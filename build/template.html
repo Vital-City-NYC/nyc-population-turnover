@@ -12,8 +12,9 @@
   --c-births:#217ebe;--c-deaths:#050507;--c-in:#ff7c53;--c-out:#e7466d;--c-stay:#cdcfde;--win:rgba(221,228,76,.3);
   font-family:var(--sans);color:var(--ink);background:#fff;max-width:760px;margin:0 auto;padding:28px 16px 48px;line-height:1.45;font-weight:300;box-sizing:border-box}
 .pt *{box-sizing:border-box}
+body.embed{margin:0;background:#fff}
+body.embed .pt{padding:0 0 8px;max-width:none}
 .pt a{color:var(--cerulean)}
-.pt .lead{font-weight:300;font-size:1.05rem;line-height:1.55;color:var(--ink);margin:0 0 1.2rem}
 .pt .keys{display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid var(--ink);border-bottom:1px solid var(--ink);margin:0 0 .4rem}
 .pt .keys div{padding:.8rem .6rem .7rem 0}
 .pt .keys .n{font-family:var(--serif);font-weight:300;font-size:1.85rem;line-height:1;display:block;margin-bottom:.3rem;white-space:nowrap}
@@ -94,7 +95,6 @@
 </head>
 <body>
 <div class="pt" id="pt">
-<p class="lead" id="lead"></p>
 <div class="keys" id="keys"></div>
 
 <div class="chap"><span class="num">I</span><h2>The ledger, year by year</h2><span class="lede">One timeline, 1970 to 2025. Hover any bar for the number.</span></div>
@@ -122,6 +122,22 @@
 </div>
 <script>
 const D = /*DATA*/;
+// Embed mode: ?embed=1 strips the page padding so the page sits inside a Ghost HTML card, and posts
+// its content height to the parent so the iframe can size to fit (and resize when the calculator
+// or "show the math" changes the height). Measures the content element, not the document.
+if (new URLSearchParams(location.search).get('embed') === '1') {
+  document.body.classList.add('embed');
+  const postHeight = () => {
+    const el = document.getElementById('pt');
+    if (!el || innerWidth < 50) return;
+    const h = Math.ceil(el.getBoundingClientRect().height);
+    if (h > 0) parent.postMessage({ type: 'vc-embed-height', id: 'nyc-population-turnover', height: h }, '*');
+  };
+  window.addEventListener('load', postHeight);
+  window.addEventListener('resize', postHeight);
+  if (window.ResizeObserver) new ResizeObserver(postHeight).observe(document.getElementById('pt'));
+  let n = 0; const t = setInterval(() => { postHeight(); if (++n > 20) clearInterval(t); }, 300);
+}
 (function(){
 const $ = id => document.getElementById(id);
 const fmt = n => Math.round(n).toLocaleString('en-US');
@@ -167,8 +183,6 @@ const U = {
 const a = (k, t) => `<a href="${U[k]}">${t}</a>`;
 
 // ---------- header
-// Lead paragraph: plain body copy, because the page sits inside a story page that carries its own headline.
-$('lead').textContent = 'Since 1970, New York City has recorded ' + M(T.births) + ' births and ' + M(T.deaths) + ' deaths, and lost a net ' + M(-T.net) + ' people to migration. It is about ' + fmt(Math.round((P[Y1].pop - P[Y0].pop)/10000)*10000) + ' people bigger than it was 56 years ago. The charts and graphs below detail who was born, who died, who moved in and who moved away over the decades, from the Census Bureau and the city\'s own birth and death registry, with an estimate of how much of the city has changed hands between any two years.';
 $('keys').innerHTML = [
   [M(T.births), 'Births to city residents, April 1970 to July 2025'],
   [M(T.deaths), 'Deaths of city residents, April 1970 to July 2025'],

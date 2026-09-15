@@ -1,0 +1,26 @@
+<!-- New York City's population since 1970 — Vital City embed. Paste into a Ghost HTML card. -->
+<div class="vc-embed-nyc-population-turnover" style="margin:1.5em 0;">
+  <div class="vc-embed-nyc-population-turnover__frame" style="position:relative;width:100%;overflow:hidden;">
+    <iframe
+      class="vc-embed-nyc-population-turnover__iframe"
+      src="https://vital-city-nyc.github.io/nyc-population-turnover/?embed=1"
+      title="New York City's population since 1970: births, deaths, moves in and out, and a turnover calculator"
+      loading="lazy"
+      scrolling="no"
+      style="display:block;width:100%;height:4200px;border:0;background:transparent;"
+    ></iframe>
+  </div>
+  <p style="font-size:0.8em;color:#707175;margin:0.5em 0 0;text-align:right;">
+    <a href="https://vital-city-nyc.github.io/nyc-population-turnover/" target="_blank" rel="noopener">Open full screen ↗</a>
+  </p>
+  <script>
+    (function () {
+      window.addEventListener('message', function (e) {
+        var d = e && e.data;
+        if (!d || d.type !== 'vc-embed-height' || d.id !== 'nyc-population-turnover') return;
+        var f = document.querySelector('.vc-embed-nyc-population-turnover__iframe');
+        if (f && typeof d.height === 'number') f.style.height = d.height + 'px';
+      });
+    })();
+  </script>
+</div>
