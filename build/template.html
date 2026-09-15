@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Who came, who went: New York City's population since 1970</title>
+<title>New York City's population since 1970</title>
 <link rel="stylesheet" href="https://use.typekit.net/qqk2vto.css">
 <style>
 @font-face{font-family:"GascogneTS";src:url("https://vital-city-nyc.github.io/vital-city-design-system/fonts/GascogneTS-Light.ttf") format("truetype");font-weight:300;font-display:swap}
@@ -13,9 +13,7 @@
   font-family:var(--sans);color:var(--ink);background:#fff;max-width:760px;margin:0 auto;padding:28px 16px 48px;line-height:1.45;font-weight:300;box-sizing:border-box}
 .pt *{box-sizing:border-box}
 .pt a{color:var(--cerulean)}
-.pt h1{font-family:var(--sans);font-weight:900;font-size:clamp(1.55rem,3.8vw,2rem);line-height:1.12;margin:0 0 .6rem;max-width:26ch}
-.pt .dek{font-weight:300;font-size:1.05rem;color:var(--ink);margin:0 0 1.2rem;max-width:64ch}
-.pt .dek a{color:var(--ink)}
+.pt .lead{font-weight:300;font-size:1.05rem;line-height:1.55;color:var(--ink);margin:0 0 1.2rem}
 .pt .keys{display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid var(--ink);border-bottom:1px solid var(--ink);margin:0 0 .4rem}
 .pt .keys div{padding:.8rem .6rem .7rem 0}
 .pt .keys .n{font-family:var(--serif);font-weight:300;font-size:1.85rem;line-height:1;display:block;margin-bottom:.3rem;white-space:nowrap}
@@ -98,8 +96,7 @@
 </head>
 <body>
 <div class="pt" id="pt">
-<h1 id="h1"></h1>
-<p class="dek" id="dek"></p>
+<p class="lead" id="lead"></p>
 <div class="keys" id="keys"></div>
 
 <div class="chap"><span class="num">I</span><h2>The ledger, year by year</h2><span class="lede">One timeline, 1970 to 2025. Hover any bar for the number.</span></div>
@@ -169,8 +166,8 @@ const U = {
 const a = (k, t) => `<a href="${U[k]}">${t}</a>`;
 
 // ---------- header
-$('h1').textContent = 'Since 1970, New York City has recorded ' + M(T.births) + ' births and ' + M(T.deaths) + ' deaths, and lost a net ' + M(-T.net) + ' people to migration. It is about ' + fmt(Math.round((P[Y1].pop - P[Y0].pop)/10000)*10000) + ' people bigger';
-$('dek').innerHTML = 'Who was born, who died, who moved in and who moved away, 1970 to 2025, from the Census Bureau and the city\'s own birth and death registry, with an estimate of how much of the city has changed hands between any two years. Every figure is official, every source is linked in the notes at the bottom, and every calculation is spelled out in the <a href="methodology.html">methodology</a>.';
+// Lead paragraph: plain body copy, because the page sits inside a story page that carries its own headline.
+$('lead').textContent = 'Since 1970, New York City has recorded ' + M(T.births) + ' births and ' + M(T.deaths) + ' deaths, and lost a net ' + M(-T.net) + ' people to migration. It is about ' + fmt(Math.round((P[Y1].pop - P[Y0].pop)/10000)*10000) + ' people bigger than it was 56 years ago. The charts and graphs below detail who was born, who died, who moved in and who moved away over the decades, from the Census Bureau and the city\'s own birth and death registry, with an estimate of how much of the city has changed hands between any two years.';
 $('keys').innerHTML = [
   [M(T.births), 'Births to city residents, 1970-2024'],
   [M(T.deaths), 'Deaths of city residents, 1970-2024'],
