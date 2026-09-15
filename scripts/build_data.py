@@ -87,8 +87,9 @@ for r in csv.DictReader(open(rp('co-est00int-tot.csv'), encoding='latin-1')):
 pop[2000] = 8008278; pop_src[2000] = 'census2000'
 assert pop[2010] == 8175133, pop[2010]
 
-# 2010s: vintage-2020 postcensal estimates, reconciled to the 2020 census count (see methodology)
+# 2010s: vintage-2020 file for components; population from the intercensal table below
 v20 = defaultdict(int); comp = defaultdict(lambda: defaultdict(int))
+stub2000 = defaultdict(int); stub2010 = defaultdict(int); stub2020 = defaultdict(int)
 for r in csv.DictReader(open(rp('co-est2020-alldata.csv'), encoding='latin-1')):
     if r['STATE'] == '36' and r['COUNTY'] in NYC3:
         for y in range(2010, 2021):
@@ -96,6 +97,8 @@ for r in csv.DictReader(open(rp('co-est2020-alldata.csv'), encoding='latin-1')):
             if y >= 2011:   # BIRTHS2010 etc. cover only April-June 2010; full years run July-June
                 for k in ('BIRTHS', 'DEATHS', 'INTERNATIONALMIG', 'DOMESTICMIG', 'RESIDUAL'):
                     comp[y][k] += int(r[f'{k}{y}'])
+            else:
+                for k in ('BIRTHS', 'DEATHS'): stub2010[k] += int(r[f'{k}{y}'])
 census2020 = 8804190
 closure2020 = census2020 - v20[2020]          # how far the vintage-2020 series fell short of the count (for the notes)
 # Official 2010-2020 intercensal county estimates (Census Bureau table CO-EST2020INT-POP-36)
@@ -122,6 +125,8 @@ for r in csv.DictReader(open(rp('co-est2025-alldata.csv'), encoding='latin-1')):
             if y >= 2021:   # 2020 column is the April-June 2020 stub
                 for k in ('BIRTHS', 'DEATHS', 'INTERNATIONALMIG', 'DOMESTICMIG', 'RESIDUAL'):
                     comp[y][k] += int(r[f'{k}{y}'])
+            else:
+                for k in ('BIRTHS', 'DEATHS'): stub2020[k] += int(r[f'{k}{y}'])
 for y in range(2021, 2026):
     pop[y] = v25[y]; pop_src[y] = 'v2025'
 
@@ -146,31 +151,81 @@ for r in csv.DictReader(open(rp('co-est2009-alldata.csv'), encoding='latin-1')):
         for y in range(2001, 2010):   # BIRTHS_2000 etc. are the April-June 2000 stub
             for k in ('BIRTHS', 'DEATHS', 'INTERNATIONALMIG', 'DOMESTICMIG', 'RESIDUAL'):
                 comp[y][k] += int(r[f'{k}_{y}'] if f'{k}_{y}' in r else r[f'{k}{y}'])
+        for k in ('BIRTHS', 'DEATHS'): stub2000[k] += int(r[f'{k}_2000'] if f'{k}_2000' in r else r[f'{k}2000'])
 # 1980-90 decade components (comp8090 record A: pop80, pop90, change, pct, births, deaths, netmig, pct)
 c8090 = defaultdict(int)
+c8090_b = defaultdict(int); c8090_d = defaultdict(int)   # record B: ten birth periods then ten death periods
 for line in open(rp('comp8090.txt'), encoding='latin-1'):
     m = re.match(r'^A (36\d{3})\s+(-?\d+)\s+(-?\d+)\s+(-?\d+)\s+(-?[\d.]+)\s+(-?\d+)\s+(-?\d+)\s+(-?\d+)', line)
     if m and m.group(1) in NYC:
         c8090['pop80'] += int(m.group(2)); c8090['pop90'] += int(m.group(3))
         c8090['births'] += int(m.group(6)); c8090['deaths'] += int(m.group(7)); c8090['netmig'] += int(m.group(8))
+    mb = re.match(r'^B (36\d{3})\s+((?:\d+\s*){20})$', line.rstrip())
+    if mb and mb.group(1) in NYC:
+        v = [int(x) for x in mb.group(2).split()]
+        # periods: 0 = April 1, 1980-June 30, 1981; 1-8 = July-June years ending 1983..1990? no: 1982..1989; 9 = July 1989-March 1990
+        for i in range(10): c8090_b[1980 + i] += v[i]; c8090_d[1980 + i] += v[10 + i]
+assert sum(c8090_b.values()) == c8090['births'] and sum(c8090_d.values()) == c8090['deaths'], (sum(c8090_b.values()), c8090['births'])
 
-# ---------------------------------------------------------------- births and deaths (DOHMH Table PC1)
-births = {}; deaths = {}; bd_src = {}
+PEP_YEARS = set(range(1991, 2001)) | set(range(2001, 2010)) | set(range(2011, 2021)) | set(range(2021, 2026))
+PEP_YEARS_ALL = PEP_YEARS
+# ---------------------------------------------------------------- births and deaths, by residence
+# Each ledger row t covers the interval between its population dates: July 1 t to July 1 t+1, except that
+# census years anchor on April 1 (so row 1980 = April 1980-July 1981, 15 months; row 1989 = July 1989-
+# April 1990, 9 months). Births and deaths are counted for residents of the five boroughs.
+#   1970-79: DOHMH Table PC1 counts (events occurring in the city, any residence), scaled to a residence
+#            basis by the 1980s ratio of NCHS resident counts to DOHMH occurrence counts (see methodology).
+#   1980-89: Census Bureau comp8090 record B (NCHS resident births and deaths by estimate period).
+#   1990-2024: Census Bureau components of change (NCHS resident counts), periods ending June 30 of t+1,
+#            plus the April-June stub in census years; July 2009-March 2010 has no Census file and uses the
+#            New York State Health Department's resident counts for calendar 2009 and 2010.
+dohmh_b = {}; dohmh_d = {}
 pc1 = open(rp('dohmh_2023sum_tablePC1_page53.txt')).read()
 for line in pc1.splitlines():
-    m = re.match(r'^(\d{4})(?:-(\d{4}))?[‡]?\s+([\d,]+)\s+([\d,]+)\s+[\d.]+\s+(?:[\d.]+\s+)?(?:[\d,.]+\s+)?([\d,]+)\s+[\d.]+\s+([\d,]+)\s+[\d.]+\s+([\d,]+)\s+[\d.]+\s*$', line)
-    if not m: continue
-    y0 = int(m.group(1)); y1 = int(m.group(2)) if m.group(2) else y0
+    m = re.match(r'^(\d{4})(?:-(\d{4}))?[‡]?\s', line)
+    if not m or 'Excluding' in line: continue
+    tok = line.split(); y0 = int(m.group(1)); y1 = int(m.group(2)) if m.group(2) else y0
     if y1 < 1966: continue
-    b = num(m.group(4)); d = num(m.group(6))
+    b = num(tok[2]); dd = num(tok[-4])
     for y in range(y0, y1 + 1):
-        if y < 1970 or y in births: continue        # first 2001 row (incl. WTC deaths) wins
-        births[y] = b; deaths[y] = d
-        bd_src[y] = 'dohmh_avg' if m.group(2) else 'dohmh'
-assert births[1990] == 139630 and deaths[2020] == 82143 and deaths[2001] == 62964, (births.get(1990), deaths.get(2020), deaths.get(2001))
-# 2024, 2025: DOHMH not yet published — Census vintage-2025 components (years ending July 1)
-for y in (2024, 2025):
-    births[y] = comp[y]['BIRTHS']; deaths[y] = comp[y]['DEATHS']; bd_src[y] = 'census_pep'
+        if y in dohmh_b: continue          # first 2001 row (with World Trade Center deaths) wins
+        dohmh_b[y] = b; dohmh_d[y] = dd
+assert dohmh_b[1990] == 139630 and dohmh_d[2020] == 82143 and dohmh_d[2001] == 62964
+nys = {int(k): v for k, v in json.load(open(rp('nysdoh/nyc_resident_births_deaths.json'))).items()}
+births = {}; deaths = {}; bd_src = {}; bd_period = {}
+# 1970s: scale occurrence counts to residence with the 1980s ratio (NCHS / DOHMH, calendar 1980-89 vs April 1980-April 1990)
+r_b = c8090['births'] / sum(dohmh_b[y] for y in range(1980, 1990))
+r_d = c8090['deaths'] / sum(dohmh_d[y] for y in range(1980, 1990))
+for y in range(1970, 1980):
+    span = 1.25 if y == 1970 else 1.0   # row 1970 runs April 1970-July 1971
+    births[y] = round(dohmh_b[y] * r_b * span); deaths[y] = round(dohmh_d[y] * r_d * span)
+    bd_src[y] = 'dohmh_scaled'; bd_period[y] = 'April 1970 to July 1971' if y == 1970 else f'July {y} to June {y+1}'
+births[1979] = round(dohmh_b[1979] * r_b * 0.75); deaths[1979] = round(dohmh_d[1979] * r_d * 0.75); bd_period[1979] = 'July 1979 to March 1980'
+for y in range(1980, 1990):
+    births[y] = c8090_b[y]; deaths[y] = c8090_d[y]; bd_src[y] = 'nchs_census'
+    bd_period[y] = 'April 1980 to June 1981' if y == 1980 else ('July 1989 to March 1990' if y == 1989 else f'July {y} to June {y+1}')
+for y in range(1990, 2025):
+    p = y + 1
+    if p in comp and p in PEP_YEARS_ALL:
+        births[y] = comp[p]['BIRTHS']; deaths[y] = comp[p]['DEATHS']; bd_src[y] = 'nchs_census'; bd_period[y] = f'July {y} to June {y+1}'
+    else:
+        births[y] = None; deaths[y] = None
+# rows that end at a census (July 1999-April 2000, July 2019-April 2020): nine-twelfths of the July-June count
+for y in (1999, 2019):
+    births[y] = round(births[y] * 0.75); deaths[y] = round(deaths[y] * 0.75); bd_period[y] = f'July {y} to March {y+1}'
+MONTHS = {y: 12 for y in range(1970, 2026)}
+for y in (1970, 1980, 1990, 2000, 2010, 2020): MONTHS[y] = 15
+for y in (1979, 1989, 1999, 2009, 2019): MONTHS[y] = 9
+MONTHS[2025] = 0
+# census-year stubs (April 1-June 30) belong to the row that starts at the census
+births[1990] += blk[4]['stub']; deaths[1990] += blk[5]['stub']; bd_period[1990] = 'April 1990 to June 1991'
+births[2000] += stub2000['BIRTHS']; deaths[2000] += stub2000['DEATHS']; bd_period[2000] = 'April 2000 to June 2001'
+births[2010] += stub2010['BIRTHS']; deaths[2010] += stub2010['DEATHS']; bd_period[2010] = 'April 2010 to June 2011'
+births[2020] += stub2020['BIRTHS']; deaths[2020] += stub2020['DEATHS']; bd_period[2020] = 'April 2020 to June 2021'
+# July 2009-March 2010: no Census component file; nine months at the state's resident counts for 2009-10
+births[2009] = round(0.75 * (nys[2009]['births'] + nys[2010]['births']) / 2); deaths[2009] = round(0.75 * (nys[2009]['deaths'] + nys[2010]['deaths']) / 2)
+bd_src[2009] = 'nysdoh'; bd_period[2009] = 'July 2009 to March 2010'
+births[2025] = None; deaths[2025] = None; bd_src[2025] = 'none'; bd_period[2025] = 'July 2025 onward, not yet published'
 
 # ---------------------------------------------------------------- gross in-migration anchors
 # ACS 1-year 2006-2024 (2005 used a different table layout and is not used)
@@ -213,6 +268,7 @@ c2c_in['abroad'] = int(sf3['P024016']) + int(sf3['P024013'])   # foreign country
 c2c_in['total'] = c2c_in['dom'] + c2c_in['abroad']
 
 PEP_YEARS = set(range(1991, 2001)) | set(range(2001, 2010)) | set(range(2011, 2021)) | set(range(2021, 2026))
+PEP_YEARS_ALL = PEP_YEARS
 # ---------------------------------------------------------------- annual ledger + turnover inputs
 years = list(range(1970, 2026))
 ledger = []
@@ -230,7 +286,7 @@ rate_2006 = in_meas[2006]['value'] / pop[2006]
 for y in years:
     P = pop[y]; Pn = pop.get(y + 1)
     b = births[y]; d = deaths[y]
-    net = (Pn - P) - (b - d) if Pn is not None else None
+    net = (Pn - P) - (b - d) if (Pn is not None and b is not None) else None
     if y in in_meas:
         inn = in_meas[y]['value']; isrc = in_meas[y]['source']
     elif y == 2020:
@@ -243,10 +299,9 @@ for y in years:
         inn = round(P * rate_first); isrc = 'assumed'
     out = (inn - net) if net is not None else None
     if out is not None and out < 0: out = 0
-    ledger.append(dict(year=y, pop=P, pop_src=pop_src[y], births=b, deaths=d, bd_src=bd_src[y],
+    ledger.append(dict(year=y, pop=P, pop_src=pop_src[y], births=b, deaths=d, bd_src=bd_src[y], period=bd_period[y], months=MONTHS[y],
                        net=net, inflow=inn, in_src=isrc, outflow=out,
-                       pep_births=comp[y]['BIRTHS'] if y in PEP_YEARS else None, pep_deaths=comp[y]['DEATHS'] if y in PEP_YEARS else None,
-                       pep_intl=comp[y]['INTERNATIONALMIG'] if y in PEP_YEARS else None,
+                                          pep_intl=comp[y]['INTERNATIONALMIG'] if y in PEP_YEARS else None,
                        pep_dom=comp[y]['DOMESTICMIG'] if y in PEP_YEARS else None,
                        pep_period=f'July {y-1} to June {y}' if y in PEP_YEARS else None))
 
@@ -255,7 +310,7 @@ dec_bounds = [1970, 1980, 1990, 2000, 2010, 2020, 2025]
 decades = []
 for a, z in zip(dec_bounds[:-1], dec_bounds[1:]):
     rows = [r for r in ledger if a <= r['year'] < z]
-    B = sum(r['births'] for r in rows); D = sum(r['deaths'] for r in rows)
+    B = sum(r['births'] for r in rows if r['births'] is not None); D = sum(r['deaths'] for r in rows if r['deaths'] is not None)
     net = (pop[z] - pop[a]) - (B - D)
     pys = [y for y in range(a + 1, z + 1) if y in PEP_YEARS]
     pep = dict(births=sum(comp[y]['BIRTHS'] for y in pys), deaths=sum(comp[y]['DEATHS'] for y in pys),
@@ -292,13 +347,20 @@ for r in csv.reader(open(rp('pe-02-nyc.csv'))):
 ages.append(age_summary(b80, 1980, 'Census Bureau intercensal county estimates by age, sex and race 1980-89 (PE-02), July 1, 1980'))
 a90 = age90[1990]; b90 = [a90[0] + a90[1]] + [a90[i] for i in range(2, 19)]
 ages.append(age_summary(b90, 1990, 'Census Bureau intercensal county estimates 1990-2000 (API int_charagegroups), July 1, 1990'))
-def agesum(fname, year_code):
+def agesum(fname, year_code, zero_is_under1=False):
+    """cc-est files: AGEGRP 0 = total, 1-18 = five-year groups. The 2000-2010 intercensal state file instead
+    uses 99 = total, 0 = under 1 year, 1 = 1-4 years, 2-18 = five-year groups (verified: Manhattan codes 0+1 =
+    76,098, the census under-5 count), so code 0 is folded into the 0-4 bin there."""
     b = [0] * 18
     for r in csv.DictReader(open(rp(fname), encoding='latin-1')):
-        if r['COUNTY'] in NYC3 and r['YEAR'] == str(year_code) and r['AGEGRP'] not in ('0', '99'):
-            b[int(r['AGEGRP']) - 1] += int(r['TOT_POP'])
+        if r['COUNTY'] in NYC3 and r['YEAR'] == str(year_code) and r['AGEGRP'] != '99':
+            g = int(r['AGEGRP'])
+            if g == 0:
+                if zero_is_under1: b[0] += int(r['TOT_POP'])
+                continue
+            b[g - 1] += int(r['TOT_POP'])
     return b
-ages.append(age_summary(agesum('co-est00int-alldata-36.csv', 1), 2000, 'Census Bureau intercensal county characteristics 2000-2010, April 1, 2000 census'))
+ages.append(age_summary(agesum('co-est00int-alldata-36.csv', 1, zero_is_under1=True), 2000, 'Census Bureau intercensal county characteristics 2000-2010, April 1, 2000 estimates base'))
 ages.append(age_summary(agesum('cc-est2020-alldata-36.csv', 1), 2010, 'Census Bureau county characteristics vintage 2020, April 1, 2010 census'))
 ages.append(age_summary(agesum('cc-est2025-alldata-36.csv', 1), 2020, 'Census Bureau county characteristics vintage 2025, April 1, 2020 estimates base'))
 ages.append(age_summary(agesum('cc-est2025-alldata-36.csv', 7), 2025, 'Census Bureau county characteristics vintage 2025, July 1, 2025 estimate'))
@@ -309,6 +371,7 @@ race = []
 for i, y in enumerate(hr['years']):
     if y < 1970: continue
     g = {x['id']: x['pct'][i] for x in hr['groups']}
+    if y == 2020: g['asian'] = round((1385144 + 6874) / 8804190 * 100, 2)   # DHC P3: Asian alone + Native Hawaiian/Pacific Islander alone, to match the API definition used for 1970-2010
     race.append(dict(year=y, total=hr['totals'][i], hispanic=g['hispanic'], nh_white=hr['nhwhite']['pct'][i], black=g['black'], asian=g['asian'], white=g['white'], other=g['other'],
                      source='Decennial census (Gibson and Jung WP76 for 1970-1990; SF1/P.L. 94-171 for 2000-2020)'))
 
@@ -344,7 +407,7 @@ first, last = ledger[0], ledger[-1]
 # Totals cover calendar years 1970-2024, the 55 years whose net-migration residuals sum to the
 # April 1970 to July 2025 population change (the 2025 row has no following year to difference).
 L55 = [r for r in ledger if r['year'] <= 2024]
-tot = dict(years='1970-2024', births=sum(r['births'] for r in L55), deaths=sum(r['deaths'] for r in L55),
+tot = dict(years='April 1970 to July 2025', births=sum(r['births'] for r in L55), deaths=sum(r['deaths'] for r in L55),
            net=(pop[2025] - pop[1970]) - (sum(r['births'] for r in L55) - sum(r['deaths'] for r in L55)),
            inflow=sum(r['inflow'] for r in L55), outflow=sum(r['outflow'] for r in L55))
 assert tot['net'] == sum(r['net'] for r in L55)
@@ -373,9 +436,16 @@ print('race:'); [print(' ', r['year'], r['hispanic'], r['nh_white'], r['black'],
 print('fb:', [(f['year'], f['share']) for f in fb])
 print('c2c2000:', data['c2c2000'])
 print('flows:', {v: (w['dom_in'], w['abroad_in'], w['dom_out'], round(w['share_nonnyc'], 3)) for v, w in flow_win.items()})
-print('DOHMH (calendar) vs PEP (July-June) births/deaths, annual averages over full PEP years in each decade:')
-for d in decades:
-    if d['pep']:
-        n = d['pep']['years']; print(' ', d['pep']['period'], 'births', round(d['births']/d['years']), 'vs', round(d['pep']['births']/n), 'deaths', round(d['deaths']/d['years']), 'vs', round(d['pep']['deaths']/n))
+print('1980s decade check: rows 1980-89 births', sum(births[y] for y in range(1980,1990)), 'vs comp8090', c8090['births'], '| deaths', sum(deaths[y] for y in range(1980,1990)), 'vs', c8090['deaths'])
+print('1970s scaling ratios (NCHS/DOHMH, 1980s): births', round(r_b,4), 'deaths', round(r_d,4))
+print('Residence (Census/NCHS, July-June) vs state resident counts (calendar): two-year averages')
+for y in (2005, 2010, 2015, 2019, 2022):
+    if y in nys and y+1 in nys and nys[y].get('deaths') and nys[y+1].get('deaths'):
+        print(f'  {y}-{y+1}: Census births (annual rate)', round(births[y]*12/MONTHS[y]), 'vs state avg', round((nys[y]['births']+nys[y+1]['births'])/2), '| deaths', round(deaths[y]*12/MONTHS[y]), 'vs', round((nys[y]['deaths']+nys[y+1]['deaths'])/2))
+print('Occurrence (DOHMH PC1) vs residence (state), calendar years:')
+for y in (2005, 2010, 2015, 2019, 2023): print(f'  {y}: DOHMH births {dohmh_b[y]} vs state {nys[y]["births"]} ({round((dohmh_b[y]/nys[y]["births"]-1)*100,1)}% higher); deaths {dohmh_d[y]} vs {nys[y].get("deaths")}')
 print('turnover examples:'); [print(' ', k, v) for k, v in examples.items()]
 chk = turnover(1995, 2000); print('1995-2000 model newcomers (moved) still present', chk['moved'], 'vs census 2000 residents 5+ who lived outside NYC in 1995:', c2c_in['total'])
+print('min natural increase row (annual rate):', min(((r['births']-r['deaths'])*12/r['months'], r['year']) for r in ledger if r['births'] is not None))
+print('births peak row since 2000 (annual rate):', max((round(r['births']*12/r['months']), r['year']) for r in ledger if r['year']>=2000 and r['births'] is not None), '| 2024 row', [(r['year'], r['births']) for r in ledger if r['year']==2024])
+print('1970s ratios births', round(r_b,4), 'deaths', round(r_d,4), '| stubs', dict(stub2000), dict(stub2010), dict(stub2020), 'stub1990', blk[4]['stub'], blk[5]['stub'])

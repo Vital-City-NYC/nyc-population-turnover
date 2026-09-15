@@ -1,0 +1,89 @@
+# How this graphic was built: the prompts, in order
+
+A record of what Josh Greenman asked Claude Code (Anthropic's coding agent) to do, and what each request produced. The queries are verbatim. Everything was done in one working session on September 15, 2026, from a folder on his laptop that had earlier Vital City and personal data projects in it, which the agent could read for style and data conventions.
+
+Live result: https://vital-city-nyc.github.io/nyc-population-turnover/
+
+---
+
+## 1. The original request
+
+> inspired by/related to this article https://www.vitalcitynyc.org/how-nyc-changed-since-9-11/ — and drawing on closely related work you did for me already — build a sophisticated graphic in vital city style that shows how new york city's population has changed over the past 50 years. who's been born, who's died, who's moved here, who's moved away. total numbers, demographics, etc. If possible/doable with the data, let someone enter in a beginning point and end point to determine approximately what percent of the city has turned over between those two dates. use ONLY official data and be transparent about all calculations.
+
+What happened: the agent read the linked article (Harry Siegel's "A City Forgets," which cites a City Planning back-of-the-envelope figure that half the city had turned over since 2001), reread its own notes on earlier projects (a 9/11 then-and-now infographic, a population atlas, a births-and-deaths page, a race-by-decade chart), and then assembled the data: Census Bureau county estimates for each decade, the decennial counts, the city Health Department's births and deaths table back to 1898, the Census migration-flow files, the American Community Survey mobility tables, Census age files, and City Planning's foreign-born history. It wrote a build script, a page in the Vital City chart-card style with seven figures and a turnover calculator, a methodology page, and published to a Vital City GitHub Pages site. The first version was a stack of bordered cards.
+
+## 2. Redesign and fact check
+
+> Knit this into a single presentation that feels like it holds together a bit more. now it's a series of boxes.
+>
+> double check all facts.
+
+What happened: the page became one continuous document in numbered chapters. Every time chart moved onto a shared 1970-2025 axis in a single column, with a short headline in the left margin, so the panels line up year for year, and the calculator's chosen window is shaded across all of them. The fact pass recomputed every number and claim from the built data and turned up four corrections: the headline totals were re-windowed to the 55 years whose yearly figures actually sum to the population change (6.6 million births, not 6.7; net migration −2.2 million, not −2.3); the year of City Planning's "fully half" figure was corrected to 2013; an unverifiable claim about the 1970 foreign-born count was removed; and the state overcount claim was sourced to the Census Bureau's own page and quoted.
+
+### 2a. Sent while that was in progress
+
+> include direct links as embedded hyperlinks to sources wherever possible.
+
+What happened: a numbered notes section at the bottom links each series to its exact file at census.gov, nyc.gov or the Census API, and the methodology got the same links. Every link was checked to resolve.
+
+## 3. Hover
+
+> make it show exact numbers when hovering over.
+
+What happened: hovering any chart puts a dashed guide through every panel at that year, switches each panel's margin readout to that year's exact figures (with the arithmetic behind derived numbers, such as net migration), and shows a tooltip at the cursor. Touch works the same way.
+
+### 3a. Sent while that was in progress
+
+> "sources and notes" should't take a roman numeral; it should just be listed at the bottom.
+
+What happened: the chapters now run I to III and the notes are an unnumbered section at the end.
+
+## 4. Fitting the story page
+
+Sent with a screenshot of a published Vital City story ("She Buys It, He Fires It") to show where the graphic would sit.
+
+> when it's published on our site, it'll be embedded in a story page with a headline and a bit of text (see image of another story. Imagine the graphic appearing where the body text is. which is to say, it shouldn't begin with its own bold headline. change the lead-in to regular halyard text that says
+>
+> Since 1970, New York City has recorded 6.6 million births and 3.7 million deaths, and lost a net 2.2 million people to migration. It is about 690,000 people bigger than it was 56 years ago. The charts and graphs below detail who was born, who died, who moved in and who moved away over the decades, from the Census Bureau and the city's own birth and death registry, with an estimate of how much of the city has changed hands between any two years.
+
+What happened: the headline and dek were replaced by that paragraph as plain body text.
+
+### 4a. Sent while that was in progress
+
+> and make sure you're really using the right census numbers. I know there's a whole thing with vintages I don't fully understand. are you looking at NYC DCP data too?
+
+What happened: this caught a real problem. The agent had believed the Census Bureau never published a reconciled ("intercensal") 2010-2020 county series and had stretched the older vintage 2020 estimates itself to land on the 2020 count. The intercensal table does exist, in a different directory from the other decades' files, and the page now uses it. The agent also pulled City Planning's July 2026 population estimates report and confirmed that its 2020-2025 figures match the page county by county, and that City Planning likewise measures change from the 2020 count rather than the estimates base. The report is now cited on the page and in the methodology, along with a plain-language explanation of vintages and intercensal series.
+
+## 5. Hover stability
+
+> when I hover over and move cursor left to right, the charts jump up and down a little. can they be fixed in place so that doesn't happen?
+
+What happened: the readout text under each chart's heading changed length as the cursor moved, resizing the row. The page now measures the longest possible readout for each panel on load and reserves that height, so nothing moves. Tested by sweeping across six years in all eight panels: zero pixel shift.
+
+## 6. The walkthrough
+
+> produce a walkthrough of how I queried you, with all follow-up queries, for someone who's asking.
+
+What happened: this document.
+
+## 7. Remove the AI caution
+
+> remove the AI caution button please
+
+What happened: the button and its pop-up were removed; the quality-control list remains in the methodology.
+
+## 8. A second fact check
+
+> now do another really rigorous fact-check as though you're a skeptical demographer.
+
+What happened: the agent re-derived every input from the raw files with fresh code, checked each variable's meaning against the publisher's documentation, and compared the page against outside benchmarks. That found one substantive error: the city Health Department's historical births-and-deaths table counts events that occurred in the city regardless of residence (12,701 of 2023's 98,389 births were to non-residents), so the ledger was rebuilt on residence-based counts from the National Center for Health Statistics as carried in Census Bureau files, with the state Health Department's resident counts as an independent check. The headline totals changed (births 6.4 million, deaths 3.6 million, net migration −2.0 million). Smaller fixes: the 2000 age file's under-1 group had been dropped; the 2020 Asian and Pacific Islander share now includes Pacific Islanders as the earlier decades do; the 1970 Hispanic and non-Hispanic white figures are labeled as sample-based estimates.
+
+---
+
+## Where things live
+
+- Page: `docs/index.html` (one self-contained file that can be pasted into a Ghost HTML card)
+- Methodology: `METHODOLOGY.md`, rendered to `docs/methodology.html`
+- Raw official files, kept verbatim: `data/raw/`
+- Build: `python3 scripts/build_data.py` then `python3 scripts/build_page.py`
+- Repository: https://github.com/Vital-City-NYC/nyc-population-turnover
