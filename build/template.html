@@ -72,11 +72,12 @@ body.embed .pt .fsbar{display:flex}
 .pt .calc{display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:end;margin:.9rem 0 1rem}
 .pt .calc label{display:block;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.3rem}
 .pt .calc select{width:100%;font:inherit;font-size:1rem;font-weight:700;padding:.45rem .5rem;border:1px solid var(--ink);background:#fff;border-radius:0;color:var(--ink)}
-.pt .big{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:0 0 1rem}
-.pt .big div{background:var(--paper);padding:.9rem 1rem;border-left:4px solid var(--orange)}
-.pt .big div:last-child{border-left-color:var(--magenta)}
-.pt .big .n{font-family:var(--serif);font-weight:300;font-size:2.6rem;line-height:1;display:block}
-.pt .big .l{font-size:.86rem;line-height:1.3;display:block;margin-top:.35rem}
+.pt .big{margin:0 0 1rem}
+.pt .big div{background:var(--paper);padding:.9rem 1.1rem 1rem;border-left:4px solid var(--orange);display:grid;grid-template-columns:auto 1fr;gap:.2rem 1.1rem;align-items:center}
+.pt .big .n{font-family:var(--serif);font-weight:300;font-size:3.2rem;line-height:1;grid-row:1 / span 2}
+.pt .big .l{font-size:.95rem;line-height:1.35;display:block;max-width:56ch}
+.pt .big .l2{font-size:.84rem;line-height:1.35;display:block;color:var(--muted);max-width:56ch}
+.pt .big .l2 b{color:var(--ink)}
 .pt .big b{font-weight:700}
 .pt .stack .bar{display:flex;height:32px;border:1px solid var(--ink)}
 .pt .stack .bar div{height:100%}
@@ -98,7 +99,7 @@ body.embed .pt .fsbar{display:flex}
 .pt .notes a{color:var(--muted)}
 .pt footer{font-size:.78rem;color:var(--muted);line-height:1.5;margin-top:1.4rem;border-top:2px solid var(--ink);padding-top:.7rem}
 .pt footer a{color:var(--muted)}
-@media (max-width:600px){.pt .keys{grid-template-columns:1fr 1fr}.pt .row{grid-template-columns:1fr;gap:.3rem}.pt .yearaxis{grid-column:1}.pt .big,.pt .calc,.pt .cmp{grid-template-columns:1fr}.pt .chap.notes-head{margin-top:2.4rem;border-bottom-width:1px}
+@media (max-width:600px){.pt .keys{grid-template-columns:1fr 1fr}.pt .row{grid-template-columns:1fr;gap:.3rem}.pt .yearaxis{grid-column:1}.pt .calc,.pt .cmp{grid-template-columns:1fr}.pt .big div{grid-template-columns:1fr}.pt .big .n{grid-row:auto}.pt .chap.notes-head{margin-top:2.4rem;border-bottom-width:1px}
 .pt .chap.notes-head h2{font-size:.9rem;color:var(--muted)}
 .pt .chap .lede{display:none}.pt .keys .n{font-size:1.6rem}}
 </style>
@@ -503,8 +504,7 @@ function renderCalc(){
   const t = turnover(A, B);
   const newShare = 1 - t.stayers / t.popB, goneShare = 1 - t.stayers / t.popA;
   const simple = (t.sums.births + t.sums.inflow) / t.popB;
-  $('big').innerHTML = `<div><span class="n">${Math.round(newShare*100)}%</span><span class="l">of the people in New York City in ${B} were not here in ${A}: about <b>${fmt(t.born)}</b> were born here in between and <b>${fmt(t.moved)}</b> moved in</span></div>
-    <div><span class="n">${Math.round(goneShare*100)}%</span><span class="l">of the people who were here in ${A} were gone by ${B}, having died or moved away. About <b>${fmt(t.stayers)}</b> of ${A}'s ${fmt(t.popA)} residents remained</span></div>`;
+  $('big').innerHTML = `<div><span class="n">${Math.round(newShare*100)}%</span><span class="l">of the people in New York City in ${B} were not here in ${A}: about <b>${fmt(t.born)}</b> were born here in between and <b>${fmt(t.moved)}</b> moved in.</span><span class="l2">Seen from the other end: of the ${fmt(t.popA)} people here in ${A}, about <b>${fmt(t.stayers)}</b> remain and ${Math.round(goneShare*100)}% have died or moved away.</span></div>`;
   const pct = v => (v / t.popB * 100);
   $('stack').innerHTML = `<div class="bar"><div style="width:${pct(t.stayers)}%;background:var(--c-stay)" title="Still here from ${A}: ${fmt(t.stayers)}"></div><div style="width:${pct(t.born)}%;background:var(--c-births)" title="Born since ${A}: ${fmt(t.born)}"></div><div style="width:${pct(t.moved)}%;background:var(--c-in)" title="Moved in since ${A}: ${fmt(t.moved)}"></div></div>
     <div class="keys2"><span><b style="color:#6b6f8a">■</b> Here in ${A} and still here: ${pct(t.stayers).toFixed(0)}%</span><span><b style="color:var(--c-births)">■</b> Born since: ${pct(t.born).toFixed(0)}%</span><span><b style="color:var(--c-in)">■</b> Moved in since: ${pct(t.moved).toFixed(0)}%</span><span>= ${B} population of ${fmt(t.popB)}</span></div>`;
