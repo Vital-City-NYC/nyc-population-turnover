@@ -109,15 +109,8 @@ body.embed .pt .fsbar{display:flex}
 <div class="fsbar"><a class="fsbtn" href="https://vital-city-nyc.github.io/nyc-population-turnover/" target="_blank" rel="noopener">View in full screen ↗</a></div>
 <div class="keys" id="keys"></div>
 
-<div class="chap"><span class="num">I</span><h2>The ledger, year by year</h2><span class="lede">One timeline, 1970 to 2025. Hover any bar for the number.</span></div>
-<div id="timeline"></div>
-
-<div class="chap"><span class="num">II</span><h2>The decade ledger</h2><span class="lede">The same arithmetic, census to census</span></div>
-<p class="prose" id="p2"></p>
-<div class="twrap"><table id="tbl2"></table></div>
-
-<div class="chap"><span class="num">III</span><h2>How much of the city has turned over?</h2><span class="lede">Pick two years; the window is shaded in section I</span></div>
-<p class="prose">Nobody tracks individual New Yorkers across decades. But the yearly ledger above is enough to estimate how much of the city changed hands between any two years: take the people here at the start, apply each year's exit rate (deaths plus out-moves) to them, and count what remains against everyone born or arrived since.</p>
+<div class="chap"><span class="num">I</span><h2>How much of the city has turned over?</h2><span class="lede">Pick two years; the charts below shade the window</span></div>
+<p class="prose">Nobody tracks individual New Yorkers across decades. But the yearly ledger of births, deaths and moves in section II is enough to estimate how much of the city changed hands between any two years: take the people here at the start, apply each year's exit rate (deaths plus out-moves) to them, and count what remains against everyone born or arrived since.</p>
 <div class="calc">
   <div><label for="ya">Start year</label><select id="ya"></select></div>
   <div><label for="yb">End year</label><select id="yb"></select></div>
@@ -127,6 +120,13 @@ body.embed .pt .fsbar{display:flex}
 <div class="cmp" id="cmp"></div>
 <p class="note" id="cnote"></p>
 <details><summary>Show the math</summary><div class="math" id="math"></div></details>
+
+<div class="chap"><span class="num">II</span><h2>The ledger, year by year</h2><span class="lede">One timeline, 1970 to 2025. Hover any bar for the number.</span></div>
+<div id="timeline"></div>
+
+<div class="chap"><span class="num">III</span><h2>The decade ledger</h2><span class="lede">The same arithmetic, census to census</span></div>
+<p class="prose" id="p2"></p>
+<div class="twrap"><table id="tbl2"></table></div>
 
 <div class="chap notes-head"><h2>Sources and notes</h2><span class="lede">Every series, linked to its file</span></div>
 <div class="notes" id="notes"></div>
@@ -518,7 +518,7 @@ function renderCalc(){
   if (A <= 2001 && B >= 2013){ const q = turnover(2001, 2013); note += `For reference, in 2013 the Department of City Planning gave <a href="${U.article}">Harry Siegel</a> a back-of-the-envelope figure that "fully half" of the city had turned over since 2001; the simple tally here gives ${Math.round((q.sums.births + q.sums.inflow)/P[2013].pop*100)}% for 2001-2013 and the cohort model ${Math.round((1 - q.stayers/P[2013].pop)*100)}%.`; }
   $('cnote').innerHTML = note;
   let math = `<p><b>Stocks.</b> Start with the ${A} population (${fmt(t.popA)}) as one cohort. For each year t from ${A} to ${B-1}: exit rate e<sub>t</sub> = (deaths<sub>t</sub> + out-moves<sub>t</sub>) ÷ population<sub>t</sub>; every existing stock is multiplied by (1 − e<sub>t</sub>); then that year's births join the "born since" stock and that year's arrivals join the "moved in since" stock. Because out-moves are defined as arrivals minus implied net migration, the three stocks add up exactly to the ${B} population.</p>
-  <p><b>Inputs per year.</b> Population, births and deaths are the series in section I. Arrivals from outside the five boroughs come from the ${a('b07001','American Community Survey')} (people who lived in another state, abroad or elsewhere in New York State a year earlier; the in-state figure is scaled by the share of such movers who came from outside the city, measured in the Bureau's ${a('flows','county-to-county flows')}) for 2006-2024, and from the 2000 census (${a('sf3','residence in 1995')}, ${a('c2c','county-to-county flows')}) for 1995-99. Out-moves<sub>t</sub> = arrivals<sub>t</sub> − net migration<sub>t</sub>.</p>
+  <p><b>Inputs per year.</b> Population, births and deaths are the series in section II. Arrivals from outside the five boroughs come from the ${a('b07001','American Community Survey')} (people who lived in another state, abroad or elsewhere in New York State a year earlier; the in-state figure is scaled by the share of such movers who came from outside the city, measured in the Bureau's ${a('flows','county-to-county flows')}) for 2006-2024, and from the 2000 census (${a('sf3','residence in 1995')}, ${a('c2c','county-to-county flows')}) for 1995-99. Out-moves<sub>t</sub> = arrivals<sub>t</sub> − net migration<sub>t</sub>.</p>
   <p><b>Formulas.</b> <code>share new = 1 − stayers ÷ pop(${B})</code> = 1 − ${fmt(t.stayers)} ÷ ${fmt(t.popB)} = ${(newShare*100).toFixed(1)}%. <code>share gone = 1 − stayers ÷ pop(${A})</code> = ${(goneShare*100).toFixed(1)}%. <code>simple tally = (births + arrivals) ÷ pop(${B})</code> = (${fmt(t.sums.births)} + ${fmt(t.sums.inflow)}) ÷ ${fmt(t.popB)} = ${(simple*100).toFixed(1)}%.</p>
   <div class="twrap"><table><thead><tr><th>Year</th><th>Population</th><th>Births</th><th>Deaths</th><th>Arrivals</th><th>Arrivals source</th><th>Out-moves</th><th>Exit rate</th><th>${A} cohort still here</th></tr></thead><tbody>`;
   t.rows.forEach(r => math += `<tr><td>${r.year}</td><td>${fmt(r.pop)}</td><td>${fmt(r.births)}</td><td>${fmt(r.deaths)}</td><td>${fmt(r.inflow)}</td><td style="text-align:left">${srcLabel[r.src]}</td><td>${fmt(r.outflow)}</td><td>${((1-r.f)*100).toFixed(2)}%</td><td>${fmt(r.stay)}</td></tr>`);
@@ -543,7 +543,7 @@ $('notes').innerHTML = `<ol>
 <li><b>Boroughs.</b> The same county files as note 1, kept by county: intercensal estimates for 1970-79, 1980-89, 1990-99, 2000-09 and 2010-19, the vintage 2025 estimates for 2021-25, and the census counts (the 1970 file carries the Bureau's modified county counts, which sum 701 above the published city total).</li>
 <li><b>Households and families.</b> Shares of all households. 1970: ${a('pc70','1970 Census of Population, Part 34 New York, Chapter B, Table 25')} (page 34-114, New York City column: 2,836,872 households; family heads 2,043,765; wives of head 1,603,387; primary individuals 793,107; 2.74 persons per household). 1980: ${a('pc80','1980 Census, PC80-1-B34, Table 27')} (page 34-132: 2,788,530 householders; family householders 1,757,564; spouses 1,203,135; nonfamily householders 1,030,966; 2.49 per household). 1990: ${a('cp90','1990 CP-1-34, Table 2')} (page 36: 2,819,401 households; family 61.5%, married-couple 39.0%, living alone 32.9%; 2.54 per household). These three were read from the scanned volumes; the ${a('scans','page images are in the repository')}. 2000, 2010 and 2020: decennial census tables ${a('p18_2000','P18 (2000)')}, ${a('p18_2010','P18 (2010)')} and ${a('p16_2020','P16 (2020)')}. 2006-2024: ${a('b11001','ACS 1-year, table B11001')} with B25010 (household size) and B11002 (people by household type). "Married-couple" is the census family type; unmarried partners living together count as nonfamily households in every year. One-person households were not tabulated for cities in the 1970 and 1980 volumes used here, so that line starts in 1990. In 1970 the census defined the husband as head of a married-couple household, so "wife of head" counts married couples.</li>
 </ol>
-<p>The turnover model in section III uses the series above; its formulas are under "Show the math" and in the <a href="methodology.html">methodology</a>, and the build scripts and raw files are in the ${a('repo','repository')}.</p>`;
+<p>The turnover model in section I uses the series above; its formulas are under "Show the math" and in the <a href="methodology.html">methodology</a>, and the build scripts and raw files are in the ${a('repo','repository')}.</p>`;
 $('foot').innerHTML = `Built by Vital City, September 2026, with data current to the Census Bureau's vintage 2025 estimates and the city Health Department's 2023 vital statistics summary. Everything here is official Census Bureau, city Health Department or Department of City Planning data; the only modeled figures are the turnover estimates, and their assumptions are stated where they appear.`;
 })();
 </script>
