@@ -9,7 +9,7 @@
 @font-face{font-family:"GascogneTS";src:url("https://vital-city-nyc.github.io/vital-city-design-system/fonts/GascogneTS-Light.ttf") format("truetype");font-weight:300;font-display:swap}
 .pt{--ink:#050507;--muted:#707175;--cloud:#dddddd;--paper:#f7f7f4;--orange:#ff7c53;--cerulean:#217ebe;--magenta:#e7466d;--indigo:#394882;--periwinkle:#9b9fbc;--chartreuse:#dde44c;
   --sans:"halyard-text","Inter","Helvetica Neue",Arial,sans-serif;--serif:"GascogneTS","Source Serif 4",Georgia,serif;
-  --c-births:#217ebe;--c-deaths:#707175;--c-in:#ff7c53;--c-out:#e7466d;--c-stay:#cdcfde;--win:rgba(221,228,76,.3);
+  --c-births:#217ebe;--c-deaths:#050507;--c-in:#ff7c53;--c-out:#e7466d;--c-stay:#cdcfde;--win:rgba(221,228,76,.3);
   font-family:var(--sans);color:var(--ink);background:#fff;max-width:760px;margin:0 auto;padding:28px 16px 48px;line-height:1.45;font-weight:300;box-sizing:border-box}
 .pt *{box-sizing:border-box}
 .pt a{color:var(--cerulean)}
@@ -210,25 +210,25 @@ rows.push(`<div class="row" style="padding:.3rem 0 0;border-bottom:0"><div></div
   rows.push(row(`<h3>The city lost ${fmt(Math.round(loss/1000)*1000)} people in the 1970s and took two decades to get them back<sup>1</sup></h3><p>Population, with census counts circled. Between censuses, the Bureau's intercensal estimates; after 2020, its vintage 2025 estimates.</p>`, panel(H, 'Population of New York City, 1970 to 2025', b), 'pop'));
 })();
 
-// B. births and deaths
+// B. births and deaths: births above the line, deaths below, like the migration panels
 (function(){
-  const H = 150, mt = 6, mb = 6, vmax = 160000;
-  const y = v => mt + (vmax - v) / vmax * (H - mt - mb);
+  const H = 190, mt = 6, mb = 6, vmax = 160000, vmin = -100000;
+  const y = v => mt + (vmax - v) / (vmax - vmin) * (H - mt - mb);
   let b = '';
-  [0, 50000, 100000, 150000].forEach(v => b += `<line class="grid" x1="${ml}" x2="${W-mr}" y1="${y(v)}" y2="${y(v)}"/><text class="tick" x="${ml-5}" y="${y(v)+3.5}" text-anchor="end">${v/1000}k</text>`);
+  [-100000, -50000, 0, 50000, 100000, 150000].forEach(v => b += `<line class="grid" x1="${ml}" x2="${W-mr}" y1="${y(v)}" y2="${y(v)}"/><text class="tick" x="${ml-5}" y="${y(v)+3.5}" text-anchor="end">${v/1000}k</text>`);
   const ann = (r, k) => r[k] * 12 / r.months;   // rows at a census cover 15 or 9 months; bars show the annual rate
   L.filter(r => r.births !== null).forEach(r => {
     b += `<rect x="${x(r.year)-bw/2}" y="${y(ann(r,'births'))}" width="${bw}" height="${y(0)-y(ann(r,'births'))}" fill="var(--c-births)"/>`;
-    b += `<rect x="${x(r.year)-bw/2}" y="${y(ann(r,'deaths'))}" width="${bw*0.55}" height="${y(0)-y(ann(r,'deaths'))}" fill="var(--c-deaths)"/>`;
+    b += `<rect x="${x(r.year)-bw/2}" y="${y(0)}" width="${bw}" height="${y(-ann(r,'deaths'))-y(0)}" fill="var(--c-deaths)"/>`;
   });
   b += `<line class="axis" x1="${ml}" x2="${W-mr}" y1="${y(0)}" y2="${y(0)}"/>`;
-  b += `<text class="lbl" x="${x(2020)-6}" y="${y(148000)}" text-anchor="end" fill="var(--c-deaths)">Pandemic: ${fmt(Math.round(ann(P[2020],'deaths')))} deaths a year →</text>`;
+  b += `<text class="lbl" x="${x(2020)-6}" y="${y(-92000)}" text-anchor="end" fill="var(--c-deaths)">Pandemic: ${fmt(Math.round(ann(P[2020],'deaths')))} deaths a year →</text>`;
   const full = L.filter(r => r.births !== null && r.year >= 2000);
   const peak = full.reduce((p, r) => ann(r,'births') > ann(p,'births') ? r : p, full[0]);
   const lastRow = P[2024];
   const drop = Math.round((1 - ann(lastRow,'births') / ann(peak,'births')) * 100);
   const minNat = L.filter(r => r.births !== null).reduce((p, r) => (ann(r,'births') - ann(r,'deaths')) < (ann(p,'births') - ann(p,'deaths')) ? r : p, L[0]);
-  rows.push(row(`<h3>More births than deaths, every single year<sup>2</sup></h3><p>Even the pandemic year (${minNat.period}) stayed ahead, by ${fmt(Math.round(ann(minNat,'births') - ann(minNat,'deaths')))} at an annual rate. Births are ${drop}% below their ${peak.year}-${String(peak.year+1).slice(2)} peak. Bars show annual rates; residents only.</p><p class="lg"><span style="--sw:var(--c-births)">Births</span><span style="--sw:var(--c-deaths)">Deaths</span></p>`, panel(H, 'Births and deaths, 1970 to 2025', b), 'bd'));
+  rows.push(row(`<h3>More births than deaths, every single year<sup>2</sup></h3><p>Even the pandemic year (${minNat.period}) stayed ahead, by ${fmt(Math.round(ann(minNat,'births') - ann(minNat,'deaths')))} at an annual rate. Births are ${drop}% below their ${peak.year}-${String(peak.year+1).slice(2)} peak. Bars show annual rates; residents only.</p><p class="lg"><span style="--sw:var(--c-births)">Births (above the line)</span><span style="--sw:var(--c-deaths)">Deaths (below)</span></p>`, panel(H, 'Births and deaths, 1970 to 2025', b), 'bd'));
 })();
 
 // C. net migration
