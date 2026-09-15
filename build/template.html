@@ -14,6 +14,10 @@
 .pt *{box-sizing:border-box}
 body.embed{margin:0;background:#fff}
 body.embed .pt{padding:0 0 8px;max-width:none}
+.pt .fsbar{display:none;justify-content:flex-end;margin:0 0 .5rem}
+body.embed .pt .fsbar{display:flex}
+.pt .fsbtn{font-family:var(--sans);font-weight:700;font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink);text-decoration:none;border:1px solid var(--ink);padding:.4rem .7rem;background:#fff}
+.pt .fsbtn:hover{background:var(--ink);color:#fff}
 .pt a{color:var(--cerulean)}
 .pt .keys{display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid var(--ink);border-bottom:1px solid var(--ink);margin:0 0 .4rem}
 .pt .keys div{padding:.8rem .6rem .7rem 0}
@@ -95,6 +99,7 @@ body.embed .pt{padding:0 0 8px;max-width:none}
 </head>
 <body>
 <div class="pt" id="pt">
+<div class="fsbar"><a class="fsbtn" href="https://vital-city-nyc.github.io/nyc-population-turnover/" target="_blank" rel="noopener">View in full screen ↗</a></div>
 <div class="keys" id="keys"></div>
 
 <div class="chap"><span class="num">I</span><h2>The ledger, year by year</h2><span class="lede">One timeline, 1970 to 2025. Hover any bar for the number.</span></div>
