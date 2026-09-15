@@ -330,9 +330,13 @@ examples = {f'{a}-{b}': turnover(a, b) for a, b in [(1970, 2025), (2001, 2013), 
 
 # ---------------------------------------------------------------- summary numbers for the page
 first, last = ledger[0], ledger[-1]
-tot = dict(births=sum(r['births'] for r in ledger), deaths=sum(r['deaths'] for r in ledger),
-           net=(pop[2025] - pop[1970]) - (sum(r['births'] for r in ledger) - sum(r['deaths'] for r in ledger)),
-           inflow=sum(r['inflow'] for r in ledger[:-1]), outflow=sum(r['outflow'] for r in ledger[:-1]))
+# Totals cover calendar years 1970-2024, the 55 years whose net-migration residuals sum to the
+# April 1970 to July 2025 population change (the 2025 row has no following year to difference).
+L55 = [r for r in ledger if r['year'] <= 2024]
+tot = dict(years='1970-2024', births=sum(r['births'] for r in L55), deaths=sum(r['deaths'] for r in L55),
+           net=(pop[2025] - pop[1970]) - (sum(r['births'] for r in L55) - sum(r['deaths'] for r in L55)),
+           inflow=sum(r['inflow'] for r in L55), outflow=sum(r['outflow'] for r in L55))
+assert tot['net'] == sum(r['net'] for r in L55)
 
 data = dict(
     meta=dict(built='2026-09-15', years=[1970, 2025], census2020=census2020, closure2020=closure2020, v2020_2020=v20[2020],
