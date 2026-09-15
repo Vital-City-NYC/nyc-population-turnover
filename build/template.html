@@ -163,6 +163,14 @@ const U = {
   int10:'https://www2.census.gov/programs-surveys/popest/tables/2010-2020/intercensal/county/co-est2020int-pop-36.xlsx',
   dcp2026:'https://s-media.nyc.gov/agencies/dcp/assets/files/pdf/data-tools/population/population-estimates/new-york-city-population-estimates-and-trends-july-2026.pdf',
   nysdoh:'https://www.health.ny.gov/statistics/vital_statistics/2023/table07.htm',
+  pc70:'https://www2.census.gov/prod2/decennial/documents/1970a_ny1-02.pdf',
+  pc80:'https://www2.census.gov/library/publications/decennial/1980/volume-1/new-york/1980censusofpopu80134unse_bw.pdf',
+  cp90:'https://www2.census.gov/library/publications/decennial/1990/cp-1/cp-1-34-1.pdf',
+  p18_2000:'https://data.census.gov/table/DECENNIALSF12000.P018?g=160XX00US3651000',
+  p18_2010:'https://data.census.gov/table/DECENNIALSF12010.P18?g=160XX00US3651000',
+  p16_2020:'https://data.census.gov/table/DECENNIALDHC2020.P16?g=160XX00US3651000',
+  b11001:'https://data.census.gov/table/ACSDT1Y2024.B11001?g=160XX00US3651000',
+  scans:'https://github.com/Vital-City-NYC/nyc-population-turnover/tree/main/data/raw/hh',
   v2025:'https://www2.census.gov/programs-surveys/popest/datasets/2020-2025/counties/totals/co-est2025-alldata.csv',
   asr70:'https://www2.census.gov/programs-surveys/popest/tables/1900-1980/counties/asrh/co-asr-7079.csv',
   pe02:'https://www2.census.gov/programs-surveys/popest/datasets/1980-1990/counties/asrh/pe-02.csv',
@@ -227,6 +235,24 @@ rows.push(`<div class="row" style="padding:.3rem 0 0;border-bottom:0"><div></div
   b += `<text class="lbl" x="${x(1980)+6}" y="${y(P[1980].pop)+14}">1980: ${fmt(P[1980].pop)}</text><text class="lbl" x="${x(2020)-6}" y="${y(P[2020].pop)-8}" text-anchor="end">2020: ${fmt(P[2020].pop)}</text>`;
   const loss = P[1970].pop - P[1980].pop;
   rows.push(row(`<h3>The city lost ${fmt(Math.round(loss/1000)*1000)} people in the 1970s and took two decades to get them back<sup>1</sup></h3><p>Population, with census counts circled. Between censuses, the Bureau's intercensal estimates; after 2020, its vintage 2025 estimates.</p>`, panel(H, 'Population of New York City, 1970 to 2025', b), 'pop'));
+})();
+
+// A2. boroughs
+(function(){
+  const H = 160, mt = 8, mb = 6, pmax = 3.0e6;
+  const y = v => mt + (pmax - v) / pmax * (H - mt - mb);
+  const B = [['Brooklyn','var(--indigo)'],['Queens','var(--orange)'],['Manhattan','var(--cerulean)'],['Bronx','var(--magenta)'],['Staten Island','var(--periwinkle)']];
+  let b = '';
+  [0, 1e6, 2e6, 3e6].forEach(v => b += `<line class="grid" x1="${ml}" x2="${W-mr}" y1="${y(v)}" y2="${y(v)}"/><text class="tick" x="${ml-5}" y="${y(v)+3.5}" text-anchor="end">${v/1e6}M</text>`);
+  B.forEach(([k,c]) => b += `<polyline points="${D.boroughs.map(r => `${x(r.year)},${y(r[k])}`).join(' ')}" fill="none" stroke="${c}" stroke-width="2"/>`);
+  const last = D.boroughs[D.boroughs.length-1];
+  const labs = B.map(([k,c]) => ({y: y(last[k]), c, t: k})).sort((p,q) => p.y - q.y);
+  for (let i = 1; i < labs.length; i++) if (labs[i].y - labs[i-1].y < 11) labs[i].y = labs[i-1].y + 11;
+  labs.forEach(o => b += `<text class="lbl" x="${x(2025)+5}" y="${o.y+3.5}" fill="${o.c}">${o.t}</text>`);
+  const b70 = D.boroughs[0];
+  const gain = B.map(([k]) => [k, Math.round((last[k] / b70[k] - 1) * 100)]);
+  const up = gain.filter(g => g[1] > 0).map(g => `${g[0]} ${g[1] > 0 ? '+' : ''}${g[1]}%`).join(', '), down = gain.filter(g => g[1] <= 0).map(g => `${g[0]} ${g[1]}%`).join(', ');
+  rows.push(row(`<h3>Staten Island and Queens grew; the Bronx has fewer people than in 1970<sup>9</sup></h3><p>Population by borough, same sources as the city line. Since 1970: ${up}; ${down}.</p><p class="lg">${B.map(([k,c]) => `<span style="--sw:${c}">${k}</span>`).join('')}</p>`, panel(H, 'Population by borough, 1970 to 2025', b), 'boro'));
 })();
 
 // B. births and deaths: births above the line, deaths below, like the migration panels
@@ -314,6 +340,28 @@ rows.push(`<div class="row" style="padding:.3rem 0 0;border-bottom:0"><div></div
   rows.push(row(`<h3>Older, with fewer children: the median age is up ${(a1.median - a0.median).toFixed(1)} years<sup>6</sup></h3><p>Share of the population by age at each census and in the 2025 estimate, with the median age beneath each bar (32.3 in 1970). Under-15s went from ${a0.shares.under15}% to ${a1.shares.under15}%.</p><p class="lg"><span style="--sw:var(--chartreuse)">Under 15</span><span style="--sw:var(--cerulean)">15-24</span><span style="--sw:var(--orange)">25-44</span><span style="--sw:var(--periwinkle)">45-64</span><span style="--sw:var(--indigo)">65+</span></p>`, panel(H, 'Age structure by census year', b), 'age'));
 })();
 
+// F2. households and families
+(function(){
+  const H = 150, mt = 10, mb = 6;
+  const y = v => mt + (80 - v) / 80 * (H - mt - mb);
+  let b = '';
+  [0, 20, 40, 60, 80].forEach(v => b += `<line class="grid" x1="${ml}" x2="${W-mr}" y1="${y(v)}" y2="${y(v)}"/><text class="tick" x="${ml-5}" y="${y(v)+3.5}" text-anchor="end">${v}%</text>`);
+  const hh = D.households, cen = hh.filter(r => r.source === 'census'), acs = hh.filter(r => r.source === 'acs');
+  const series = [['pct_family','var(--indigo)','Family households'],['pct_married','var(--orange)','Married-couple families'],['pct_alone','var(--cerulean)','One person living alone']];
+  series.forEach(([k,c,l]) => {
+    const cp = cen.filter(r => r[k] != null), ap = acs.filter(r => r[k] != null);
+    b += `<polyline points="${cp.map(r => `${x(r.year)},${y(r[k])}`).join(' ')}" fill="none" stroke="${c}" stroke-width="2.5" stroke-dasharray="5 4"/>`;
+    b += `<polyline points="${ap.map(r => `${x(r.year)},${y(r[k])}`).join(' ')}" fill="none" stroke="${c}" stroke-width="2.5"/>`;
+    cp.forEach(r => b += `<circle cx="${x(r.year)}" cy="${y(r[k])}" r="3.5" fill="#fff" stroke="${c}" stroke-width="2"/>`);
+  });
+  const last = acs[acs.length-1], first = cen[0];
+  const labs = series.map(([k,c,l]) => ({y: y(last[k]), c, t: `${last[k].toFixed(0)}% ${l.replace('Married-couple families','married couples').replace('Family households','family').replace('One person living alone','living alone')}`})).sort((p,q) => p.y - q.y);
+  for (let i = 1; i < labs.length; i++) if (labs[i].y - labs[i-1].y < 12) labs[i].y = labs[i-1].y + 12;
+  labs.forEach(o => b += `<text class="lbl" x="${x(2025)+5}" y="${o.y+3.5}" fill="${o.c}">${o.t}</text>`);
+  b += `<text class="tick" x="${x(1986)}" y="${y(6)}" text-anchor="middle">One-person households not tabulated for the city before 1990</text>`;
+  rows.push(row(`<h3>Married couples headed ${first.pct_married.toFixed(0)}% of households in 1970 and ${last.pct_married.toFixed(0)}% now; a third of households are one person<sup>10</sup></h3><p>Share of households by type. Open circles are census counts (dashed between them); the solid line is the yearly survey. Households averaged ${first.pph} people in 1970 and ${last.pph} in ${last.year}.</p><p class="lg"><span style="--sw:var(--indigo)">Family households</span><span style="--sw:var(--orange)">Married-couple families</span><span style="--sw:var(--cerulean)">Living alone</span></p>`, panel(H, 'Households by type, 1970 to 2024', b), 'hh'));
+})();
+
 // G. race / Hispanic origin
 (function(){
   const H = 150, mt = 8, mb = 6;
@@ -362,11 +410,13 @@ const INFO = {
   pep: yr => { const r = P[yr]; return r.pep_intl == null ? `<b>${yr}</b>: no Census Bureau estimate for this year` : `<b>${r.pep_period}</b>: net international ${fmtS(r.pep_intl)}, net domestic ${fmtS(r.pep_dom)}<br>Bureau births ${fmt(r.pep_births)}, deaths ${fmt(r.pep_deaths)}`; },
   age: yr => { const ag = nearest(D.ages, yr, 2); if (!ag) return `<b>${yr}</b>: age structure is shown for census years and 2025`; const g = [['Under 15',0,3,'under15'],['15-24',3,5,'a15_24'],['25-44',5,9,'a25_44'],['45-64',9,13,'a45_64'],['65 and over',13,18,'a65']]; return `<b>${ag.year}</b>: median age ${ag.median}, ${fmt(ag.total)} people<br>` + g.map(([l,f,t,k]) => `${l}: ${fmt(ageN(ag,f,t))} (${ag.shares[k]}%)`).join('; '); },
   race: yr => { const r = nearest(D.race, yr, 2); if (!r) return `<b>${yr}</b>: shown for census years through 2020`; return `<b>${r.year}</b> census, ${fmt(r.total)} people<br>Non-Hispanic white ${r.nh_white}%, Hispanic ${r.hispanic}%, Black ${r.black}%, Asian and Pacific Islander ${r.asian}%, white (race alone) ${r.white}%`; },
+  boro: yr => { const r = D.boroughs.find(o => o.year === yr); const tot = ['Bronx','Brooklyn','Manhattan','Queens','Staten Island'].reduce((s,k) => s + r[k], 0); return `<b>${yr}</b>: ` + ['Brooklyn','Queens','Manhattan','Bronx','Staten Island'].map(k => `${k} ${fmt(r[k])} (${(r[k]/tot*100).toFixed(1)}%)`).join(', ') + `<br>Five boroughs ${fmt(tot)}`; },
+  hh: yr => { const cands = D.households.filter(o => o.year === yr); const r = cands.find(o => o.source === 'acs') || cands[0] || nearest(D.households.filter(o => o.source === 'census'), yr, 2); if (!r) return `<b>${yr}</b>: measured at census years, then yearly from 2006`; const src = r.source === 'census' ? `${r.year} census` : `${r.year} ACS 1-year`; const parts = [`family ${r.pct_family}%`, `married-couple ${r.pct_married}%`, `nonfamily ${r.pct_nonfamily}%`, r.pct_alone != null ? `living alone ${r.pct_alone}%` : 'living alone not tabulated']; return `<b>${src}</b>: ${fmt(r.households)} households, ${r.pph} people per household<br>` + parts.join('; ') + (r.pct_people_in_families ? `; ${r.pct_people_in_families}% of people live in family households` : ''); },
   fb: yr => { const r = D.foreign_born.find(o => o.year === yr); if (!r) return `<b>${yr}</b>: ${yr === 2020 ? 'no 2020 survey release' : 'not measured (census years, then yearly from 2006)'}`; return `<b>${r.year}</b>: ${fmt(r.foreign_born)} foreign-born of ${fmt(r.total)} (${r.share}%)`; }
 };
 const tipEl = document.createElement('div'); tipEl.className = 'tip'; $('pt').appendChild(tipEl);
 const rowEls = Array.from(document.querySelectorAll('#timeline .row[data-key]'));
-const defaults = {pop:2025, bd:2024, net:2024, arr:2024, pep:2025, age:2025, race:2020, fb:2024};
+const defaults = {pop:2025, boro:2025, bd:2024, net:2024, arr:2024, pep:2025, age:2025, hh:2024, race:2020, fb:2024};
 function showYear(yr, hoveredKey, ev){
   rowEls.forEach(el => {
     const k = el.dataset.key, svg = el.querySelector('svg'), cross = svg.querySelector('.cross');
@@ -483,6 +533,8 @@ $('notes').innerHTML = `<ol>
 <li><b>Age.</b> Census Bureau county estimates by age, summed for the five boroughs: ${a('asr70','1970 modified census count')}, ${a('pe02','July 1, 1980 intercensal estimate')}, ${a('int90','July 1, 1990 intercensal estimate')}, ${a('int00a','April 1, 2000 count')}, ${a('cc2020','April 1, 2010 count')}, and the ${a('cc2025','April 1, 2020 estimates base and July 1, 2025 estimate')}. Median age is interpolated within five-year groups (the 2000-2010 file codes the under-1 and 1-4 groups separately; both are in the under-15 bar). Shares may not sum to 100 because of rounding.</li>
 <li><b>Race and Hispanic origin.</b> Decennial census: 1970-1990 from Gibson and Jung, ${a('wp76','Census Bureau Population Division Working Paper 76')} (2005), New York city table; 2000, 2010 and 2020 from the ${a('dp2_2000','2000 Summary File 3 profile')}, ${a('p5_2010','2010 Summary File 1 table P5')} and ${a('p5_2020','2020 Demographic and Housing Characteristics table P5')}. Race groups are race alone; Asian and Pacific Islander combines the two census categories. The 1970 Hispanic and non-Hispanic white figures come from the 1970 census 15-percent sample, and the Bureau notes it estimated the 1970 non-Hispanic white figure for cities from state-level proportions. The 2020 census changed how it coded write-in race answers, which lowered race-alone Black and white counts relative to 2010; non-Hispanic white is less affected. The Bureau's post-2020 estimates use a "modified race" scheme and are not comparable, so 2025 is not shown.</li>
 <li><b>Foreign-born.</b> 1970-2000 from the decennial census as tabulated in ${a('nny','NYC Department of City Planning, The Newest New Yorkers, 2013 edition')}, Table 2-1 (the 2000 figure ties to Summary File 3); 2006-2024 from ${a('b05002','American Community Survey 1-year, table B05002')}.</li>
+<li><b>Boroughs.</b> The same county files as note 1, kept by county: intercensal estimates for 1970-79, 1980-89, 1990-99, 2000-09 and 2010-19, the vintage 2025 estimates for 2021-25, and the census counts (the 1970 file carries the Bureau's modified county counts, which sum 701 above the published city total).</li>
+<li><b>Households and families.</b> Shares of all households. 1970: ${a('pc70','1970 Census of Population, Part 34 New York, Chapter B, Table 25')} (page 34-114, New York City column: 2,836,872 households; family heads 2,043,765; wives of head 1,603,387; primary individuals 793,107; 2.74 persons per household). 1980: ${a('pc80','1980 Census, PC80-1-B34, Table 27')} (page 34-132: 2,788,530 householders; family householders 1,757,564; spouses 1,203,135; nonfamily householders 1,030,966; 2.49 per household). 1990: ${a('cp90','1990 CP-1-34, Table 2')} (page 36: 2,819,401 households; family 61.5%, married-couple 39.0%, living alone 32.9%; 2.54 per household). These three were read from the scanned volumes; the ${a('scans','page images are in the repository')}. 2000, 2010 and 2020: decennial census tables ${a('p18_2000','P18 (2000)')}, ${a('p18_2010','P18 (2010)')} and ${a('p16_2020','P16 (2020)')}. 2006-2024: ${a('b11001','ACS 1-year, table B11001')} with B25010 (household size) and B11002 (people by household type). "Married-couple" is the census family type; unmarried partners living together count as nonfamily households in every year. One-person households were not tabulated for cities in the 1970 and 1980 volumes used here, so that line starts in 1990. In 1970 the census defined the husband as head of a married-couple household, so "wife of head" counts married couples.</li>
 </ol>
 <p>The turnover model in section III uses the series above; its formulas are under "Show the math" and in the <a href="methodology.html">methodology</a>, and the build scripts and raw files are in the ${a('repo','repository')}.</p>`;
 $('foot').innerHTML = `Built by Vital City, September 2026, with data current to the Census Bureau's vintage 2025 estimates and the city Health Department's 2023 vital statistics summary. Everything here is official Census Bureau, city Health Department or Department of City Planning data; the only modeled figures are the turnover estimates, and their assumptions are stated where they appear.`;

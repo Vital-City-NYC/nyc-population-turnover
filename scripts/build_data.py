@@ -60,10 +60,11 @@ def parse_blocks(fname, ncols):
 
 e70 = parse_blocks('e7079co.txt', 5)
 e80 = parse_blocks('e8089co.txt', 5)
+boro = defaultdict(dict)
 for y in range(1970, 1980):
-    pop[y] = sum(e70[y][c] for c in NYC); pop_src[y] = 'census1970' if y == 1970 else 'intercensal70s'
+    pop[y] = sum(e70[y][c] for c in NYC); pop_src[y] = 'census1970' if y == 1970 else 'intercensal70s'; boro[y] = dict(e70[y])
 for y in range(1980, 1990):
-    pop[y] = sum(e80[y][c] for c in NYC); pop_src[y] = 'census1980' if y == 1980 else 'intercensal80s'
+    pop[y] = sum(e80[y][c] for c in NYC); pop_src[y] = 'census1980' if y == 1980 else 'intercensal80s'; boro[y] = dict(e80[y])
 assert pop[1980] == 7071639, pop[1980]
 pop1970_file = pop[1970]
 pop[1970] = 7894862   # published 1970 count; the estimates file carries a modified count of 7,895,563
@@ -74,6 +75,7 @@ h = cag[0]; rows90 = [dict(zip(h, r)) for r in cag[1:]]
 tot90 = defaultdict(int); age90 = defaultdict(lambda: defaultdict(int))
 for r in rows90:
     y = 1900 + int(r['YEAR']); tot90[y] += int(r['POP']); age90[y][int(r['AGEGRP'])] += int(r['POP'])
+    boro[y]['36' + r['county']] = boro[y].get('36' + r['county'], 0) + int(r['POP'])
 for y in range(1990, 2000):
     pop[y] = tot90[y]; pop_src[y] = 'intercensal90s'
 pop[1990] = 7322564; pop_src[1990] = 'census1990'   # April 1 count (intercensal 7/1/1990 differs by a few hundred)
@@ -82,8 +84,8 @@ pop[1990] = 7322564; pop_src[1990] = 'census1990'   # April 1 count (intercensal
 for r in csv.DictReader(open(rp('co-est00int-tot.csv'), encoding='latin-1')):
     if r['STATE'] == '36' and r['COUNTY'].zfill(3) in NYC3:
         for y in range(2000, 2010):
-            pop[y] = pop.get(y, 0) + int(r[f'POPESTIMATE{y}']); pop_src[y] = 'intercensal00s'
-        pop[2010] = pop.get(2010, 0) + int(r['CENSUS2010POP']); pop_src[2010] = 'census2010'
+            pop[y] = pop.get(y, 0) + int(r[f'POPESTIMATE{y}']); pop_src[y] = 'intercensal00s'; boro[y]['36' + r['COUNTY'].zfill(3)] = int(r[f'POPESTIMATE{y}'])
+        pop[2010] = pop.get(2010, 0) + int(r['CENSUS2010POP']); pop_src[2010] = 'census2010'; boro[2010]['36' + r['COUNTY'].zfill(3)] = int(r['CENSUS2010POP'])
 pop[2000] = 8008278; pop_src[2000] = 'census2000'
 assert pop[2010] == 8175133, pop[2010]
 
@@ -108,9 +110,11 @@ int10 = defaultdict(int); hdr = None
 for row in ws.iter_rows(values_only=True):
     if row[2] == 2010: hdr = list(row); continue
     if row[0] and any(k in str(row[0]) for k in ('Bronx County', 'Kings County', 'New York County', 'Queens County', 'Richmond County')):
+        fips = {'Bronx County': '36005', 'Kings County': '36047', 'New York County': '36061', 'Queens County': '36081', 'Richmond County': '36085'}[next(k for k in ('Bronx County', 'Kings County', 'New York County', 'Queens County', 'Richmond County') if k in str(row[0]))]
         for i, y in enumerate(hdr):
-            if isinstance(y, int) and 2010 <= y <= 2019: int10[y] += int(row[i])
-        int10['census2020'] += int(row[12]); int10['base2010'] += int(row[1])
+            if isinstance(y, int) and 2011 <= y <= 2019: int10[y] += int(row[i]); boro[y][fips] = int(row[i])
+            elif isinstance(y, int) and y == 2010: int10[y] += int(row[i])
+        int10['census2020'] += int(row[12]); int10['base2010'] += int(row[1]); boro[2020][fips] = int(row[12])
 assert abs(int10['census2020'] - census2020) <= 100, int10['census2020']   # table's census column sums to 8,804,200 (post-count corrections); the page keeps the published 8,804,190
 for y in range(2011, 2020):
     pop[y] = int10[y]; pop_src[y] = 'intercensal10s'
@@ -122,6 +126,7 @@ for r in csv.DictReader(open(rp('co-est2025-alldata.csv'), encoding='latin-1')):
     if r['STATE'] == '36' and r['COUNTY'] in NYC3:
         for y in range(2020, 2026):
             v25[y] += int(r[f'POPESTIMATE{y}'])
+            if y >= 2021: boro[y]['36' + r['COUNTY']] = int(r[f'POPESTIMATE{y}'])
             if y >= 2021:   # 2020 column is the April-June 2020 stub
                 for k in ('BIRTHS', 'DEATHS', 'INTERNATIONALMIG', 'DOMESTICMIG', 'RESIDUAL'):
                     comp[y][k] += int(r[f'{k}{y}'])
@@ -158,7 +163,7 @@ c8090_b = defaultdict(int); c8090_d = defaultdict(int)   # record B: ten birth p
 for line in open(rp('comp8090.txt'), encoding='latin-1'):
     m = re.match(r'^A (36\d{3})\s+(-?\d+)\s+(-?\d+)\s+(-?\d+)\s+(-?[\d.]+)\s+(-?\d+)\s+(-?\d+)\s+(-?\d+)', line)
     if m and m.group(1) in NYC:
-        c8090['pop80'] += int(m.group(2)); c8090['pop90'] += int(m.group(3))
+        c8090['pop80'] += int(m.group(2)); c8090['pop90'] += int(m.group(3)); boro[1990][m.group(1)] = int(m.group(3))
         c8090['births'] += int(m.group(6)); c8090['deaths'] += int(m.group(7)); c8090['netmig'] += int(m.group(8))
     mb = re.match(r'^B (36\d{3})\s+((?:\d+\s*){20})$', line.rstrip())
     if mb and mb.group(1) in NYC:
@@ -385,6 +390,44 @@ assert fb[-1]['foreign_born'] == int(sf3['P021013'])   # 2000 ties to SF3 P21
 for y in sorted(acs):
     fb.append(dict(year=y, total=acs[y]['B01001_001E'], foreign_born=acs[y]['B05002_013E'], share=round(acs[y]['B05002_013E'] / acs[y]['B01001_001E'] * 100, 1), source=f'ACS {y} 1-year, B05002'))
 
+# ---------------------------------------------------------------- boroughs
+BORO = [('36005', 'Bronx'), ('36047', 'Brooklyn'), ('36061', 'Manhattan'), ('36081', 'Queens'), ('36085', 'Staten Island')]
+boroughs = []
+for y in years:
+    row = {n: boro[y].get(f) for f, n in BORO}
+    assert all(v for v in row.values()), (y, row)
+    boroughs.append(dict(year=y, **row))
+
+# ---------------------------------------------------------------- households and families
+hh = []
+hist = json.load(open(rp('hh/historical_households_1970_1990.json')))
+for y in ('1970', '1980'):
+    h = hist[y]; T = h['households']
+    hh.append(dict(year=int(y), source='census', households=T, family=h['family'], married=h['married_couple'], nonfamily=h['nonfamily'], alone=None, pph=h['persons_per_household'],
+                   pct_family=round(h['family'] / T * 100, 1), pct_married=round(h['married_couple'] / T * 100, 1), pct_nonfamily=round(h['nonfamily'] / T * 100, 1), pct_alone=None))
+h = hist['1990']
+hh.append(dict(year=1990, source='census', households=h['households'], family=None, married=None, nonfamily=None, alone=None, pph=h['persons_per_household'],
+               pct_family=h['pct_family'], pct_married=h['pct_married_couple'], pct_nonfamily=h['pct_nonfamily'], pct_alone=h['pct_living_alone']))
+d00 = json.load(open(rp('hh/dec2000_sf1_households.json'))); d00 = dict(zip(d00[0], d00[1]))
+T = int(d00['P018001']); alone = int(d00['P018002']); fam = int(d00['P018006']); mar = int(d00['P018007']); nonfam = alone + int(d00['P018017'])
+hh.append(dict(year=2000, source='census', households=T, family=fam, married=mar, nonfamily=nonfam, alone=alone, pph=float(d00['P017001']),
+               pct_family=round(fam / T * 100, 1), pct_married=round(mar / T * 100, 1), pct_nonfamily=round(nonfam / T * 100, 1), pct_alone=round(alone / T * 100, 1)))
+d10 = json.load(open(rp('hh/dec2010_sf1_households.json'))); d10 = dict(zip(d10[0], d10[1]))
+T = int(d10['P018001']); fam = int(d10['P018002']); mar = int(d10['P018003']); nonfam = int(d10['P018007']); alone = int(d10['P018008'])
+hh.append(dict(year=2010, source='census', households=T, family=fam, married=mar, nonfamily=nonfam, alone=alone, pph=float(d10['P017001']),
+               pct_family=round(fam / T * 100, 1), pct_married=round(mar / T * 100, 1), pct_nonfamily=round(nonfam / T * 100, 1), pct_alone=round(alone / T * 100, 1)))
+d20 = json.load(open(rp('hh/dec2020_dhc_households.json'))); d20 = dict(zip(d20[0], d20[1]))
+T = int(d20['P16_001N']); fam = int(d20['P16_002N']); mar = int(d20['P16_003N']); nonfam = int(d20['P16_007N']); alone = int(d20['P16_008N'])
+hh.append(dict(year=2020, source='census', households=T, family=fam, married=mar, nonfamily=nonfam, alone=alone, pph=round(int(d20['P15_001N']) / int(d20['H12_001N']), 2),
+               pct_family=round(fam / T * 100, 1), pct_married=round(mar / T * 100, 1), pct_nonfamily=round(nonfam / T * 100, 1), pct_alone=round(alone / T * 100, 1)))
+for y in list(range(2006, 2020)) + [2021, 2022, 2023, 2024]:
+    a = json.load(open(rp(f'hh/acs1_{y}.json'))); a = dict(zip(a[0], a[1]))
+    T = int(a['B11001_001E']); fam = int(a['B11001_002E']); mar = int(a['B11001_003E']); nonfam = int(a['B11001_007E']); alone = int(a['B11001_008E'])
+    hh.append(dict(year=y, source='acs', households=T, family=fam, married=mar, nonfamily=nonfam, alone=alone, pph=float(a['B25010_001E']),
+                   pct_family=round(fam / T * 100, 1), pct_married=round(mar / T * 100, 1), pct_nonfamily=round(nonfam / T * 100, 1), pct_alone=round(alone / T * 100, 1),
+                   pct_people_in_families=round(int(a['B11002_002E']) / int(a['B11002_001E']) * 100, 1)))
+hh.sort(key=lambda r: (r['year'], r['source'] != 'census'))
+
 # ---------------------------------------------------------------- turnover model (mirrors the page's JavaScript)
 def turnover(A, B):
     """Cohort-survival model. Every resident faces the same yearly exit rate (deaths + out-moves) / population.
@@ -419,7 +462,8 @@ data = dict(
     flows=flow_win, c2c2000=dict(in_dom=c2c_in['dom'], in_other_state=c2c_in['other'], in_rest_of_state=c2c_in['nys'], in_abroad=c2c_in['abroad'], out_dom=c2c_out['dom'],
                                  pop5plus=int(sf3['P024001']), same_house=int(sf3['P024002'])),
     acs_medage={y: acs[y]['medage'] for y in acs}, comp8090=dict(c8090), examples=examples,
-    inflow_parts={y: {k: v for k, v in in_meas[y].items() if k in ('other_state', 'abroad', 'rest_of_state', 'share', 'source')} for y in in_meas})
+    inflow_parts={y: {k: v for k, v in in_meas[y].items() if k in ('other_state', 'abroad', 'rest_of_state', 'share', 'source')} for y in in_meas},
+    boroughs=boroughs, households=hh)
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
 json.dump(data, open(OUT, 'w'), separators=(',', ':'))
 
@@ -444,6 +488,7 @@ for y in (2005, 2010, 2015, 2019, 2022):
         print(f'  {y}-{y+1}: Census births (annual rate)', round(births[y]*12/MONTHS[y]), 'vs state avg', round((nys[y]['births']+nys[y+1]['births'])/2), '| deaths', round(deaths[y]*12/MONTHS[y]), 'vs', round((nys[y]['deaths']+nys[y+1]['deaths'])/2))
 print('Occurrence (DOHMH PC1) vs residence (state), calendar years:')
 for y in (2005, 2010, 2015, 2019, 2023): print(f'  {y}: DOHMH births {dohmh_b[y]} vs state {nys[y]["births"]} ({round((dohmh_b[y]/nys[y]["births"]-1)*100,1)}% higher); deaths {dohmh_d[y]} vs {nys[y].get("deaths")}')
+print('boroughs:', boroughs[0], boroughs[-1]); print('households:'); [print('  ', r['year'], r['source'], r['households'], r['pct_family'], r['pct_married'], r['pct_alone'], r['pph']) for r in hh if r['source']=='census' or r['year'] in (2006, 2024)]
 print('turnover examples:'); [print(' ', k, v) for k, v in examples.items()]
 chk = turnover(1995, 2000); print('1995-2000 model newcomers (moved) still present', chk['moved'], 'vs census 2000 residents 5+ who lived outside NYC in 1995:', c2c_in['total'])
 print('min natural increase row (annual rate):', min(((r['births']-r['deaths'])*12/r['months'], r['year']) for r in ledger if r['births'] is not None))

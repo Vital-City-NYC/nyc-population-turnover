@@ -78,6 +78,18 @@ What happened: the button and its pop-up were removed; the quality-control list 
 
 What happened: the agent re-derived every input from the raw files with fresh code, checked each variable's meaning against the publisher's documentation, and compared the page against outside benchmarks. That found one substantive error: the city Health Department's historical births-and-deaths table counts events that occurred in the city regardless of residence (12,701 of 2023's 98,389 births were to non-residents), so the ledger was rebuilt on residence-based counts from the National Center for Health Statistics as carried in Census Bureau files, with the state Health Department's resident counts as an independent check. The headline totals changed (births 6.4 million, deaths 3.6 million, net migration −2.0 million). Smaller fixes: the 2000 age file's under-1 group had been dropped; the 2020 Asian and Pacific Islander share now includes Pacific Islanders as the earlier decades do; the 1970 Hispanic and non-Hispanic white figures are labeled as sample-based estimates.
 
+## 9. Households, and the boroughs
+
+> is there anything from fully verified sources that can be added on how the shape of the city's poopulation has chagned vis-a-vis families? what % is part of families, what % is single, etc.? or is that already in here?
+>
+> yeah please do that. add it all the way back.
+
+Sent while that was in progress:
+
+> last, can you also add in the shift in borough population over these years?
+
+What happened: two panels were added to the timeline. Households by type (family, married-couple, living alone) runs 1970 to 2024: the 2000-2024 figures come from the Census API, and the 1970, 1980 and 1990 figures were taken from the Bureau's printed state volumes, which for 1970 and 1980 are image scans that had to be read by eye (the page images are saved in the repository, and each year's parts add exactly to its household total). One-person households were not tabulated for cities in those two volumes, so that line starts in 1990. The borough panel uses the county detail already in the population files.
+
 ---
 
 ## Where things live

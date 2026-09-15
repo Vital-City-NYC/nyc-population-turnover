@@ -1,0 +1,43 @@
+{
+ "1970": {
+  "source": "1970 Census of Population, Volume 1, Characteristics of the Population, Part 34 New York, Section 1, Chapter B, Table 25 'Household Relationship and Type of Family by Race, for Areas and Places: 1970', page 34-114, New York City column",
+  "url": "https://www2.census.gov/prod2/decennial/documents/1970a_ny1-02.pdf",
+  "scan": "scans/1970_pc1-b34_table25_p34-114_nyc_column.png",
+  "households": 2836872,
+  "family": 2043765,
+  "married_couple": 1603387,
+  "nonfamily": 793107,
+  "living_alone": null,
+  "persons_per_household": 2.74,
+  "in_households": 7770278,
+  "notes": "Households = 'Head'; family households = family head, male + female; married-couple = 'Wife of head' (in 1970 the husband was the head by definition); nonfamily = 'Primary individual', male + female. One-person households are not tabulated for places in this table."
+ },
+ "1980": {
+  "source": "1980 Census of Population, Volume 1, Chapter B, General Population Characteristics, Part 34 New York (PC80-1-B34), Table 27 'Household Relationship of Persons by Race and Spanish Origin for Areas and Places: 1980', page 34-132, New York city column",
+  "url": "https://www2.census.gov/library/publications/decennial/1980/volume-1/new-york/1980censusofpopu80134unse_bw.pdf",
+  "scan": "scans/1980_pc80-1-b34_table27_p34-132.png",
+  "households": 2788530,
+  "family": 1757564,
+  "married_couple": 1203135,
+  "nonfamily": 1030966,
+  "living_alone": null,
+  "persons_per_household": 2.49,
+  "in_households": 6948332,
+  "notes": "Households = 'Householder'; family = family householder, male + female; married-couple = 'Spouse'; nonfamily = nonfamily householder, male + female. One-person households are not tabulated for places in this table (only persons 75 and over living alone, 139,386)."
+ },
+ "1990": {
+  "source": "1990 Census of Population, General Population Characteristics, New York (1990 CP-1-34), Section 1, Table 2 'Summary of General Characteristics of Households and Families: 1990', page 36, New York city row",
+  "url": "https://www2.census.gov/library/publications/decennial/1990/cp-1/cp-1-34-1.pdf",
+  "households": 2819401,
+  "pct_family": 61.5,
+  "pct_family_with_children": 27.8,
+  "pct_married_couple": 39.0,
+  "pct_female_householder": 18.0,
+  "pct_nonfamily": 38.5,
+  "pct_living_alone": 32.9,
+  "pct_living_alone_65plus": 11.3,
+  "persons_per_household": 2.54,
+  "persons_per_family": 3.27,
+  "notes": "The table publishes shares of all households (one decimal) rather than counts; row read with pdfplumber word extraction: 'New York city 2 819 401 61.5 27.8 39.0 17.0 18.0 9.4 38.5 32.9 19.7 11.3 8.7 22.3 2.54 3.27'."
+ }
+}
