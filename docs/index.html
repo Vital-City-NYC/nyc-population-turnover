@@ -23,6 +23,8 @@
 .pt .chap{display:flex;align-items:baseline;gap:.7rem;margin:2.2rem 0 .2rem;border-bottom:1px solid var(--ink);padding-bottom:.35rem}
 .pt .chap .num{font-family:var(--serif);font-size:1.35rem;font-weight:300;color:var(--muted)}
 .pt .chap h2{font-family:var(--sans);font-weight:900;font-size:1.05rem;letter-spacing:.01em;margin:0;text-transform:uppercase}
+.pt .chap.notes-head{margin-top:2.4rem;border-bottom-width:1px}
+.pt .chap.notes-head h2{font-size:.9rem;color:var(--muted)}
 .pt .chap .lede{font-size:.9rem;color:var(--muted);margin-left:auto;font-weight:300;text-align:right}
 .pt .row{display:grid;grid-template-columns:168px 1fr;gap:0 16px;border-bottom:1px solid var(--cloud);padding:.7rem 0 .4rem}
 .pt .row.last{border-bottom:0}
@@ -40,6 +42,12 @@
 .pt svg .axis{stroke:var(--ink);stroke-width:1}
 .pt svg .lbl{font-weight:700;font-size:10.5px}
 .pt svg .win{fill:var(--win)}
+.pt svg .cross{stroke:var(--ink);stroke-width:1;stroke-dasharray:3 2;pointer-events:none}
+.pt svg .ov{fill:transparent;cursor:crosshair}
+.pt .lab .rd{font-size:.76rem;line-height:1.35;color:var(--ink);margin:.35rem 0 0;min-height:2.7em;font-weight:400}
+.pt .lab .rd b{font-weight:700}
+.pt .tip{position:fixed;pointer-events:none;background:var(--ink);color:#fff;font-size:.76rem;line-height:1.35;padding:.45rem .6rem;max-width:280px;z-index:9;display:none}
+.pt .tip b{font-weight:700;color:var(--chartreuse)}
 .pt .yearaxis{grid-column:2}
 .pt table{border-collapse:collapse;width:100%;font-size:.76rem}
 .pt th,.pt td{padding:.4rem .35rem;border-bottom:1px solid var(--cloud);text-align:right;vertical-align:top;line-height:1.3;white-space:nowrap}
@@ -83,7 +91,9 @@
 .pt .ai{display:inline-block;margin-top:.6rem;background:#7a1f2b;color:#fff;border:0;font:inherit;font-size:.72rem;font-weight:700;padding:.3rem .6rem;cursor:pointer}
 .pt .aibox{display:none;background:#1c2340;color:#fff;padding:.9rem 1rem;margin-top:.5rem;font-size:.8rem;line-height:1.5}
 .pt .aibox.open{display:block}
-@media (max-width:600px){.pt .keys{grid-template-columns:1fr 1fr}.pt .row{grid-template-columns:1fr;gap:.3rem}.pt .yearaxis{grid-column:1}.pt .big,.pt .calc,.pt .cmp{grid-template-columns:1fr}.pt .chap .lede{display:none}.pt .keys .n{font-size:1.6rem}}
+@media (max-width:600px){.pt .keys{grid-template-columns:1fr 1fr}.pt .row{grid-template-columns:1fr;gap:.3rem}.pt .yearaxis{grid-column:1}.pt .big,.pt .calc,.pt .cmp{grid-template-columns:1fr}.pt .chap.notes-head{margin-top:2.4rem;border-bottom-width:1px}
+.pt .chap.notes-head h2{font-size:.9rem;color:var(--muted)}
+.pt .chap .lede{display:none}.pt .keys .n{font-size:1.6rem}}
 </style>
 </head>
 <body>
@@ -111,7 +121,7 @@
 <p class="note" id="cnote"></p>
 <details><summary>Show the math</summary><div class="math" id="math"></div></details>
 
-<div class="chap"><span class="num">IV</span><h2>Sources and notes</h2><span class="lede">Every series, linked to its file</span></div>
+<div class="chap notes-head"><h2>Sources and notes</h2><span class="lede">Every series, linked to its file</span></div>
 <div class="notes" id="notes"></div>
 <footer id="foot"></footer>
 </div>
@@ -160,7 +170,7 @@ const a = (k, t) => `<a href="${U[k]}">${t}</a>`;
 
 // ---------- header
 $('h1').textContent = 'Since 1970, New York City has recorded ' + M(T.births) + ' births and ' + M(T.deaths) + ' deaths, and lost a net ' + M(-T.net) + ' people to migration. It is about ' + fmt(Math.round((P[Y1].pop - P[Y0].pop)/10000)*10000) + ' people bigger';
-$('dek').innerHTML = 'Who was born, who died, who moved in and who moved away, 1970 to 2025, from the Census Bureau and the city\'s own birth and death registry, with an estimate of how much of the city has changed hands between any two years. Every figure is official, every source is linked in section IV, and every calculation is spelled out in the <a href="methodology.html">methodology</a>.';
+$('dek').innerHTML = 'Who was born, who died, who moved in and who moved away, 1970 to 2025, from the Census Bureau and the city\'s own birth and death registry, with an estimate of how much of the city has changed hands between any two years. Every figure is official, every source is linked in the notes at the bottom, and every calculation is spelled out in the <a href="methodology.html">methodology</a>.';
 $('keys').innerHTML = [
   [M(T.births), 'Births to city residents, 1970-2024'],
   [M(T.deaths), 'Deaths of city residents, 1970-2024'],
@@ -176,14 +186,15 @@ const decades = [1970, 1980, 1990, 2000, 2010, 2020];
 function panel(H, aria, body){
   let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${aria}"><rect class="win" x="0" y="0" width="0" height="${H}"/>`;
   decades.concat([2025]).forEach(d => s += `<line class="dec" x1="${x(d)}" x2="${x(d)}" y1="0" y2="${H}"/>`);
-  return s + body + '</svg>';
+  body = body.replace(/<title>.*?<\/title>/g, '');
+  return s + body + `<line class="cross" x1="0" x2="0" y1="0" y2="${H}" style="display:none"/><rect class="ov" x="${ml}" y="0" width="${W-ml-mr}" height="${H}"/></svg>`;
 }
 function yearAxis(){
   let s = `<svg viewBox="0 0 ${W} 16" aria-hidden="true">`;
   decades.concat([2025]).forEach(d => s += `<text class="tick" x="${x(d)}" y="12" text-anchor="middle" style="font-weight:700">${d}</text>`);
   return s + '</svg>';
 }
-const row = (lab, svg, last) => `<div class="row${last?' last':''}"><div class="lab">${lab}</div><div>${svg}</div></div>`;
+const row = (lab, svg, key, last) => `<div class="row${last?' last':''}" data-key="${key}"><div class="lab">${lab}<p class="rd"></p></div><div>${svg}</div></div>`;
 const rows = [];
 rows.push(`<div class="row" style="padding:.3rem 0 0;border-bottom:0"><div></div><div class="yearaxis">${yearAxis()}</div></div>`);
 
@@ -198,7 +209,7 @@ rows.push(`<div class="row" style="padding:.3rem 0 0;border-bottom:0"><div></div
   L.filter(r => r.pop_src.startsWith('census')).forEach(r => b += `<circle cx="${x(r.year)}" cy="${y(r.pop)}" r="3.2" fill="#fff" stroke="var(--ink)" stroke-width="2"><title>${r.year} census: ${fmt(r.pop)}</title></circle>`);
   b += `<text class="lbl" x="${x(1980)+6}" y="${y(P[1980].pop)+14}">1980: ${fmt(P[1980].pop)}</text><text class="lbl" x="${x(2020)-6}" y="${y(P[2020].pop)-8}" text-anchor="end">2020: ${fmt(P[2020].pop)}</text>`;
   const loss = P[1970].pop - P[1980].pop;
-  rows.push(row(`<h3>The city lost ${fmt(Math.round(loss/1000)*1000)} people in the 1970s and took two decades to get them back<sup>1</sup></h3><p>Population, with census counts circled. The 2010s estimates are stretched to land on the 2020 count.</p>`, panel(H, 'Population of New York City, 1970 to 2025', b)));
+  rows.push(row(`<h3>The city lost ${fmt(Math.round(loss/1000)*1000)} people in the 1970s and took two decades to get them back<sup>1</sup></h3><p>Population, with census counts circled. The 2010s estimates are stretched to land on the 2020 count.</p>`, panel(H, 'Population of New York City, 1970 to 2025', b), 'pop'));
 })();
 
 // B. births and deaths
@@ -214,7 +225,7 @@ rows.push(`<div class="row" style="padding:.3rem 0 0;border-bottom:0"><div></div
   b += `<line class="axis" x1="${ml}" x2="${W-mr}" y1="${y(0)}" y2="${y(0)}"/>`;
   b += `<text class="lbl" x="${x(2020)-6}" y="${y(148000)}" text-anchor="end" fill="var(--c-deaths)">2020: ${fmt(P[2020].deaths)} deaths →</text>`;
   const drop = Math.round((1 - P[2023].births / P[2008].births) * 100);
-  rows.push(row(`<h3>More births than deaths, every single year<sup>2</sup></h3><p>Even 2020, the pandemic year, stayed ahead by ${fmt(P[2020].births - P[2020].deaths)}. Births in 2023 were ${drop}% below 2008.</p><p class="lg"><span style="--sw:var(--c-births)">Births</span><span style="--sw:var(--c-deaths)">Deaths</span></p>`, panel(H, 'Births and deaths, 1970 to 2025', b)));
+  rows.push(row(`<h3>More births than deaths, every single year<sup>2</sup></h3><p>Even 2020, the pandemic year, stayed ahead by ${fmt(P[2020].births - P[2020].deaths)}. Births in 2023 were ${drop}% below 2008.</p><p class="lg"><span style="--sw:var(--c-births)">Births</span><span style="--sw:var(--c-deaths)">Deaths</span></p>`, panel(H, 'Births and deaths, 1970 to 2025', b), 'bd'));
 })();
 
 // C. net migration
@@ -230,7 +241,7 @@ rows.push(`<div class="row" style="padding:.3rem 0 0;border-bottom:0"><div></div
   b += `<line class="axis" x1="${ml}" x2="${W-mr}" y1="${y(0)}" y2="${y(0)}"/>`;
   b += `<text class="lbl" x="${x(2020)-7}" y="${y(-330000)}" text-anchor="end" fill="var(--c-out)">April 2020 to July 2021: ${fmtS(P[2020].net)}</text>`;
   const neg = L.filter(r => r.net !== null && r.net < 0).length, all = L.filter(r => r.net !== null).length;
-  rows.push(row(`<h3>In ${neg} of ${all} years, more people left than arrived<sup>3</sup></h3><p>Net migration is what remains after births and deaths are subtracted from each year's population change. It absorbs any error in the counts.</p><p class="lg"><span style="--sw:var(--c-in)">More arrived</span><span style="--sw:var(--c-out)">More left</span></p>`, panel(H, 'Net migration implied each year, 1970 to 2024', b)));
+  rows.push(row(`<h3>In ${neg} of ${all} years, more people left than arrived<sup>3</sup></h3><p>Net migration is what remains after births and deaths are subtracted from each year's population change. It absorbs any error in the counts.</p><p class="lg"><span style="--sw:var(--c-in)">More arrived</span><span style="--sw:var(--c-out)">More left</span></p>`, panel(H, 'Net migration implied each year, 1970 to 2024', b), 'net'));
 })();
 
 // D. arrivals by origin (ACS)
@@ -247,7 +258,7 @@ rows.push(`<div class="row" style="padding:.3rem 0 0;border-bottom:0"><div></div
   b += `<line class="axis" x1="${ml}" x2="${W-mr}" y1="${y(0)}" y2="${y(0)}"/>`;
   b += `<text class="tick" x="${x(2005)-4}" y="${y(250000)}" text-anchor="end">Survey begins 2006; no 2020 release</text>`;
   const acs = L.filter(r => r.in_src === 'acs');
-  rows.push(row(`<h3>A quarter of a million people a year move in from somewhere else<sup>4</sup></h3><p>Arrivals in the past year by origin: ${fmt(Math.min(...acs.map(r=>r.inflow)))} to ${fmt(Math.max(...acs.map(r=>r.inflow)))} a year since 2006. Moves between boroughs are excluded.</p><p class="lg"><span style="--sw:var(--c-in)">Another state</span><span style="--sw:var(--indigo)">Abroad</span><span style="--sw:var(--periwinkle)">Rest of New York State</span></p>`, panel(H, 'Arrivals by origin, 2006 to 2024', b)));
+  rows.push(row(`<h3>A quarter of a million people a year move in from somewhere else<sup>4</sup></h3><p>Arrivals in the past year by origin: ${fmt(Math.min(...acs.map(r=>r.inflow)))} to ${fmt(Math.max(...acs.map(r=>r.inflow)))} a year since 2006. Moves between boroughs are excluded.</p><p class="lg"><span style="--sw:var(--c-in)">Another state</span><span style="--sw:var(--indigo)">Abroad</span><span style="--sw:var(--periwinkle)">Rest of New York State</span></p>`, panel(H, 'Arrivals by origin, 2006 to 2024', b), 'arr'));
 })();
 
 // E. Census Bureau net international / domestic
@@ -262,7 +273,7 @@ rows.push(`<div class="row" style="padding:.3rem 0 0;border-bottom:0"><div></div
   });
   b += `<line class="axis" x1="${ml}" x2="${W-mr}" y1="${y(0)}" y2="${y(0)}"/>`;
   b += `<text class="tick" x="${x(1989)}" y="${y(200000)}" text-anchor="end">Estimates begin July 1990</text>`;
-  rows.push(row(`<h3>Immigration in, domestic migration out: the Census Bureau's split<sup>5</sup></h3><p>Its yearly estimates of net international and net domestic migration. Estimates, not counts; the 1990s and 2000s series undershot the growth those decades' censuses found.</p><p class="lg"><span style="--sw:var(--cerulean)">Net international</span><span style="--sw:var(--c-out)">Net domestic</span></p>`, panel(H, 'Census Bureau net international and domestic migration, 1991 to 2025', b)));
+  rows.push(row(`<h3>Immigration in, domestic migration out: the Census Bureau's split<sup>5</sup></h3><p>Its yearly estimates of net international and net domestic migration. Estimates, not counts; the 1990s and 2000s series undershot the growth those decades' censuses found.</p><p class="lg"><span style="--sw:var(--cerulean)">Net international</span><span style="--sw:var(--c-out)">Net domestic</span></p>`, panel(H, 'Census Bureau net international and domestic migration, 1991 to 2025', b), 'pep'));
 })();
 
 // F. age structure
@@ -278,7 +289,7 @@ rows.push(`<div class="row" style="padding:.3rem 0 0;border-bottom:0"><div></div
     b += `<text class="tick" x="${cx}" y="${H-3}" text-anchor="middle" style="font-weight:700">${ag.median.toFixed(1)}</text>`;
   });
   const a0 = D.ages[0], a1 = D.ages[D.ages.length-1];
-  rows.push(row(`<h3>Older, with fewer children: the median age is up ${(a1.median - a0.median).toFixed(1)} years<sup>6</sup></h3><p>Share of the population by age at each census and in the 2025 estimate, with the median age beneath each bar (32.3 in 1970). Under-15s went from ${a0.shares.under15}% to ${a1.shares.under15}%.</p><p class="lg"><span style="--sw:var(--chartreuse)">Under 15</span><span style="--sw:var(--cerulean)">15-24</span><span style="--sw:var(--orange)">25-44</span><span style="--sw:var(--periwinkle)">45-64</span><span style="--sw:var(--indigo)">65+</span></p>`, panel(H, 'Age structure by census year', b)));
+  rows.push(row(`<h3>Older, with fewer children: the median age is up ${(a1.median - a0.median).toFixed(1)} years<sup>6</sup></h3><p>Share of the population by age at each census and in the 2025 estimate, with the median age beneath each bar (32.3 in 1970). Under-15s went from ${a0.shares.under15}% to ${a1.shares.under15}%.</p><p class="lg"><span style="--sw:var(--chartreuse)">Under 15</span><span style="--sw:var(--cerulean)">15-24</span><span style="--sw:var(--orange)">25-44</span><span style="--sw:var(--periwinkle)">45-64</span><span style="--sw:var(--indigo)">65+</span></p>`, panel(H, 'Age structure by census year', b), 'age'));
 })();
 
 // G. race / Hispanic origin
@@ -297,7 +308,7 @@ rows.push(`<div class="row" style="padding:.3rem 0 0;border-bottom:0"><div></div
   const labs = series.map(([k,c,l]) => ({y: y(last[k]), c, t: `${last[k].toFixed(0)}% ${l}`})).sort((p,q) => p.y - q.y);
   for (let i = 1; i < labs.length; i++) if (labs[i].y - labs[i-1].y < 12) labs[i].y = labs[i-1].y + 12;
   labs.forEach(o => b += `<text class="lbl" x="${x(2020)+7}" y="${o.y+3.5}" fill="${o.c}">${o.t}</text>`);
-  rows.push(row(`<h3>Non-Hispanic white New Yorkers: from nearly two thirds of the city to less than a third<sup>7</sup></h3><p>Share at each census. Black and Asian/Pacific Islander are race alone and include Hispanic members, so the lines are not additive. Not measured on a comparable basis after 2020.</p><p class="lg"><span style="--sw:var(--indigo)">Non-Hispanic white</span><span style="--sw:var(--orange)">Hispanic or Latino</span><span style="--sw:var(--magenta)">Black</span><span style="--sw:var(--cerulean)">Asian and Pacific Islander</span></p>`, panel(H, 'Population shares by race and Hispanic origin, 1970 to 2020', b)));
+  rows.push(row(`<h3>Non-Hispanic white New Yorkers: from nearly two thirds of the city to less than a third<sup>7</sup></h3><p>Share at each census. Black and Asian/Pacific Islander are race alone and include Hispanic members, so the lines are not additive. Not measured on a comparable basis after 2020.</p><p class="lg"><span style="--sw:var(--indigo)">Non-Hispanic white</span><span style="--sw:var(--orange)">Hispanic or Latino</span><span style="--sw:var(--magenta)">Black</span><span style="--sw:var(--cerulean)">Asian and Pacific Islander</span></p>`, panel(H, 'Population shares by race and Hispanic origin, 1970 to 2020', b), 'race'));
 })();
 
 // H. foreign-born share
@@ -311,10 +322,55 @@ rows.push(`<div class="row" style="padding:.3rem 0 0;border-bottom:0"><div></div
   b += `<polyline points="${acs.map(r => `${x(r.year)},${y(r.share)}`).join(' ')}" fill="none" stroke="var(--orange)" stroke-width="2.5"/>`;
   fb.forEach(r => b += `<circle cx="${x(r.year)}" cy="${y(r.share)}" r="${r.year<=2000?3.5:2.2}" fill="${r.year<=2000?'#fff':'var(--orange)'}" stroke="var(--orange)" stroke-width="2"><title>${r.year}: ${fmt(r.foreign_born)} foreign-born, ${r.share}%</title></circle>`);
   fb.filter(r => r.year <= 2000 || r.year === 2024).forEach(r => b += `<text class="lbl" x="${x(r.year)}" y="${y(r.share)-8}" text-anchor="middle">${r.share}%</text>`);
-  rows.push(row(`<h3>The foreign-born share doubled by 2000 and has held near 37% since<sup>8</sup></h3><p>Foreign-born residents as a share of the population. Open circles are census counts; the solid line is the yearly survey.</p>`, panel(H, 'Foreign-born share of the population, 1970 to 2024', b), true));
+  rows.push(row(`<h3>The foreign-born share doubled by 2000 and has held near 37% since<sup>8</sup></h3><p>Foreign-born residents as a share of the population. Open circles are census counts; the solid line is the yearly survey.</p>`, panel(H, 'Foreign-born share of the population, 1970 to 2024', b), 'fb', true));
 })();
 rows.push(`<div class="row last" style="padding:.1rem 0 0"><div></div><div class="yearaxis">${yearAxis()}</div></div>`);
 $('timeline').innerHTML = rows.join('');
+
+// ---------- hover: exact numbers for the year under the cursor, in every panel at once
+const popSrc = {census1970:'1970 census count', census1980:'1980 census count', census1990:'1990 census count', census2000:'2000 census count', census2010:'2010 census count', census2020:'2020 census count', intercensal70s:'Census Bureau intercensal estimate, July 1', intercensal80s:'Census Bureau intercensal estimate, July 1', intercensal90s:'Census Bureau intercensal estimate, July 1', intercensal00s:'Census Bureau intercensal estimate, July 1', v2020_reconciled:'vintage 2020 estimate, adjusted to the 2020 count', v2025:'Census Bureau vintage 2025 estimate, July 1'};
+const bdSrc = {dohmh:'city Health Department', dohmh_avg:'city Health Department, five-year average', census_pep:'Census Bureau estimate, year ending June 30'};
+const nearest = (arr, yr, tol) => { let best = null; arr.forEach(o => { if (Math.abs(o.year - yr) <= tol && (!best || Math.abs(o.year - yr) < Math.abs(best.year - yr))) best = o; }); return best; };
+const ageN = (ag, from, to) => ag.bins.slice(from, to).reduce((p, q) => p + q, 0);
+const INFO = {
+  pop: yr => { const r = P[yr]; return `<b>${yr}</b>: ${fmt(r.pop)} residents<br>${popSrc[r.pop_src]}`; },
+  bd: yr => { const r = P[yr]; return `<b>${yr}</b>: ${fmt(r.births)} births, ${fmt(r.deaths)} deaths<br>Births minus deaths: ${fmtS(r.births - r.deaths)} (${bdSrc[r.bd_src]})`; },
+  net: yr => { const r = P[yr]; return r.net === null ? `<b>${yr}</b>: no following year to difference yet` : `<b>${yr} to ${yr+1}</b>: net migration ${fmtS(r.net)}<br>= ${fmtS(P[yr+1].pop - r.pop)} change − (${fmt(r.births)} − ${fmt(r.deaths)})`; },
+  arr: yr => { const p = D.inflow_parts[yr]; if (!p) return `<b>${yr}</b>: ${yr === 2020 ? 'no 2020 survey release' : 'not measured (yearly survey begins 2006)'}`; const t = p.other_state + p.abroad + p.rest_of_state; const head = p.source === 'census2000' ? `<b>${yr}</b>: 1995-2000 average from the 2000 census, ${fmt(t)} arrivals a year from outside the five boroughs` : `<b>${yr}</b>: ${fmt(t)} arrivals from outside the five boroughs`; return `${head}<br>${fmt(p.other_state)} from another state, ${fmt(p.abroad)} from abroad${p.source === 'census2000' ? ', Puerto Rico or the island areas' : ''}, ${fmt(p.rest_of_state)} from the rest of New York State`; },
+  pep: yr => { const r = P[yr]; return r.pep_intl == null ? `<b>${yr}</b>: no Census Bureau estimate for this year` : `<b>${r.pep_period}</b>: net international ${fmtS(r.pep_intl)}, net domestic ${fmtS(r.pep_dom)}<br>Bureau births ${fmt(r.pep_births)}, deaths ${fmt(r.pep_deaths)}`; },
+  age: yr => { const ag = nearest(D.ages, yr, 2); if (!ag) return `<b>${yr}</b>: age structure is shown for census years and 2025`; const g = [['Under 15',0,3,'under15'],['15-24',3,5,'a15_24'],['25-44',5,9,'a25_44'],['45-64',9,13,'a45_64'],['65 and over',13,18,'a65']]; return `<b>${ag.year}</b>: median age ${ag.median}, ${fmt(ag.total)} people<br>` + g.map(([l,f,t,k]) => `${l}: ${fmt(ageN(ag,f,t))} (${ag.shares[k]}%)`).join('; '); },
+  race: yr => { const r = nearest(D.race, yr, 2); if (!r) return `<b>${yr}</b>: shown for census years through 2020`; return `<b>${r.year}</b> census, ${fmt(r.total)} people<br>Non-Hispanic white ${r.nh_white}%, Hispanic ${r.hispanic}%, Black ${r.black}%, Asian and Pacific Islander ${r.asian}%, white (race alone) ${r.white}%`; },
+  fb: yr => { const r = D.foreign_born.find(o => o.year === yr); if (!r) return `<b>${yr}</b>: ${yr === 2020 ? 'no 2020 survey release' : 'not measured (census years, then yearly from 2006)'}`; return `<b>${r.year}</b>: ${fmt(r.foreign_born)} foreign-born of ${fmt(r.total)} (${r.share}%)`; }
+};
+const tipEl = document.createElement('div'); tipEl.className = 'tip'; $('pt').appendChild(tipEl);
+const rowEls = Array.from(document.querySelectorAll('#timeline .row[data-key]'));
+const defaults = {pop:2025, bd:2024, net:2024, arr:2024, pep:2025, age:2025, race:2020, fb:2024};
+function showYear(yr, hoveredKey, ev){
+  rowEls.forEach(el => {
+    const k = el.dataset.key, svg = el.querySelector('svg'), cross = svg.querySelector('.cross');
+    if (yr === null){ cross.style.display = 'none'; el.querySelector('.rd').innerHTML = INFO[k](defaults[k]); return; }
+    cross.setAttribute('x1', x(yr)); cross.setAttribute('x2', x(yr)); cross.style.display = '';
+    el.querySelector('.rd').innerHTML = INFO[k](yr);
+  });
+  if (yr === null || !hoveredKey){ tipEl.style.display = 'none'; return; }
+  tipEl.innerHTML = INFO[hoveredKey](yr); tipEl.style.display = 'block';
+  const vw = window.innerWidth, tw = tipEl.offsetWidth, th = tipEl.offsetHeight;
+  let left = ev.clientX + 14, top = ev.clientY + 14;
+  if (left + tw > vw - 8) left = ev.clientX - tw - 14;
+  if (top + th > window.innerHeight - 8) top = ev.clientY - th - 14;
+  tipEl.style.left = left + 'px'; tipEl.style.top = top + 'px';
+}
+function yearAt(svg, clientX){
+  const bb = svg.getBoundingClientRect(); const xr = (clientX - bb.left) / bb.width * W;
+  return Math.max(Y0, Math.min(Y1, Math.round(Y0 + (xr - ml) / (W - ml - mr) * (Y1 - Y0))));
+}
+rowEls.forEach(el => {
+  const svg = el.querySelector('svg'), k = el.dataset.key;
+  const move = ev => { const pt = ev.touches ? ev.touches[0] : ev; showYear(yearAt(svg, pt.clientX), k, pt); };
+  svg.addEventListener('mousemove', move); svg.addEventListener('touchstart', move, {passive:true}); svg.addEventListener('touchmove', move, {passive:true});
+  svg.addEventListener('mouseleave', () => showYear(null)); svg.addEventListener('touchend', () => showYear(null));
+});
+showYear(null);
 
 // ---------- II. decade table
 (function(){
