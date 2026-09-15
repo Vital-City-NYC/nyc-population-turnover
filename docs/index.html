@@ -154,7 +154,7 @@ if (new URLSearchParams(location.search).get('embed') === '1') {
 const $ = id => document.getElementById(id);
 const fmt = n => Math.round(n).toLocaleString('en-US');
 const fmtS = n => (n < 0 ? '−' : '+') + fmt(Math.abs(n));
-const M = n => (Math.abs(n) >= 1e6 ? (n/1e6).toFixed(1) + ' million' : fmt(n));
+const M = n => (Math.abs(n) >= 1e6 ? (n/1e6).toFixed(2) + ' million' : fmt(n));   // two decimals so the four key numbers reconcile
 const L = D.ledger, Y0 = 1970, Y1 = 2025;
 const P = {}; L.forEach(r => P[r.year] = r);
 const T = D.totals;
@@ -206,7 +206,7 @@ const a = (k, t) => `<a href="${U[k]}">${t}</a>`;
 $('keys').innerHTML = [
   [M(T.births), 'Births to city residents, April 1970 to July 2025'],
   [M(T.deaths), 'Deaths of city residents, April 1970 to July 2025'],
-  ['−' + M(-T.net), 'Net migration implied by the census counts'],
+  ['−' + M(-T.net), 'Net migration implied by the census counts (births − deaths + net migration = population change)'],
   [(P[Y0].pop/1e6).toFixed(2) + 'M → ' + (P[Y1].pop/1e6).toFixed(2) + 'M', 'Population, April 1970 → July 2025']
 ].map(([n,l]) => `<div><span class="n">${n}</span><span class="l">${l}</span></div>`).join('');
 
