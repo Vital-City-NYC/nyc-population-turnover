@@ -43,6 +43,7 @@
 .pt svg .cross{stroke:var(--ink);stroke-width:1;stroke-dasharray:3 2;pointer-events:none}
 .pt svg .ov{fill:transparent;cursor:crosshair}
 .pt .lab .rd{font-size:.76rem;line-height:1.35;color:var(--ink);margin:.35rem 0 0;min-height:2.7em;font-weight:400}
+.pt .row{align-items:start}
 .pt .lab .rd b{font-weight:700}
 .pt .tip{position:fixed;pointer-events:none;background:var(--ink);color:#fff;font-size:.76rem;line-height:1.35;padding:.45rem .6rem;max-width:280px;z-index:9;display:none}
 .pt .tip b{font-weight:700;color:var(--chartreuse)}
@@ -370,6 +371,19 @@ rowEls.forEach(el => {
   svg.addEventListener('mouseleave', () => showYear(null)); svg.addEventListener('touchend', () => showYear(null));
 });
 showYear(null);
+// Reserve each readout's height for its longest possible text, so rows never resize while hovering
+function lockReadoutHeights(){
+  rowEls.forEach(el => {
+    const rd = el.querySelector('.rd'), k = el.dataset.key, keep = rd.innerHTML; let h = 0;
+    rd.style.minHeight = '0';
+    for (let yr = Y0; yr <= Y1; yr++){ rd.innerHTML = INFO[k](yr); h = Math.max(h, rd.offsetHeight); }
+    rd.innerHTML = keep; rd.style.minHeight = h + 'px';
+  });
+}
+lockReadoutHeights();
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(lockReadoutHeights);
+window.addEventListener('load', lockReadoutHeights);
+let rsz; window.addEventListener('resize', () => { clearTimeout(rsz); rsz = setTimeout(lockReadoutHeights, 150); });
 
 // ---------- II. decade table
 (function(){
