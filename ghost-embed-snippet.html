@@ -17,9 +17,14 @@
     (function () {
       window.addEventListener('message', function (e) {
         var d = e && e.data;
-        if (!d || d.type !== 'vc-embed-height' || d.id !== 'nyc-population-turnover') return;
+        if (!d || d.id !== 'nyc-population-turnover') return;
         var f = document.querySelector('.vc-embed-nyc-population-turnover__iframe');
-        if (f && typeof d.height === 'number') f.style.height = d.height + 'px';
+        if (!f) return;
+        if (d.type === 'vc-embed-height' && typeof d.height === 'number') f.style.height = d.height + 'px';
+        if (d.type === 'vc-embed-scroll' && typeof d.offset === 'number') {
+          var top = f.getBoundingClientRect().top + window.scrollY + d.offset - 12;
+          window.scrollTo({ top: top, behavior: 'smooth' });
+        }
       });
     })();
   </script>
