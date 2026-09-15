@@ -87,9 +87,6 @@
 .pt .notes a{color:var(--muted)}
 .pt footer{font-size:.78rem;color:var(--muted);line-height:1.5;margin-top:1.4rem;border-top:2px solid var(--ink);padding-top:.7rem}
 .pt footer a{color:var(--muted)}
-.pt .ai{display:inline-block;margin-top:.6rem;background:#7a1f2b;color:#fff;border:0;font:inherit;font-size:.72rem;font-weight:700;padding:.3rem .6rem;cursor:pointer}
-.pt .aibox{display:none;background:#1c2340;color:#fff;padding:.9rem 1rem;margin-top:.5rem;font-size:.8rem;line-height:1.5}
-.pt .aibox.open{display:block}
 @media (max-width:600px){.pt .keys{grid-template-columns:1fr 1fr}.pt .row{grid-template-columns:1fr;gap:.3rem}.pt .yearaxis{grid-column:1}.pt .big,.pt .calc,.pt .cmp{grid-template-columns:1fr}.pt .chap.notes-head{margin-top:2.4rem;border-bottom-width:1px}
 .pt .chap.notes-head h2{font-size:.9rem;color:var(--muted)}
 .pt .chap .lede{display:none}.pt .keys .n{font-size:1.6rem}}
@@ -463,9 +460,7 @@ $('notes').innerHTML = `<ol>
 <li><b>Foreign-born.</b> 1970-2000 from the decennial census as tabulated in ${a('nny','NYC Department of City Planning, The Newest New Yorkers, 2013 edition')}, Table 2-1 (the 2000 figure ties to Summary File 3); 2006-2024 from ${a('b05002','American Community Survey 1-year, table B05002')}.</li>
 </ol>
 <p>The turnover model in section III uses the series above; its formulas are under "Show the math" and in the <a href="methodology.html">methodology</a>, and the build scripts and raw files are in the ${a('repo','repository')}.</p>`;
-$('foot').innerHTML = `Built by Vital City, September 2026, with data current to the Census Bureau's vintage 2025 estimates and the city Health Department's 2023 vital statistics summary. Everything here is official Census Bureau, city Health Department or Department of City Planning data; the only modeled figures are the turnover estimates, and their assumptions are stated where they appear.<br>
-<button class="ai" id="aibtn">And please read this AI caution.</button><div class="aibox" id="aibox">Everything substantive (the concept, the choice of data and the layout) was handled by the author (a human). The coding and the file-handling were done by Anthropic's Claude Code under the author's direction. Quality-control steps taken on this project: every raw source file was downloaded from census.gov, nyc.gov or the Census API and kept verbatim in the repository; the 2000 county-to-county flow file was checked against the 2000 census Summary File 3 mobility table (it ties exactly on movers from other states); the 2000 foreign-born figure from City Planning was checked against Summary File 3; the Health Department's births and deaths were compared decade by decade with the Census Bureau's own birth and death components; the turnover model's three stocks were confirmed to add up exactly to each end-year population; every number and claim in the page text was recomputed from the built data in a second pass; every source link was checked to resolve; the 2020-2025 population series was checked against the Department of City Planning's July 2026 estimates release (identical, county by county); and the 2001-2013 result was compared with the figure City Planning gave in 2013. The risks of AI-assisted work remain, and we would be grateful to hear of anything that looks wrong.</div>`;
-$('aibtn').addEventListener('click', () => $('aibox').classList.toggle('open'));
+$('foot').innerHTML = `Built by Vital City, September 2026, with data current to the Census Bureau's vintage 2025 estimates and the city Health Department's 2023 vital statistics summary. Everything here is official Census Bureau, city Health Department or Department of City Planning data; the only modeled figures are the turnover estimates, and their assumptions are stated where they appear.`;
 })();
 </script>
 </body>
