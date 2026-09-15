@@ -10,7 +10,7 @@
 #     2000c8_36.txt (CO-2000-8, county components 1990-2000, postcensal),
 #     co-est00int-tot.csv (intercensal county totals 2000-2010),
 #     co-est2009-alldata.csv (vintage 2009 components 2000-09),
-#     co-est2020-alldata.csv (vintage 2020 totals + components 2010-20),
+#     co-est2020int-pop-36.xlsx (intercensal county totals 2010-2020), co-est2020-alldata.csv (vintage 2020 components 2010-20),
 #     co-est2025-alldata.csv (vintage 2025 totals + components 2020-25),
 #     co-asr-7079 (1970s county age/sex/race), pe-02 (1980s), co-est00int-alldata-36,
 #     cc-est2020-alldata-36, cc-est2025-alldata-36 (age/sex/race/Hispanic).
@@ -97,9 +97,20 @@ for r in csv.DictReader(open(rp('co-est2020-alldata.csv'), encoding='latin-1')):
                 for k in ('BIRTHS', 'DEATHS', 'INTERNATIONALMIG', 'DOMESTICMIG', 'RESIDUAL'):
                     comp[y][k] += int(r[f'{k}{y}'])
 census2020 = 8804190
-closure2020 = census2020 - v20[2020]          # how far the vintage-2020 series fell short of the count
+closure2020 = census2020 - v20[2020]          # how far the vintage-2020 series fell short of the count (for the notes)
+# Official 2010-2020 intercensal county estimates (Census Bureau table CO-EST2020INT-POP-36)
+import openpyxl
+ws = openpyxl.load_workbook(rp('co-est2020int-pop-36.xlsx')).active
+int10 = defaultdict(int); hdr = None
+for row in ws.iter_rows(values_only=True):
+    if row[2] == 2010: hdr = list(row); continue
+    if row[0] and any(k in str(row[0]) for k in ('Bronx County', 'Kings County', 'New York County', 'Queens County', 'Richmond County')):
+        for i, y in enumerate(hdr):
+            if isinstance(y, int) and 2010 <= y <= 2019: int10[y] += int(row[i])
+        int10['census2020'] += int(row[12]); int10['base2010'] += int(row[1])
+assert abs(int10['census2020'] - census2020) <= 100, int10['census2020']   # table's census column sums to 8,804,200 (post-count corrections); the page keeps the published 8,804,190
 for y in range(2011, 2020):
-    pop[y] = round(v20[y] + closure2020 * (y - 2010) / 10); pop_src[y] = 'v2020_reconciled'
+    pop[y] = int10[y]; pop_src[y] = 'intercensal10s'
 pop[2020] = census2020; pop_src[2020] = 'census2020'
 
 # 2020s: vintage 2025 postcensal
@@ -350,7 +361,7 @@ os.makedirs(os.path.dirname(OUT), exist_ok=True)
 json.dump(data, open(OUT, 'w'), separators=(',', ':'))
 
 # ---------------------------------------------------------------- printed cross-checks
-print('closure 2020 (census minus vintage-2020 estimate):', closure2020)
+print('closure 2020 (census minus vintage-2020 estimate):', closure2020, '| intercensal 2015/2019:', int10[2015], int10[2019])
 print('pop:', {y: pop[y] for y in (1970, 1975, 1980, 1990, 2000, 2010, 2015, 2019, 2020, 2021, 2025)})
 print('totals 1970-2025:', tot)
 print('decades:')
