@@ -179,6 +179,7 @@ Foreign-born shares are foreign-born residents divided by total population. Peop
 - Net migration is a residual and carries every error in the counts, estimates and vital statistics. Several annual values are within that error, and the 2010s yearly pattern partly reflects how the intercensal method spread the 2020 correction.
 - The 2020-25 population and the 2023-25 births and deaths are postcensal estimates and will be revised.
 - Arrivals before 2005 are calibrated (1995-99), interpolated (2000-04) or assumed (1970-94). Windows that start in the 1970s are sensitive to the assumed rate: 1970-2001 ranges from about 65 to 79 percent for assumed rates of 1.5 to 3.5 percent a year, while 1970-2025 stays between 88 and 93 percent.
+- Gross moves are counted once a year, so they are a floor on movement. Someone who moved in and left again within 12 months appears in neither arrivals nor out-moves; someone who moved in twice counts twice; arrivals under age 1 are missed; and former New Yorkers who return count as newcomers. Out-moves, including emigration, are derived as arrivals minus net migration, not measured.
 - The turnover figures are model estimates meant to answer "roughly how much." They should be quoted with their range.
 - The 1971-79 population estimates are preliminary and rounded to hundreds.
 - Race categories changed in 1980 (Hispanic write-ins), 2000 (multiple races) and 2020 (coding of write-ins).
