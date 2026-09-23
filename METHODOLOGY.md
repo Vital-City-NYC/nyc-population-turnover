@@ -107,6 +107,55 @@ The three stocks sum exactly to the population in B, for every window (checked i
 
 **Equal exit rates.** Newcomers leave at higher rates than long-settled residents, a pattern well established in migration research (e.g., [Morrison, Demography, 1967](https://pubmed.ncbi.nlm.nih.gov/21318669/)); the model ignores that, which overstates the newcomers still present and so overstates turnover. Deaths fall mostly on older, long-settled residents; the model spreads them evenly, which understates the loss of the original cohort and so understates turnover. The audit's simulations, run on the version of the model it examined, put the first effect at −1.5 to −6.6 points on the 2001-2025 result (newcomers leaving at two to four times the base rate in their first years) and the second at about +3.5 points; together they changed the result by about 3 points or less. Heterogeneity within the original cohort, mobile renters against rooted owners, is not modeled; over long windows it would push the model toward overstating turnover. Former New Yorkers who return count as newcomers, which also pushes turnover up.
 
+**Independent check of the calculator (September 23, 2026).** A second implementation, written separately, computes each stock as a product of yearly survival factors instead of carrying running totals. It reproduces the page's figures for all 1,540 pairs of start and end years at all three arrival levels, to within floating-point error (about one part in a quadrillion). Every other check also passed:
+
+- The three stocks sum to the end-year population in every window.
+- Every yearly exit rate falls between 0 and 10 percent.
+- Every out-move figure stays positive, even at the low end of the range.
+- The range is ordered correctly in every window.
+- The share gone never falls as a window lengthens.
+- Every survey-based arrivals figure rebuilds exactly from the raw B07204 files.
+- The 2000 target of 970,613 rebuilds from SF3 table P024 and the county-to-county file. That file's out-of-state total ties exactly to SF3's (301,243).
+
+Three tests against official figures the model never uses:
+
+| Test | Official figure | Model | Ratio |
+|---|---|---|---|
+| Born outside the U.S., entered 2010 or later, living in the city, 2019 ACS (B05005) | 758,970 | 733,755 arrivals from abroad since April 2010 still present | 0.97 |
+| Same, 2024 ACS | 1,137,841 | 1,110,438 | 0.98 |
+| Children under 5 born in New York State, 2019 ACS (B06001) | 485,111 | 520,221 born in the city in the prior five years, still present | 1.07 |
+| Children 5-17 born in New York State, 2019 ACS | 1,003,136 | 1,038,889 | 1.04 |
+| Children under 5 born in New York State, 2024 ACS | 413,371 | 427,367 | 1.03 |
+| Children 5-17 born in New York State, 2024 ACS | 993,361 | 939,438 | 0.95 |
+
+The comparisons are approximate, for four reasons:
+
+- The survey's year-of-entry count includes immigrants who settled elsewhere in the country first, and it leaves out U.S.-born people returning from abroad.
+- The New York State count includes children born outside the city who later moved in.
+- Survey interviews are spread across the year.
+- The 2019 survey is weighted to the Bureau's vintage 2019 estimate, 5.5 percent below the intercensal figure the model uses.
+
+Without the floor at the Bureau's net international migration, the 2024 abroad figure would be 941,022, or 0.83 of the survey count. The survey count therefore supports the floor.
+
+Rerunning the model with the two main departures from equal exit rates gives these results:
+
+| Window | Page | Newcomers leave at 2x in first 3 years | 3x | Deaths weighted to original residents | 2x + deaths | 3x + deaths |
+|---|---|---|---|---|---|---|
+| 2001-2025 | 66.5% | 64.9% | 63.5% | 68.6% | 67.0% | 65.6% |
+| 2001-2013 | 42.3% | 41.1% | 40.1% | 43.1% | 41.9% | 40.9% |
+| 2010-2020 | 35.5% | 34.6% | 33.7% | 36.1% | 35.1% | 34.3% |
+| 2020-2025 | 22.6% | 21.8% | 21.2% | 22.8% | 22.0% | 21.3% |
+| 1970-2025 | 91.3% | 90.4% | 89.6% | 94.2% | 93.6% | 93.0% |
+
+The death weighting assumes the original residents have a relative death rate of 1, newcomers 0.4 and children born since 0.15. Every variant stays inside the page's range.
+
+The pre-2005 calibration probably errs slightly low. The model's stock of arrivals after 1995 includes children under 5 and returning New Yorkers. The census target excludes both. Children aged 1 to 4 were 3 to 4 percent of arrivals from out of state or abroad in the 2010, 2015 and 2019 surveys. So the calibrated rate is, if anything, a little low, and so are turnover figures for windows before 2005.
+
+The check led to two display fixes:
+
+- The legend's rounded shares now always add to 100 and to the headline, using largest-remainder rounding. Before the fix, 367 of the 1,540 windows were off by a point.
+- The calculator now names the population date: April 1 in census years, July 1 otherwise.
+
 **City Planning's 2013 figure.** In 2013 City Planning gave Harry Siegel a back-of-the-envelope estimate that "fully half" of the city had turned over since 2001 ([Vital City, 2026](https://www.vitalcitynyc.org/how-nyc-changed-since-9-11/)). Its method was not published. For 2001-2013 the model gives 42 percent (share of the 2013 city new since 2001) and 39 percent (share of 2001 residents gone). The simple tally, births plus arrivals divided by the 2013 population, gives 51 percent. That tally overstates turnover, because it counts newcomers who later left or died, so its closeness to "fully half" is not corroboration. The same Vital City article says "more than three-quarters of the city has turned over" since 9/11. The model's figures for 2001-2025 are 66 percent new and 64 percent gone, with an upper bound near 72 percent.
 
 ### 2.6 Households and families

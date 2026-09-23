@@ -565,10 +565,16 @@ function renderCalc(){
   const simple = (t.sums.births + t.sums.inflow) / t.popB;
   const lo = turnover(A, B, 0.85), hi = turnover(A, B, 1.25);
   const rng = [1 - lo.stayers / lo.popB, 1 - hi.stayers / hi.popB].map(v => Math.round(v*100));
-  $('big').innerHTML = `<div><span class="n">${Math.round(newShare*100)}%</span><span class="l">of the people in New York City in ${B} were not here in ${A}: about <b>${about(t.born)}</b> were born here in between and <b>${about(t.moved)}</b> moved in. Plausible range ${rng[0]}% to ${rng[1]}%, depending on how many people actually moved in and out.</span><span class="l2">Seen from the other end: of the ${fmt(t.popA)} people here in ${A}, about <b>${about(t.stayers)}</b> were still here in ${B}, and ${Math.round(goneShare*100)}% had died or moved away.</span></div>`;
+  // population dates: April 1 in census years, July 1 otherwise
+  const when = y => (P[y].pop_src.startsWith('census') ? 'April ' : 'July ') + y;
+  // rounded shares that add up: born + moved = headline, and the three parts = 100 (largest remainder)
+  const headN = Math.round(newShare*100), stayN = 100 - headN;
+  const raw = [t.born, t.moved].map(v => v / t.popB * 100), parts = raw.map(Math.floor);
+  raw.map((v, i) => [v - parts[i], i]).sort((p, q) => q[0] - p[0]).slice(0, headN - parts[0] - parts[1]).forEach(([, i]) => parts[i]++);
+  $('big').innerHTML = `<div><span class="n">${headN}%</span><span class="l">of the people in New York City in ${when(B)} were not here in ${when(A)}: about <b>${about(t.born)}</b> were born here in between and <b>${about(t.moved)}</b> moved in. Plausible range ${rng[0]}% to ${rng[1]}%, depending on how many people actually moved in and out.</span><span class="l2">Seen from the other end: of the ${fmt(t.popA)} people here in ${when(A)}, about <b>${about(t.stayers)}</b> were still here in ${when(B)}, and ${Math.round(goneShare*100)}% had died or moved away.</span></div>`;
   const pct = v => (v / t.popB * 100);
   $('stack').innerHTML = `<div class="bar"><div style="width:${pct(t.stayers)}%;background:var(--c-stay)" title="Still here from ${A}: ${fmt(t.stayers)}"></div><div style="width:${pct(t.born)}%;background:var(--c-births)" title="Born since ${A}: ${fmt(t.born)}"></div><div style="width:${pct(t.moved)}%;background:var(--c-in)" title="Moved in since ${A}: ${fmt(t.moved)}"></div></div>
-    <div class="keys2"><span><b style="color:#6b6f8a">■</b> Here in ${A} and still here in ${B}: ${pct(t.stayers).toFixed(0)}%</span><span><b style="color:var(--c-births)">■</b> Born since: ${pct(t.born).toFixed(0)}%</span><span><b style="color:var(--c-in)">■</b> Moved in since: ${pct(t.moved).toFixed(0)}%</span><span>= ${B} population of ${fmt(t.popB)}</span></div>`;
+    <div class="keys2"><span><b style="color:#6b6f8a">■</b> Here in ${A} and still here in ${B}: ${stayN}%</span><span><b style="color:var(--c-births)">■</b> Born since: ${parts[0]}%</span><span><b style="color:var(--c-in)">■</b> Moved in since: ${parts[1]}%</span><span>= ${B} population of ${fmt(t.popB)}</span></div>`;
   $('cmp').innerHTML = `<div><span class="v">${fmt(t.sums.births)} born · ${fmt(t.sums.deaths)} died</span><span>Births and deaths of city residents, ${A} to ${B}</span></div>
     <div><span class="v">${about(t.sums.inflow)} in · ${about(t.sums.outflow)} out</span><span>Estimated gross moves into and out of the city over the same years</span></div>
     <div><span class="v">${Math.round(simple*100)}%</span><span>The back-of-the-envelope version: births plus arrivals divided by the ${B} population. It ignores newcomers who later left or died, so it overstates turnover and can pass 100% over long spans</span></div>

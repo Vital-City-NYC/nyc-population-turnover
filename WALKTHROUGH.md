@@ -112,6 +112,11 @@ What happened: the decade table was compressed to fit the column; the calculator
 
 What happened: four independent checkers re-derived every series from freshly downloaded primary sources without using the project's processed data, and a fifth read the 1970s federal vital statistics volumes. The population series and most figures held up exactly. The corrections: the 1970s births and deaths are now federal resident counts for each year instead of scaled five-year averages; four periods where the Census files hold modeled births and deaths now use state resident counts; arrivals now come from a more direct survey table, aligned to the year of the moves, with the Census Bureau's net international migration as a floor and the pre-2005 rate calibrated to the 2000 census; a chart that was drawn a year off was realigned; a decade sentence that ignored the 2010s' small migration gain was fixed; census-year borough and age figures now use the published counts and official median ages; the living-alone line now starts in 1970; and the calculator now rounds its outputs and shows a plausible range. The full list is in section 4 of the methodology.
 
+
+> do an independent check of the turnover calculator to make sure it's 100% solid in how it yields a figure.
+
+What happened: the calculator was rebuilt separately in a second language using a different formulation. It matched the page exactly for all 1,540 pairs of years. Its inputs rebuilt exactly from the raw Census files. It was then tested against official counts it never uses: immigrants who arrived since 2010 and children born in the state. The model came within 2 to 7 percent. Letting newcomers leave faster, or weighting deaths toward older residents, kept every result inside the stated range. Two display fixes followed. The legend's rounded percentages now always add up to the headline. The calculator now says whether a year means April 1 (census) or July 1 (estimate). The results are in section 2.5 of the methodology.
+
 ---
 
 ## Where things live
