@@ -1,0 +1,52 @@
+{
+ "_about": "New York City population by five-year age group from the printed census volumes, read from the scanned pages (images in scans/). 1980 and 1970 columns: 1980 Census of Population PC80-1-B34, Table 26 'Persons by Age for Areas and Places: 1980 and 1970', printed page 34-124, New York city. 1970 column is identical to 1970 PC(1)-B34 Table 24, page 34-108. Each column sums exactly to the published total and the 65+ subtotal matches the printed 65-and-over line.",
+ "url_1980": "https://www2.census.gov/library/publications/decennial/1980/volume-1/new-york/1980censusofpopu80134unse_bw.pdf",
+ "url_1970": "https://www2.census.gov/prod2/decennial/documents/1970a_ny1-02.pdf",
+ "1980": [
+  470694,
+  447327,
+  506283,
+  563492,
+  603893,
+  631050,
+  572117,
+  450735,
+  382820,
+  360104,
+  392990,
+  393169,
+  345233,
+  316596,
+  253923,
+  189629,
+  114252,
+  77332
+ ],
+ "1970": [
+  615831,
+  631748,
+  624166,
+  602327,
+  649640,
+  596566,
+  479020,
+  444931,
+  470704,
+  479839,
+  462177,
+  463418,
+  426617,
+  355284,
+  270715,
+  171492,
+  93834,
+  56553
+ ],
+ "median_1970": 32.4,
+ "median_1980": 32.6,
+ "median_1990": {
+  "value": 33.6,
+  "source": "1990 CP-1-34 (General Population Characteristics, New York), Table 1, printed page 14, New York city row",
+  "url": "https://www2.census.gov/library/publications/decennial/1990/cp-1/cp-1-34-1.pdf"
+ }
+}

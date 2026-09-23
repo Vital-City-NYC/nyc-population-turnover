@@ -1,0 +1,243 @@
+{
+ "_about": "Births to and deaths of New York City residents, calendar years 1970-1982. 'dohmh_in_city_resident' = events that occurred in the city to city residents, from the NYC Department of Health annual Summary of Vital Statistics for each year (Table 3 for 1970-75, Table 2 from 1976; health-center-district tables for 1972), read from the scanned reports at https://www.nyc.gov/site/doh/data/data-sets/vital-statistics-data-archive.page (files .../vs/1970sum.pdf through 1982sum.pdf); page images in dohmh_1970s/. These exclude residents' births and deaths that occurred outside the city. 'nchs_resident' = full resident counts (including events outside the city) from NCHS, Vital Statistics of the United States; read for every year 1970-1980 from the natality (Table 2-1) and mortality (Table 7-1/8-1) volumes; each value's borough rows and race rows sum exactly to the city figure; crops in nchs_vsus_1970s/.",
+ "dohmh_occurrence_total": {
+  "1970": 149192,
+  "1971": 131920,
+  "1972": 117088,
+  "1973": 110639,
+  "1974": 110642,
+  "1975": 109418,
+  "1976": 109995,
+  "1977": 110486,
+  "1978": 106720,
+  "1979": 106021,
+  "1980": 107066,
+  "1981": 108547,
+  "1982": 111487
+ },
+ "dohmh_occurrence_deaths": {
+  "1970": 88161,
+  "1971": 86724,
+  "1972": 85363,
+  "1973": 82319,
+  "1974": 79846,
+  "1975": 76312,
+  "1976": 77538,
+  "1977": 75011,
+  "1978": 73081,
+  "1979": 72079,
+  "1980": 76625,
+  "1981": 73329,
+  "1982": 73083
+ },
+ "dohmh_in_city_resident_births": {
+  "1970": 139226,
+  "1971": 123711,
+  "1972": 109949,
+  "1973": 103616,
+  "1974": 103348,
+  "1975": 102382,
+  "1976": 102949,
+  "1977": 103488,
+  "1978": 99863,
+  "1979": 98942,
+  "1980": 99943,
+  "1981": 101341,
+  "1982": 104386
+ },
+ "dohmh_in_city_resident_deaths": {
+  "1970": 82791,
+  "1971": 81962,
+  "1972": 79943,
+  "1973": 77150,
+  "1974": 74788,
+  "1975": 71299,
+  "1976": 72498,
+  "1977": 69844,
+  "1978": 68103,
+  "1979": 67239,
+  "1980": 71406,
+  "1981": 68204,
+  "1982": 68251
+ },
+ "nchs_resident_births": {
+  "1970": {
+   "value": 143936,
+   "url": "https://www.cdc.gov/nchs/data/vsus/nat70_1acc.pdf",
+   "pdf_page": 280,
+   "table": "Table 2-1. Live Births by Attendant and Place of Delivery and Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1970",
+   "note": "50-percent sample of all births nationwide; NYC value is a sample estimate (all figures even).",
+   "crop": "nchs_vsus_1970s/nat1970_t21_nyc.png"
+  },
+  "1975": {
+   "value": 105283,
+   "url": "https://www.cdc.gov/nchs/data/vsus/nat75_1.pdf",
+   "pdf_page": 313,
+   "table": "Table 2-1. Live Births by Attendant and Place of Delivery and Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1975",
+   "note": "Technical Appendix (PDF p.373): 100-percent states include \"New York (exclusive of New York City)\"; NYC births were a 50-percent sample.",
+   "crop": "nchs_vsus_1970s/nat1975_t21_nyc.png"
+  },
+  "1979": {
+   "value": 101703,
+   "url": "https://www.cdc.gov/nchs/data/vsus/nat79_1.pdf",
+   "pdf_page": 302,
+   "table": "Table 2-1. Live Births by Place of Delivery and Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1979",
+   "note": "Technical Appendix (PDF p.360): only AZ, AR, CA, DE, GA, NM, ND, SD and DC sampled at 50 percent; New York (incl. NYC) on a 100-percent basis.",
+   "crop": "nchs_vsus_1970s/nat1979_t21_nyc.png"
+  },
+  "1971": {
+   "value": 127284,
+   "url": "https://www.cdc.gov/nchs/data/vsus/nat71_1.pdf",
+   "pdf_page": 286,
+   "table": "Table 2-1. Live Births by Attendant and Place of Delivery and Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1971",
+   "note": "50-percent sample of all births nationwide; NYC value is a sample estimate (all figures even).",
+   "crop": "nchs_vsus_1970s/nat1971_t21_nyc.png"
+  },
+  "1972": {
+   "value": 112989,
+   "url": "https://www.cdc.gov/nchs/data/vsus/nat72_1.pdf",
+   "pdf_page": 279,
+   "table": "Table 2-1. Live Births by Attendant and Place of Delivery and Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1972",
+   "note": "Technical Appendix: 100-percent states were Florida, Maine, Missouri, New Hampshire, Rhode Island, Vermont; New York not among them, so NYC births were a 50-percent sample.",
+   "crop": "nchs_vsus_1970s/nat1972_t21_nyc.png"
+  },
+  "1973": {
+   "value": 106242,
+   "url": "https://www.cdc.gov/nchs/data/vsus/nat73_1.pdf",
+   "pdf_page": 293,
+   "table": "Table 2-1. Live Births by Attendant and Place of Delivery and Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1973",
+   "note": "Technical Appendix (PDF p.352): 100-percent CHSS states listed (OCR partly illegible); NYC registration records received as microfilm, i.e. 50-percent sample.",
+   "crop": "nchs_vsus_1970s/nat1973_t21_nyc.png"
+  },
+  "1974": {
+   "value": 106214,
+   "url": "https://www.cdc.gov/nchs/data/vsus/nat74_1.pdf",
+   "pdf_page": 308,
+   "table": "Table 2-1. Live Births by Attendant and Place of Delivery and Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1974",
+   "note": "Technical Appendix (PDF p.367): 100-percent states include \"New York (exclusive of New York City)\"; NYC births were a 50-percent sample.",
+   "crop": "nchs_vsus_1970s/nat1974_t21_nyc.png"
+  },
+  "1976": {
+   "value": 105751,
+   "url": "https://www.cdc.gov/nchs/data/vsus/nat76_1.pdf",
+   "pdf_page": 280,
+   "table": "Table 2-1. Live Births by Attendant and Place of Delivery and Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1976",
+   "note": "Technical Appendix (PDF p.339): 100-percent states include \"New York (exclusive of New York City)\"; NYC births were a 50-percent sample.",
+   "crop": "nchs_vsus_1970s/nat1976_t21_nyc.png"
+  },
+  "1977": {
+   "value": 106335,
+   "url": "https://www.cdc.gov/nchs/data/vsus/nat77_1.pdf",
+   "pdf_page": 288,
+   "table": "Table 2-1. Live Births by Attendant and Place of Delivery and Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1977",
+   "note": "Technical Appendix (PDF p.347) lists \"New York\" among 100-percent states without saying whether NYC is included; NYC occurrence counts (110,400; 68,506; 41,894; 38,370) are all even, consistent with a doubled 50-percent sample.",
+   "crop": "nchs_vsus_1970s/nat1977_t21_nyc.png"
+  },
+  "1978": {
+   "value": 102776,
+   "url": "https://www.cdc.gov/nchs/data/vsus/nat78_1.pdf",
+   "pdf_page": 302,
+   "table": "Table 2-1. Live Births by Place of Delivery and Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1978",
+   "note": "Technical Appendix (PDF p.361) lists \"New York\" among 100-percent states without saying whether NYC is included; NYC occurrence total 106,710 is 10 below the Health Department figure.",
+   "crop": "nchs_vsus_1970s/nat1978_t21_nyc.png"
+  },
+  "1980": {
+   "value": 102771,
+   "url": "https://www.cdc.gov/nchs/data/vsus/nat80_1acc.pdf",
+   "pdf_page": 366,
+   "table": "Table 2-1. Live Births by Place of Delivery and Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1980",
+   "note": "Technical Appendix (PDF p.426): only AZ, CA, DE, GA, NM, ND and DC sampled at 50 percent; New York on a 100-percent basis.",
+   "crop": "nchs_vsus_1970s/nat1980_t21_nyc.png"
+  }
+ },
+ "nchs_resident_deaths": {
+  "1970": {
+   "value": 90999,
+   "url": "https://www.cdc.gov/nchs/data/vsus/mort70_2b.pdf",
+   "pdf_page": 51,
+   "table": "Table 7-1. Total, Infant, and Neonatal Deaths, and Fetal Deaths, by Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1970",
+   "note": "",
+   "crop": "nchs_vsus_1970s/mort1970_nyc.png"
+  },
+  "1975": {
+   "value": 77517,
+   "url": "https://www.cdc.gov/nchs/data/vsus/mort75_2b.pdf",
+   "pdf_page": 49,
+   "table": "Table 7-1. Total, Infant, and Neonatal Deaths, and Fetal Deaths, by Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1975",
+   "note": "",
+   "crop": "nchs_vsus_1970s/mort1975_nyc.png"
+  },
+  "1979": {
+   "value": 72505,
+   "url": "https://www.cdc.gov/nchs/data/vsus/mort79_2b.pdf",
+   "pdf_page": 49,
+   "table": "Table 8-1. Total, Infant, and Neonatal Deaths, and Fetal Deaths, by Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1979",
+   "note": "",
+   "crop": "nchs_vsus_1970s/mort1979_nyc.png"
+  },
+  "1971": {
+   "value": 89402,
+   "url": "https://www.cdc.gov/nchs/data/vsus/mort71_2b.pdf",
+   "pdf_page": 51,
+   "table": "Table 7-1. Total, Infant, and Neonatal Deaths, and Fetal Deaths, by Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1971",
+   "note": "",
+   "crop": "nchs_vsus_1970s/mort1971_nyc.png"
+  },
+  "1972": {
+   "value": 87914,
+   "url": "https://www.cdc.gov/nchs/data/vsus/mort72_2b.pdf",
+   "pdf_page": 50,
+   "table": "Table 7-1. Total, Infant, and Neonatal Deaths, and Fetal Deaths, by Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1972",
+   "note": "Footnotes to Table 7-1 (PDF p.78): occurrence column \"Deaths based on a 50-percent sample. Includes deaths occurring in the United States to nonresidents...\"; residence column \"Deaths based on a 50-percent sample.\" 1972 mortality was sampled nationwide; all NYC figures are even (doubled).",
+   "crop": "nchs_vsus_1970s/mort1972_nyc.png"
+  },
+  "1973": {
+   "value": 84739,
+   "url": "https://www.cdc.gov/nchs/data/vsus/mort73_2b.pdf",
+   "pdf_page": 51,
+   "table": "Table 7-1. Total, Infant, and Neonatal Deaths, and Fetal Deaths, by Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1973",
+   "note": "",
+   "crop": "nchs_vsus_1970s/mort1973_nyc.png"
+  },
+  "1974": {
+   "value": 81728,
+   "url": "https://www.cdc.gov/nchs/data/vsus/mort74_2b.pdf",
+   "pdf_page": 51,
+   "table": "Table 7-1. Total, Infant, and Neonatal Deaths, and Fetal Deaths, by Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1974",
+   "note": "",
+   "crop": "nchs_vsus_1970s/mort1974_nyc.png"
+  },
+  "1976": {
+   "value": 78494,
+   "url": "https://www.cdc.gov/nchs/data/vsus/mort76_2b.pdf",
+   "pdf_page": 49,
+   "table": "Table 7-1. Total, Infant, and Neonatal Deaths, and Fetal Deaths, by Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1976",
+   "note": "",
+   "crop": "nchs_vsus_1970s/mort1976_nyc.png"
+  },
+  "1977": {
+   "value": 75948,
+   "url": "https://www.cdc.gov/nchs/data/vsus/mort77_2b.pdf",
+   "pdf_page": 49,
+   "table": "Table 7-1. Total, Infant, and Neonatal Deaths, and Fetal Deaths, by Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1977",
+   "note": "",
+   "crop": "nchs_vsus_1970s/mort1977_nyc.png"
+  },
+  "1978": {
+   "value": 73767,
+   "url": "https://www.cdc.gov/nchs/data/vsus/mort78_2b.pdf",
+   "pdf_page": 49,
+   "table": "Table 7-1. Total, Infant, and Neonatal Deaths, and Fetal Deaths, by Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1978",
+   "note": "",
+   "crop": "nchs_vsus_1970s/mort1978_nyc.png"
+  },
+  "1980": {
+   "value": 76877,
+   "url": "https://www.cdc.gov/nchs/data/vsus/mort80_2b.pdf",
+   "pdf_page": 50,
+   "table": "Table 8-1. Total, Infant, and Neonatal Deaths, and Fetal Deaths, by Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1980",
+   "note": "",
+   "crop": "nchs_vsus_1970s/mort1980_nyc.png"
+  }
+ }
+}

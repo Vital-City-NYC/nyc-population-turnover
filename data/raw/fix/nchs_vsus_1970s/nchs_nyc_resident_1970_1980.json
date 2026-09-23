@@ -1,0 +1,619 @@
+{
+  "description": "Births to and deaths of New York City residents (five boroughs), from NCHS Vital Statistics of the United States annual volumes. Births: Vol. I Natality, Table 2-1 (Section 2, Local Area Statistics), column \"Births by place of residence - Total births\". Deaths: Vol. II Mortality Part B, Table 7-1 (8-1 in 1979-80), column \"Deaths by place of residence - Total deaths\". Every value double-read from high-resolution crops and checked two ways: five borough rows sum exactly to the city row, and White + All other sum exactly to the city row.",
+  "index_pages": [
+    "https://www.cdc.gov/nchs/products/vsus/vsus_1965_1979.htm",
+    "https://www.cdc.gov/nchs/products/vsus/vsus_1980_2003.htm"
+  ],
+  "years": {
+    "1970": {
+      "births": {
+        "value": 143936,
+        "url": "https://www.cdc.gov/nchs/data/vsus/nat70_1acc.pdf",
+        "pdf_page": 280,
+        "printed_page": "2-47",
+        "table": "Table 2-1. Live Births by Attendant and Place of Delivery and Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1970",
+        "column": "Births by place of residence: Total births",
+        "row_label": "NEW YORK CITY",
+        "occurrence_same_row": 149188,
+        "borough_rows_bronx_kings_newyork_queens_richmond": [
+          29164,
+          53250,
+          24690,
+          31526,
+          5306
+        ],
+        "white_plus_all_other": [
+          98454,
+          45482
+        ],
+        "checks": "boroughs sum = 143936; white+all other = 143936",
+        "table_headnote": "[Based on a 50-percent sample of births. Small figures should be used with caution; for sampling errors, see Technical Appendix. ...]",
+        "sampling_note": "50-percent sample of all births nationwide; NYC value is a sample estimate (all figures even).",
+        "crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/nat1970_t21_nyc.png",
+        "headnote_crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/nat1970_table21_headnote.png",
+        "prior_checker_value_confirmed": true
+      },
+      "deaths": {
+        "value": 90999,
+        "url": "https://www.cdc.gov/nchs/data/vsus/mort70_2b.pdf",
+        "pdf_page": 51,
+        "printed_page": "7-46",
+        "table": "Table 7-1. Total, Infant, and Neonatal Deaths, and Fetal Deaths, by Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1970",
+        "column": "Deaths by place of residence: Total deaths",
+        "row_label": "NEW YORK CITY",
+        "occurrence_same_row": 88158,
+        "borough_rows_bronx_kings_newyork_queens_richmond": [
+          15952,
+          29172,
+          22206,
+          21045,
+          2624
+        ],
+        "white_plus_all_other": [
+          75111,
+          15888
+        ],
+        "checks": "boroughs sum = 90999; white+all other = 90999",
+        "sampling_note": null,
+        "crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/mort1970_nyc.png",
+        "prior_checker_value_confirmed": true
+      }
+    },
+    "1971": {
+      "births": {
+        "value": 127284,
+        "url": "https://www.cdc.gov/nchs/data/vsus/nat71_1.pdf",
+        "pdf_page": 286,
+        "printed_page": "2-47",
+        "table": "Table 2-1. Live Births by Attendant and Place of Delivery and Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1971",
+        "column": "Births by place of residence: Total births",
+        "row_label": "NEW YORK CITY",
+        "occurrence_same_row": 131830,
+        "borough_rows_bronx_kings_newyork_queens_richmond": [
+          26454,
+          47486,
+          20434,
+          28108,
+          4802
+        ],
+        "white_plus_all_other": [
+          86348,
+          40936
+        ],
+        "checks": "boroughs sum = 127284; white+all other = 127284",
+        "table_headnote": "[Based on a 50-percent sample of births. Small figures should be used with caution; for sampling errors, see Technical Appendix. ...]",
+        "sampling_note": "50-percent sample of all births nationwide; NYC value is a sample estimate (all figures even).",
+        "crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/nat1971_t21_nyc.png",
+        "headnote_crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/nat1971_table21_headnote.png",
+        "nyc_health_dept_occurrence": 131920,
+        "resident_share_of_DOH_occurrence": 0.9649,
+        "cross_table": "Same value 127,284 in Table 1-58 (cities of 100,000 or more), PDF p.119, headnote \"[Based on a 50-percent sample of births...]\"; crops nat1971_nyc.png, nat1971_boroughs.png, nat1971_header.png."
+      },
+      "deaths": {
+        "value": 89402,
+        "url": "https://www.cdc.gov/nchs/data/vsus/mort71_2b.pdf",
+        "pdf_page": 51,
+        "printed_page": "7-46",
+        "table": "Table 7-1. Total, Infant, and Neonatal Deaths, and Fetal Deaths, by Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1971",
+        "column": "Deaths by place of residence: Total deaths",
+        "row_label": "NEW YORK CITY",
+        "occurrence_same_row": 86710,
+        "borough_rows_bronx_kings_newyork_queens_richmond": [
+          15559,
+          28614,
+          21672,
+          21008,
+          2549
+        ],
+        "white_plus_all_other": [
+          73709,
+          15693
+        ],
+        "checks": "boroughs sum = 89402; white+all other = 89402",
+        "sampling_note": null,
+        "crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/mort1971_nyc.png",
+        "nyc_health_dept_occurrence": 86724,
+        "resident_share_of_DOH_occurrence": 1.0309
+      }
+    },
+    "1972": {
+      "births": {
+        "value": 112989,
+        "url": "https://www.cdc.gov/nchs/data/vsus/nat72_1.pdf",
+        "pdf_page": 279,
+        "printed_page": "2-47",
+        "table": "Table 2-1. Live Births by Attendant and Place of Delivery and Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1972",
+        "column": "Births by place of residence: Total births",
+        "row_label": "NEW YORK CITY",
+        "occurrence_same_row": 117010,
+        "borough_rows_bronx_kings_newyork_queens_richmond": [
+          23910,
+          41956,
+          17861,
+          24875,
+          4387
+        ],
+        "white_plus_all_other": [
+          75506,
+          37483
+        ],
+        "checks": "boroughs sum = 112989; white+all other = 112989",
+        "table_headnote": "[Based on 100 percent of births in selected States and on a 50-percent sample of births in all other States; see Technical Appendix. Small figures should be used with caution ...]",
+        "sampling_note": "Technical Appendix: 100-percent states were Florida, Maine, Missouri, New Hampshire, Rhode Island, Vermont; New York not among them, so NYC births were a 50-percent sample.",
+        "crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/nat1972_t21_nyc.png",
+        "headnote_crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/nat1972_table21_headnote.png",
+        "nyc_health_dept_occurrence": 117088,
+        "resident_share_of_DOH_occurrence": 0.965
+      },
+      "deaths": {
+        "value": 87914,
+        "url": "https://www.cdc.gov/nchs/data/vsus/mort72_2b.pdf",
+        "pdf_page": 50,
+        "printed_page": "7-46",
+        "table": "Table 7-1. Total, Infant, and Neonatal Deaths, and Fetal Deaths, by Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1972",
+        "column": "Deaths by place of residence: Total deaths",
+        "row_label": "NEW YORK CITY",
+        "occurrence_same_row": 85348,
+        "borough_rows_bronx_kings_newyork_queens_richmond": [
+          15460,
+          27732,
+          21284,
+          20744,
+          2694
+        ],
+        "white_plus_all_other": [
+          72106,
+          15808
+        ],
+        "checks": "boroughs sum = 87914; white+all other = 87914",
+        "sampling_note": "Footnotes to Table 7-1 (PDF p.78): occurrence column \"Deaths based on a 50-percent sample. Includes deaths occurring in the United States to nonresidents...\"; residence column \"Deaths based on a 50-percent sample.\" 1972 mortality was sampled nationwide; all NYC figures are even (doubled).",
+        "crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/mort1972_nyc.png",
+        "footnote_crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/mort1972_table71_footnotes.png",
+        "headnote_crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/mort1972_table71_headnote.png",
+        "nyc_health_dept_occurrence": 85363,
+        "resident_share_of_DOH_occurrence": 1.0299
+      }
+    },
+    "1973": {
+      "births": {
+        "value": 106242,
+        "url": "https://www.cdc.gov/nchs/data/vsus/nat73_1.pdf",
+        "pdf_page": 293,
+        "printed_page": "2-47",
+        "table": "Table 2-1. Live Births by Attendant and Place of Delivery and Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1973",
+        "column": "Births by place of residence: Total births",
+        "row_label": "NEW YORK CITY",
+        "occurrence_same_row": 110546,
+        "borough_rows_bronx_kings_newyork_queens_richmond": [
+          21808,
+          39304,
+          17358,
+          23385,
+          4387
+        ],
+        "white_plus_all_other": [
+          69566,
+          36676
+        ],
+        "checks": "boroughs sum = 106242; white+all other = 106242",
+        "table_headnote": "[Based on 100 percent of births in selected States and on a 50-percent sample of births in all other States; see Technical Appendix. Small figures should be used with caution ...]",
+        "sampling_note": "Technical Appendix (PDF p.352): 100-percent CHSS states listed (OCR partly illegible); NYC registration records received as microfilm, i.e. 50-percent sample.",
+        "crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/nat1973_t21_nyc.png",
+        "headnote_crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/nat1973_table21_headnote.png",
+        "nyc_health_dept_occurrence": 110639,
+        "resident_share_of_DOH_occurrence": 0.9603
+      },
+      "deaths": {
+        "value": 84739,
+        "url": "https://www.cdc.gov/nchs/data/vsus/mort73_2b.pdf",
+        "pdf_page": 51,
+        "printed_page": "7-46",
+        "table": "Table 7-1. Total, Infant, and Neonatal Deaths, and Fetal Deaths, by Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1973",
+        "column": "Deaths by place of residence: Total deaths",
+        "row_label": "NEW YORK CITY",
+        "occurrence_same_row": 82299,
+        "borough_rows_bronx_kings_newyork_queens_richmond": [
+          14678,
+          26272,
+          20201,
+          20748,
+          2840
+        ],
+        "white_plus_all_other": [
+          69347,
+          15392
+        ],
+        "checks": "boroughs sum = 84739; white+all other = 84739",
+        "sampling_note": null,
+        "crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/mort1973_nyc.png",
+        "nyc_health_dept_occurrence": 82319,
+        "resident_share_of_DOH_occurrence": 1.0294
+      }
+    },
+    "1974": {
+      "births": {
+        "value": 106214,
+        "url": "https://www.cdc.gov/nchs/data/vsus/nat74_1.pdf",
+        "pdf_page": 308,
+        "printed_page": "2-47",
+        "table": "Table 2-1. Live Births by Attendant and Place of Delivery and Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1974",
+        "column": "Births by place of residence: Total births",
+        "row_label": "NEW YORK CITY",
+        "occurrence_same_row": 110584,
+        "borough_rows_bronx_kings_newyork_queens_richmond": [
+          21375,
+          39722,
+          16875,
+          23909,
+          4333
+        ],
+        "white_plus_all_other": [
+          68359,
+          37855
+        ],
+        "checks": "boroughs sum = 106214; white+all other = 106214",
+        "table_headnote": "[Based on 100 percent of births in selected States and on a 50-percent sample of births in all other States; see Technical Appendix. Small figures should be used with caution ...]",
+        "sampling_note": "Technical Appendix (PDF p.367): 100-percent states include \"New York (exclusive of New York City)\"; NYC births were a 50-percent sample.",
+        "crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/nat1974_t21_nyc.png",
+        "nyc_health_dept_occurrence": 110642,
+        "resident_share_of_DOH_occurrence": 0.96
+      },
+      "deaths": {
+        "value": 81728,
+        "url": "https://www.cdc.gov/nchs/data/vsus/mort74_2b.pdf",
+        "pdf_page": 51,
+        "printed_page": "7-46",
+        "table": "Table 7-1. Total, Infant, and Neonatal Deaths, and Fetal Deaths, by Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1974",
+        "column": "Deaths by place of residence: Total deaths",
+        "row_label": "NEW YORK CITY",
+        "occurrence_same_row": 79788,
+        "borough_rows_bronx_kings_newyork_queens_richmond": [
+          13870,
+          25294,
+          19271,
+          20618,
+          2675
+        ],
+        "white_plus_all_other": [
+          66712,
+          15016
+        ],
+        "checks": "boroughs sum = 81728; white+all other = 81728",
+        "sampling_note": null,
+        "crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/mort1974_nyc.png",
+        "nyc_health_dept_occurrence": 79846,
+        "resident_share_of_DOH_occurrence": 1.0236
+      }
+    },
+    "1975": {
+      "births": {
+        "value": 105283,
+        "url": "https://www.cdc.gov/nchs/data/vsus/nat75_1.pdf",
+        "pdf_page": 313,
+        "printed_page": "2-47",
+        "table": "Table 2-1. Live Births by Attendant and Place of Delivery and Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1975",
+        "column": "Births by place of residence: Total births",
+        "row_label": "NEW YORK CITY",
+        "occurrence_same_row": 109370,
+        "borough_rows_bronx_kings_newyork_queens_richmond": [
+          20863,
+          39557,
+          16654,
+          23719,
+          4490
+        ],
+        "white_plus_all_other": [
+          65683,
+          39600
+        ],
+        "checks": "boroughs sum = 105283; white+all other = 105283",
+        "table_headnote": "[Based on 100 percent of births in selected States and on a 50-percent sample of births in all other States; see Technical Appendix. Small figures should be used with caution ...]",
+        "sampling_note": "Technical Appendix (PDF p.373): 100-percent states include \"New York (exclusive of New York City)\"; NYC births were a 50-percent sample.",
+        "crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/nat1975_t21_nyc.png",
+        "prior_checker_value_confirmed": true
+      },
+      "deaths": {
+        "value": 77517,
+        "url": "https://www.cdc.gov/nchs/data/vsus/mort75_2b.pdf",
+        "pdf_page": 49,
+        "printed_page": "7-45",
+        "table": "Table 7-1. Total, Infant, and Neonatal Deaths, and Fetal Deaths, by Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1975",
+        "column": "Deaths by place of residence: Total deaths",
+        "row_label": "New York City",
+        "occurrence_same_row": 76307,
+        "borough_rows_bronx_kings_newyork_queens_richmond": [
+          13455,
+          23786,
+          17985,
+          19639,
+          2652
+        ],
+        "white_plus_all_other": [
+          62681,
+          14836
+        ],
+        "checks": "boroughs sum = 77517; white+all other = 77517",
+        "sampling_note": null,
+        "crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/mort1975_nyc.png",
+        "prior_checker_value_confirmed": true
+      }
+    },
+    "1976": {
+      "births": {
+        "value": 105751,
+        "url": "https://www.cdc.gov/nchs/data/vsus/nat76_1.pdf",
+        "pdf_page": 280,
+        "printed_page": "2-47",
+        "table": "Table 2-1. Live Births by Attendant and Place of Delivery and Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1976",
+        "column": "Births by place of residence: Total births",
+        "row_label": "New York City",
+        "occurrence_same_row": 109986,
+        "borough_rows_bronx_kings_newyork_queens_richmond": [
+          20691,
+          39780,
+          16922,
+          24063,
+          4295
+        ],
+        "white_plus_all_other": [
+          65341,
+          40410
+        ],
+        "checks": "boroughs sum = 105751; white+all other = 105751",
+        "table_headnote": "[Based on 100 percent of births in selected States and on a 50-percent sample of births in all other States; see Technical Appendix. Small figures should be used with caution ...]",
+        "sampling_note": "Technical Appendix (PDF p.339): 100-percent states include \"New York (exclusive of New York City)\"; NYC births were a 50-percent sample.",
+        "crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/nat1976_t21_nyc.png",
+        "headnote_crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/nat1976_table21_headnote.png",
+        "nyc_health_dept_occurrence": 109995,
+        "resident_share_of_DOH_occurrence": 0.9614,
+        "note": "Occurrence total prints as \"09,986\" (leading digit lost in scan); 69,300+40,686 = 109,986."
+      },
+      "deaths": {
+        "value": 78494,
+        "url": "https://www.cdc.gov/nchs/data/vsus/mort76_2b.pdf",
+        "pdf_page": 49,
+        "printed_page": "7-45",
+        "table": "Table 7-1. Total, Infant, and Neonatal Deaths, and Fetal Deaths, by Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1976",
+        "column": "Deaths by place of residence: Total deaths",
+        "row_label": "New York City",
+        "occurrence_same_row": 77509,
+        "borough_rows_bronx_kings_newyork_queens_richmond": [
+          13436,
+          23920,
+          17957,
+          20319,
+          2862
+        ],
+        "white_plus_all_other": [
+          63112,
+          15382
+        ],
+        "checks": "boroughs sum = 78494; white+all other = 78494",
+        "sampling_note": null,
+        "crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/mort1976_nyc.png",
+        "nyc_health_dept_occurrence": 77538,
+        "resident_share_of_DOH_occurrence": 1.0123
+      }
+    },
+    "1977": {
+      "births": {
+        "value": 106335,
+        "url": "https://www.cdc.gov/nchs/data/vsus/nat77_1.pdf",
+        "pdf_page": 288,
+        "printed_page": "2-47",
+        "table": "Table 2-1. Live Births by Attendant and Place of Delivery and Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1977",
+        "column": "Births by place of residence: Total births",
+        "row_label": "New York City",
+        "occurrence_same_row": 110400,
+        "borough_rows_bronx_kings_newyork_queens_richmond": [
+          20475,
+          39954,
+          17182,
+          24358,
+          4366
+        ],
+        "white_plus_all_other": [
+          64863,
+          41472
+        ],
+        "checks": "boroughs sum = 106335; white+all other = 106335",
+        "table_headnote": "[Based on 100 percent of births in selected States and on a 50-percent sample of births in all other States; see Technical Appendix. Small figures should be used with caution ...]",
+        "sampling_note": "Technical Appendix (PDF p.347) lists \"New York\" among 100-percent states without saying whether NYC is included; NYC occurrence counts (110,400; 68,506; 41,894; 38,370) are all even, consistent with a doubled 50-percent sample.",
+        "crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/nat1977_t21_nyc.png",
+        "headnote_crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/nat1977_table21_headnote.png",
+        "nyc_health_dept_occurrence": 110486,
+        "resident_share_of_DOH_occurrence": 0.9624
+      },
+      "deaths": {
+        "value": 75948,
+        "url": "https://www.cdc.gov/nchs/data/vsus/mort77_2b.pdf",
+        "pdf_page": 49,
+        "printed_page": "7-45",
+        "table": "Table 7-1. Total, Infant, and Neonatal Deaths, and Fetal Deaths, by Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1977",
+        "column": "Deaths by place of residence: Total deaths",
+        "row_label": "New York City",
+        "occurrence_same_row": 75011,
+        "borough_rows_bronx_kings_newyork_queens_richmond": [
+          12906,
+          23147,
+          17149,
+          19985,
+          2761
+        ],
+        "white_plus_all_other": [
+          61256,
+          14692
+        ],
+        "checks": "boroughs sum = 75948; white+all other = 75948",
+        "sampling_note": null,
+        "crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/mort1977_nyc.png",
+        "nyc_health_dept_occurrence": 75011,
+        "resident_share_of_DOH_occurrence": 1.0125
+      }
+    },
+    "1978": {
+      "births": {
+        "value": 102776,
+        "url": "https://www.cdc.gov/nchs/data/vsus/nat78_1.pdf",
+        "pdf_page": 302,
+        "printed_page": "2-47",
+        "table": "Table 2-1. Live Births by Place of Delivery and Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1978",
+        "column": "Births by place of residence: Total births",
+        "row_label": "New York City",
+        "occurrence_same_row": 106710,
+        "borough_rows_bronx_kings_newyork_queens_richmond": [
+          19303,
+          38299,
+          16717,
+          24094,
+          4363
+        ],
+        "white_plus_all_other": [
+          62278,
+          40498
+        ],
+        "checks": "boroughs sum = 102776; white+all other = 102776",
+        "table_headnote": "[Based on 100 percent of births in selected States and on a 50-percent sample of births in all other States; see Technical Appendix. Small figures should be used with caution ...]",
+        "sampling_note": "Technical Appendix (PDF p.361) lists \"New York\" among 100-percent states without saying whether NYC is included; NYC occurrence total 106,710 is 10 below the Health Department figure.",
+        "crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/nat1978_t21_nyc.png",
+        "headnote_crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/nat1978_table21_headnote.png",
+        "nyc_health_dept_occurrence": 106720,
+        "resident_share_of_DOH_occurrence": 0.963
+      },
+      "deaths": {
+        "value": 73767,
+        "url": "https://www.cdc.gov/nchs/data/vsus/mort78_2b.pdf",
+        "pdf_page": 49,
+        "printed_page": "7-45",
+        "table": "Table 7-1. Total, Infant, and Neonatal Deaths, and Fetal Deaths, by Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1978",
+        "column": "Deaths by place of residence: Total deaths",
+        "row_label": "New York City",
+        "occurrence_same_row": 73042,
+        "borough_rows_bronx_kings_newyork_queens_richmond": [
+          12643,
+          22362,
+          16488,
+          19568,
+          2706
+        ],
+        "white_plus_all_other": [
+          58805,
+          14962
+        ],
+        "checks": "boroughs sum = 73767; white+all other = 73767",
+        "sampling_note": null,
+        "crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/mort1978_nyc.png",
+        "nyc_health_dept_occurrence": 73081,
+        "resident_share_of_DOH_occurrence": 1.0094
+      }
+    },
+    "1979": {
+      "births": {
+        "value": 101703,
+        "url": "https://www.cdc.gov/nchs/data/vsus/nat79_1.pdf",
+        "pdf_page": 302,
+        "printed_page": "2-45",
+        "table": "Table 2-1. Live Births by Place of Delivery and Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1979",
+        "column": "Births by place of residence: Total births",
+        "row_label": "New York City",
+        "occurrence_same_row": 106021,
+        "borough_rows_bronx_kings_newyork_queens_richmond": [
+          18568,
+          37700,
+          16679,
+          24316,
+          4440
+        ],
+        "white_plus_all_other": [
+          60552,
+          41151
+        ],
+        "checks": "boroughs sum = 101703; white+all other = 101703",
+        "table_headnote": "[Based on 100 percent of births in selected States and on a 50-percent sample of births in all other States; see Technical Appendix. Small figures should be used with caution ...]",
+        "sampling_note": "Technical Appendix (PDF p.360): only AZ, AR, CA, DE, GA, NM, ND, SD and DC sampled at 50 percent; New York (incl. NYC) on a 100-percent basis.",
+        "crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/nat1979_t21_nyc.png",
+        "prior_checker_value_confirmed": true
+      },
+      "deaths": {
+        "value": 72505,
+        "url": "https://www.cdc.gov/nchs/data/vsus/mort79_2b.pdf",
+        "pdf_page": 49,
+        "printed_page": "section 8 page 43",
+        "table": "Table 8-1. Total, Infant, and Neonatal Deaths, and Fetal Deaths, by Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1979",
+        "column": "Deaths by place of residence: Total deaths",
+        "row_label": "New York City",
+        "occurrence_same_row": 72028,
+        "borough_rows_bronx_kings_newyork_queens_richmond": [
+          12355,
+          21939,
+          16129,
+          19314,
+          2768
+        ],
+        "white_plus_all_other": [
+          57336,
+          15169
+        ],
+        "checks": "boroughs sum = 72505; white+all other = 72505",
+        "sampling_note": null,
+        "crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/mort1979_nyc.png",
+        "prior_checker_value_confirmed": true
+      }
+    },
+    "1980": {
+      "births": {
+        "value": 102771,
+        "url": "https://www.cdc.gov/nchs/data/vsus/nat80_1acc.pdf",
+        "pdf_page": 366,
+        "printed_page": "2-47",
+        "table": "Table 2-1. Live Births by Place of Delivery and Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1980",
+        "column": "Births by place of residence: Total births",
+        "row_label": "NEW YORK CITY",
+        "occurrence_same_row": 106951,
+        "borough_rows_bronx_kings_newyork_queens_richmond": [
+          19045,
+          37821,
+          16704,
+          24593,
+          4608
+        ],
+        "white_plus_all_other": [
+          58670,
+          44101
+        ],
+        "checks": "boroughs sum = 102771; white+all other = 102771",
+        "table_headnote": "[Based on 100 percent of births in selected States and on a 50-percent sample of births in all other States; see Technical Appendix. Small figures should be used with caution ...]",
+        "sampling_note": "Technical Appendix (PDF p.426): only AZ, CA, DE, GA, NM, ND and DC sampled at 50 percent; New York on a 100-percent basis.",
+        "crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/nat1980_t21_nyc.png",
+        "nyc_health_dept_occurrence": 107066,
+        "resident_share_of_DOH_occurrence": 0.9599
+      },
+      "deaths": {
+        "value": 76877,
+        "url": "https://www.cdc.gov/nchs/data/vsus/mort80_2b.pdf",
+        "pdf_page": 50,
+        "printed_page": "section 8 page 43",
+        "table": "Table 8-1. Total, Infant, and Neonatal Deaths, and Fetal Deaths, by Race: United States, Each State and County, and Specified Urban Places of 10,000 or More, 1980",
+        "column": "Deaths by place of residence: Total deaths",
+        "row_label": "New York City",
+        "occurrence_same_row": 76541,
+        "borough_rows_bronx_kings_newyork_queens_richmond": [
+          13274,
+          23407,
+          17014,
+          20160,
+          3022
+        ],
+        "white_plus_all_other": [
+          60334,
+          16543
+        ],
+        "checks": "boroughs sum = 76877; white+all other = 76877",
+        "sampling_note": null,
+        "crop": "/private/tmp/claude-501/-Users-joshgreenman-Experiments/4515a3df-9c1b-45b6-a613-752df44d4325/scratchpad/audit/vsus70s/crops/mort1980_nyc.png",
+        "nyc_health_dept_occurrence": 76625,
+        "resident_share_of_DOH_occurrence": 1.0033
+      }
+    }
+  }
+}

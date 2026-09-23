@@ -90,6 +90,28 @@ Sent while that was in progress:
 
 What happened: two panels were added to the timeline. Households by type (family, married-couple, living alone) runs 1970 to 2024: the 2000-2024 figures come from the Census API, and the 1970, 1980 and 1990 figures were taken from the Bureau's printed state volumes, which for 1970 and 1980 are image scans that had to be read by eye (the page images are saved in the repository, and each year's parts add exactly to its household total). One-person households were not tabulated for cities in those two volumes, so that line starts in 1990. The borough panel uses the county detail already in the population files.
 
+## 10. Layout fixes and wording
+
+> can you fix this so it fits in the box and doesn't require a scrollbar?
+
+> should there be two separate panels under here or just one? it confused me slightly.
+
+> please put the third item, the calculator, first.
+
+> this summary isn't right... math doesn't work. be more specific.
+
+> you have footnote markers and footnotes below. is it possible to have elegant links to the source notes instead, so if you click them it jumps right down, and no traditional footnotes?
+
+> "A quarter of a million people a year move in from somewhere else" is present tense. should be past tense. review the language.
+
+What happened: the decade table was compressed to fit the column; the calculator's two result boxes became one; the calculator moved to the top; the key numbers went to two decimals so births, deaths and net migration reconcile with the population change; footnote numbers were replaced by "Sources for this chart" links that jump to titled notes and back; and every historical claim was put in the past tense with its dates. That language pass also caught two errors: the foreign-born share "nearly doubled" rather than doubled, and a note had misstated what City Planning challenged in the Census estimates.
+
+## 11. A third, independent research pass
+
+> Take a deep look at this. Do a rigorous research pass to ensure that everything holds up to scrutiny.
+
+What happened: four independent checkers re-derived every series from freshly downloaded primary sources without using the project's processed data, and a fifth read the 1970s federal vital statistics volumes. The population series and most figures held up exactly. The corrections: the 1970s births and deaths are now federal resident counts for each year instead of scaled five-year averages; four periods where the Census files hold modeled births and deaths now use state resident counts; arrivals now come from a more direct survey table, aligned to the year of the moves, with the Census Bureau's net international migration as a floor and the pre-2005 rate calibrated to the 2000 census; a chart that was drawn a year off was realigned; a decade sentence that ignored the 2010s' small migration gain was fixed; census-year borough and age figures now use the published counts and official median ages; the living-alone line now starts in 1970; and the calculator now rounds its outputs and shows a plausible range. The full list is in section 4 of the methodology.
+
 ---
 
 ## Where things live

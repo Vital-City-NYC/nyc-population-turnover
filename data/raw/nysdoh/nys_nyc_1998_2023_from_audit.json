@@ -1,0 +1,158 @@
+{
+ "1998": {
+  "births": 119883,
+  "births_boro_sum": 119883,
+  "deaths": 59859,
+  "deaths_boro_sum": 59859
+ },
+ "1999": {
+  "births": 119179,
+  "births_boro_sum": 119179,
+  "deaths": 61411,
+  "deaths_boro_sum": 61411
+ },
+ "2000": {
+  "births": 120988,
+  "births_boro_sum": 120988,
+  "deaths": null,
+  "deaths_boro_sum": 0
+ },
+ "2001": {
+  "births": 119412,
+  "births_boro_sum": 119412,
+  "deaths": 60075,
+  "deaths_boro_sum": 60075
+ },
+ "2002": {
+  "births": 117939,
+  "births_boro_sum": 117939,
+  "deaths": 58356,
+  "deaths_boro_sum": 58356
+ },
+ "2003": {
+  "births": 119469,
+  "births_boro_sum": 119469,
+  "deaths": 57917,
+  "deaths_boro_sum": 57917
+ },
+ "2004": {
+  "births": 118649,
+  "births_boro_sum": 118649,
+  "deaths": 56065,
+  "deaths_boro_sum": 56065
+ },
+ "2005": {
+  "births": 117086,
+  "births_boro_sum": 117086,
+  "deaths": 55775,
+  "deaths_boro_sum": 55775
+ },
+ "2006": {
+  "births": 119430,
+  "births_boro_sum": 119430,
+  "deaths": 54190,
+  "deaths_boro_sum": 54190
+ },
+ "2007": {
+  "births": 122932,
+  "births_boro_sum": 122932,
+  "deaths": 52871,
+  "deaths_boro_sum": 52871
+ },
+ "2008": {
+  "births": 121756,
+  "births_boro_sum": 121756,
+  "deaths": 53001,
+  "deaths_boro_sum": 53001
+ },
+ "2009": {
+  "births": 121745,
+  "births_boro_sum": 121745,
+  "deaths": 51450,
+  "deaths_boro_sum": 51450
+ },
+ "2010": {
+  "births": 120003,
+  "births_boro_sum": 120003,
+  "deaths": 50852,
+  "deaths_boro_sum": 50852
+ },
+ "2011": {
+  "births": 118719,
+  "births_boro_sum": 118719,
+  "deaths": 51344,
+  "deaths_boro_sum": 51344
+ },
+ "2012": {
+  "births": 118811,
+  "births_boro_sum": 118811,
+  "deaths": 50938,
+  "deaths_boro_sum": 50938
+ },
+ "2013": {
+  "births": 115994,
+  "births_boro_sum": 115994,
+  "deaths": 51825,
+  "deaths_boro_sum": 51825
+ },
+ "2014": {
+  "births": 117099,
+  "births_boro_sum": 117099,
+  "deaths": 52956,
+  "deaths_boro_sum": 52956
+ },
+ "2015": {
+  "births": 116040,
+  "births_boro_sum": 116040,
+  "deaths": 53786,
+  "deaths_boro_sum": 53786
+ },
+ "2016": {
+  "births": 114400,
+  "births_boro_sum": 114400,
+  "deaths": 53891,
+  "deaths_boro_sum": 53891
+ },
+ "2017": {
+  "births": 110682,
+  "births_boro_sum": 110682,
+  "deaths": 53806,
+  "deaths_boro_sum": 53806
+ },
+ "2018": {
+  "births": 107821,
+  "births_boro_sum": 107821,
+  "deaths": 54419,
+  "deaths_boro_sum": 54419
+ },
+ "2019": {
+  "births": 104294,
+  "births_boro_sum": 104294,
+  "deaths": 54061,
+  "deaths_boro_sum": 54061
+ },
+ "2020": {
+  "births": 94857,
+  "births_boro_sum": 94857,
+  "deaths": 82952,
+  "deaths_boro_sum": 82952
+ },
+ "2021": {
+  "births": 92523,
+  "births_boro_sum": 92523,
+  "deaths": 63596,
+  "deaths_boro_sum": 63596
+ },
+ "2022": {
+  "births": 92094,
+  "births_boro_sum": 92094,
+  "deaths": 60521,
+  "deaths_boro_sum": 60521
+ },
+ "2023": {
+  "births": 90869,
+  "births_boro_sum": 90869,
+  "deaths": 55085,
+  "deaths_boro_sum": 55085
+ }
+}
