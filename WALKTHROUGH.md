@@ -117,6 +117,11 @@ What happened: four independent checkers re-derived every series from freshly do
 
 What happened: the calculator was rebuilt separately in a second language using a different formulation. It matched the page exactly for all 1,540 pairs of years. Its inputs rebuilt exactly from the raw Census files. It was then tested against official counts it never uses: immigrants who arrived since 2010 and children born in the state. The model came within 2 to 7 percent. Letting newcomers leave faster, or weighting deaths toward older residents, kept every result inside the stated range. Two display fixes followed. The legend's rounded percentages now always add up to the headline. The calculator now says whether a year means April 1 (census) or July 1 (estimate). The results are in section 2.5 of the methodology.
 
+
+> (An outside demographer suggested vintage 2010 to fill the 2009-10 gap and asked how the 1995-99 arrivals were derived.) make the vintage 2010 switch
+
+What happened: the Census Bureau's international and domestic migration split for the 2000s now comes from vintage 2010, the last release of that decade's series, instead of vintage 2009. It fills July 2009 to June 2010 and slightly revises earlier years, and the decade table now covers the full ten years. The turnover figures and every other series are unchanged. The same check caught a wrong claim: the 2000s series overshot the 2010 census count, rather than undershooting it, and the chart note and methodology now say so.
+
 ---
 
 ## Where things live

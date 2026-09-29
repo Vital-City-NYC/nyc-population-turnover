@@ -9,7 +9,7 @@
 #     api.census.gov/data/1990/pep/int_charagegroups (intercensal 1990-99 by age/sex/race),
 #     2000c8_36.txt (CO-2000-8, county components 1990-2000, postcensal),
 #     co-est00int-tot.csv (intercensal county totals 2000-2010),
-#     co-est2009-alldata.csv (vintage 2009 components 2000-09),
+#     fix/co-est2010-alldata.csv (vintage 2010 components 2000-10),
 #     co-est2020int-pop-36.xlsx (intercensal county totals 2010-2020), co-est2020-alldata.csv (vintage 2020 components 2010-20),
 #     co-est2025-alldata.csv (vintage 2025 totals + components 2020-25),
 #     co-asr-7079 (1970s county age/sex/race), pe-02 (1980s), co-est00int-alldata-36,
@@ -135,7 +135,7 @@ for r in csv.DictReader(open(rp('co-est2025-alldata.csv'), encoding='latin-1')):
 for y in range(2021, 2026):
     pop[y] = v25[y]; pop_src[y] = 'v2025'
 
-# Census components for 1990s (CO-2000-8, postcensal) and 2000s (vintage 2009, postcensal)
+# Census components for 1990s (CO-2000-8, postcensal) and 2000s (vintage 2010, postcensal)
 blk = {}
 for line in open(rp('2000c8_36.txt'), encoding='latin-1'):
     m = re.match(r'^([1-9])\s+(36\d{3})\s+((?:\s*-?[\d,]+){12})', line)
@@ -151,9 +151,9 @@ comp_names = {4: 'BIRTHS', 5: 'DEATHS', 6: 'INTERNATIONALMIG', 8: 'DOMESTICMIG',
 for b, k in comp_names.items():
     for y in range(1991, 2001):
         comp[y][k] += blk[b][y]
-for r in csv.DictReader(open(rp('co-est2009-alldata.csv'), encoding='latin-1')):
+for r in csv.DictReader(open(rp('fix/co-est2010-alldata.csv'), encoding='latin-1')):
     if r['STATE'] == '36' and r['COUNTY'] in NYC3:
-        for y in range(2001, 2010):   # BIRTHS_2000 etc. are the April-June 2000 stub
+        for y in range(2001, 2011):   # BIRTHS2000 etc. are the April-June 2000 stub; vintage 2010 is the last to cover July 2009-June 2010
             for k in ('BIRTHS', 'DEATHS', 'INTERNATIONALMIG', 'DOMESTICMIG', 'RESIDUAL'):
                 comp[y][k] += int(r[f'{k}_{y}'] if f'{k}_{y}' in r else r[f'{k}{y}'])
         for k in ('BIRTHS', 'DEATHS'): stub2000[k] += int(r[f'{k}_2000'] if f'{k}_2000' in r else r[f'{k}2000'])
@@ -172,7 +172,7 @@ for line in open(rp('comp8090.txt'), encoding='latin-1'):
         for i in range(10): c8090_b[1980 + i] += v[i]; c8090_d[1980 + i] += v[10 + i]
 assert sum(c8090_b.values()) == c8090['births'] and sum(c8090_d.values()) == c8090['deaths'], (sum(c8090_b.values()), c8090['births'])
 
-PEP_YEARS = set(range(1991, 2001)) | set(range(2001, 2010)) | set(range(2011, 2021)) | set(range(2021, 2026))
+PEP_YEARS = set(range(1991, 2001)) | set(range(2001, 2011)) | set(range(2011, 2021)) | set(range(2021, 2026))
 PEP_YEARS_ALL = PEP_YEARS
 # ---------------------------------------------------------------- births and deaths, by residence
 # Each ledger row t covers the interval between its population dates: July 1 t to July 1 t+1, except that
@@ -335,7 +335,7 @@ assert c2c_in['other'] == int(sf3['P024008']), (c2c_in['other'], sf3['P024008'])
 c2c_in['abroad'] = int(sf3['P024016']) + int(sf3['P024013'])   # foreign country/at sea + island areas + Puerto Rico
 c2c_in['total'] = c2c_in['dom'] + c2c_in['abroad']
 
-PEP_YEARS = set(range(1991, 2001)) | set(range(2001, 2010)) | set(range(2011, 2021)) | set(range(2021, 2026))
+PEP_YEARS = set(range(1991, 2001)) | set(range(2001, 2011)) | set(range(2011, 2021)) | set(range(2021, 2026))
 PEP_YEARS_ALL = PEP_YEARS
 # ---------------------------------------------------------------- annual ledger + turnover inputs
 # Gross arrivals from outside the five boroughs (see METHODOLOGY 2.4):
