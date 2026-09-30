@@ -13,4 +13,4 @@ python3 scripts/build_data.py
 python3 scripts/build_page.py
 ```
 
-Only official sources are used: U.S. Census Bureau (population estimates, decennial census, American Community Survey, migration flows), the NYC Department of Health and Mental Hygiene (births and deaths) and the NYC Department of City Planning (foreign-born history). See the methodology for every calculation and assumption.
+Only official sources are used: U.S. Census Bureau (population estimates, decennial census, American Community Survey, microdata samples, migration flows), the National Center for Health Statistics and the New York State and New York City health departments (births and deaths). Every turnover figure is an estimate, not a count. See the methodology for every calculation and assumption.

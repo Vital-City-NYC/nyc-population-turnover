@@ -1,0 +1,37 @@
+{
+ "1980": {
+  "sample": {
+   "weighted_total": 7092200,
+   "age5plus": 6630000,
+   "same_house": 3973920,
+   "other_house_in_city": 1985240,
+   "abroad": 297760,
+   "puerto_rico": 45920,
+   "other_state": 211520,
+   "rest_of_state": 112920,
+   "outlying_areas": 2720
+  },
+  "newcomers_sample": 670840,
+  "share_of_age5plus": 0.10118,
+  "scale_to_census": 0.9971,
+  "newcomers": 668895,
+  "source": "https://www2.census.gov/census_1980/pums_1980_a/PUMSAXNY.ZIP"
+ },
+ "1990": {
+  "sample": {
+   "weighted_total": 7280106,
+   "age5plus": 6782517,
+   "other_house_in_city": 1683692,
+   "same_house": 4289736,
+   "rest_of_state": 117882,
+   "abroad": 420389,
+   "other_state": 241115,
+   "puerto_rico": 29703
+  },
+  "newcomers_sample": 809089,
+  "share_of_age5plus": 0.11929,
+  "scale_to_census": 1.00583,
+  "newcomers": 813808,
+  "source": "https://www2.census.gov/census_1990/1990_PUMS_A/PUMSAXNY.zip"
+ }
+}

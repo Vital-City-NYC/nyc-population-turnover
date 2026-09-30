@@ -1,6 +1,6 @@
 # Methodology: New York City's population since 1970, and the turnover calculator
 
-Built September 15, 2026; revised September 23, 2026 after an independent audit that re-derived every series from primary sources (section 4). Every figure comes from the U.S. Census Bureau, the National Center for Health Statistics (NCHS), the New York State Department of Health, the New York City Department of Health and Mental Hygiene or the New York City Department of City Planning. The raw files are kept in `data/raw/` (page images of scanned volumes included). `scripts/build_data.py` turns them into `docs/data.json`, and `scripts/build_page.py` inlines that into `docs/index.html`. Re-running the two scripts reproduces the page.
+Built September 15, 2026; revised September 23, 2026 after an independent audit that re-derived every series from primary sources (section 4), and September 30, 2026, when arrival rates before 2005 were calibrated to the 1980 and 1990 censuses as well as the 2000 census (section 5). Every figure comes from the U.S. Census Bureau, the National Center for Health Statistics (NCHS), the New York State Department of Health or the New York City Department of Health and Mental Hygiene. Every turnover figure is an estimate, not a count. The raw files are kept in `data/raw/` (page images of scanned volumes included). `scripts/build_data.py` turns them into `docs/data.json`, and `scripts/build_page.py` inlines that into `docs/index.html`. Re-running the two scripts reproduces the page.
 
 ## 1. Sources
 
@@ -8,13 +8,13 @@ Built September 15, 2026; revised September 23, 2026 after an independent audit 
 
 | Series | Source | File in `data/raw/` | Notes |
 |---|---|---|---|
-| Census counts | 1970: 7,894,862; 1980: 7,071,639; 1990: 7,322,564; 2000: 8,008,278; 2010: 8,175,133; 2020: 8,804,190 (April 1) | | Borough counts for 1970-1990 from City Planning's [historical table](https://www.nyc.gov/assets/planning/download/pdf/data-maps/nyc-population/historical-population/nyc_total_pop_1900-2010.pdf) (`fix/dcp_nyc_total_pop_1900-2010.pdf`); 2000 and 2010 from Summary File 1; 2020 from the P.L. 94-171 file (`fix/pl_2020_county_pop.json`). |
+| Census counts | 1970: 7,894,862; 1980: 7,071,639; 1990: 7,322,564; 2000: 8,008,278; 2010: 8,175,133; 2020: 8,804,190 (April 1) | | Borough counts for 1970-1990 from the Census Bureau's [Population of States and Counties of the United States: 1790-1990](https://www2.census.gov/library/publications/decennial/1990/population-of-states-and-counties-us-1790-1990/population-of-states-and-counties-of-the-united-states-1790-1990.pdf), New York table (`fix/census_1790_1990_new_york_counties.pdf`); 2000 and 2010 from Summary File 1; 2020 from the P.L. 94-171 file (`fix/pl_2020_county_pop.json`). |
 | 1971-79 | Census Bureau, [Preliminary Estimates of the Intercensal Population of Counties 1970-1979](https://www2.census.gov/programs-surveys/popest/tables/1900-1980/counties/totals/e7079co.txt) | `e7079co.txt` | The Bureau's only county series for the decade; rounded to hundreds. Its 1970 county base includes later corrections (Queens +701). |
 | 1981-89 | Census Bureau, [Intercensal Estimates, 1980-1989](https://www2.census.gov/programs-surveys/popest/tables/1980-1990/counties/totals/e8089co.txt) | `e8089co.txt` | Its 1980 base shifts 92 people from Staten Island to Brooklyn relative to the published counts. |
 | 1991-99 | Census Bureau, [CO-EST2001-12-36](https://www2.census.gov/programs-surveys/popest/tables/1990-2000/intercensal/st-co/co-est2001-12-36.pdf) intercensal county estimates, pulled via the [API](https://api.census.gov/data/1990/pep/int_charagegroups.html) | `int_charagegroups_1990s.json` | Values identical to the published table. |
 | 2001-09 | Census Bureau, [intercensal county estimates 2000-2010](https://www2.census.gov/programs-surveys/popest/datasets/2000-2010/intercensal/county/co-est00int-tot.csv) | `co-est00int-tot.csv` | |
 | 2011-19 | Census Bureau, [intercensal county estimates 2010-2020](https://www2.census.gov/programs-surveys/popest/tables/2010-2020/intercensal/county/co-est2020int-pop-36.xlsx) (released November 2024) | `co-est2020int-pop-36.xlsx` | Its April 2020 column differs from the official 2020 count by a few people per borough, so census years use the official count. |
-| 2021-25 | Census Bureau, [vintage 2025 county estimates](https://www2.census.gov/programs-surveys/popest/datasets/2020-2025/counties/totals/co-est2025-alldata.csv) (file dated March 26, 2026) | `co-est2025-alldata.csv` | Identical to City Planning's [July 2026 release](https://s-media.nyc.gov/agencies/dcp/assets/files/pdf/data-tools/population/population-estimates/new-york-city-population-estimates-and-trends-july-2026.pdf), county by county. |
+| 2021-25 | Census Bureau, [vintage 2025 county estimates](https://www2.census.gov/programs-surveys/popest/datasets/2020-2025/counties/totals/co-est2025-alldata.csv) (file dated March 26, 2026) | `co-est2025-alldata.csv` | |
 
 ### Births and deaths (residents of the five boroughs)
 
@@ -36,6 +36,7 @@ The city Health Department's long historical series ([Summary of Vital Statistic
 |---|---|---|---|
 | Arrivals 2006-2024 surveys | ACS 1-year [table B07204](https://data.census.gov/table/ACSDT1Y2024.B07204?g=160XX00US3651000), New York city: line 7 ("Different house in United States 1 year ago: Elsewhere") + line 16 ("Abroad 1 year ago"), with margins of error | `fix/b07204/acs1_YYYY.json` | Population aged 1 and over. No standard 2020 release. |
 | 2000 census arrivals | [County-to-county flows](https://www2.census.gov/programs-surveys/demo/tables/geographic-mobility/2000/county-to-county-flows/) and SF3 table P24 (residence in 1995) | `c2c2000_*.txt`, `sf3_2000_nyc_mobility_nativity.json` | 448,970 from elsewhere in the U.S. (ties exactly to SF3's 301,243 from other states plus 147,727 from the rest of the state) + 521,643 from abroad, Puerto Rico and the island areas = 970,613 residents aged 5+. |
+| 1980 and 1990 census arrivals | Census Bureau Public Use Microdata Samples, A samples (5 percent): [1980](https://www2.census.gov/census_1980/pums_1980_a/) and [1990](https://www2.census.gov/census_1990/1990_PUMS_A/), New York files; 1990 layout in `DOCUMENT/PUMSUSDD.doc`, 1980 layout in the 1980 PUMS technical documentation (reproduced by IPUMS as [1980_PUMS_codebook.pdf](https://usa.ipums.org/usa/resources/codebooks/1980_PUMS_codebook.pdf)) | `fix/census_newcomers_1980_1990.json`, built by `scripts/census_newcomers.py` | Residents of the five boroughs aged 5 and over who lived outside the city five years earlier (rest of New York State, other states, Puerto Rico and outlying areas, abroad). 1980: 670,840 in the sample, 10.1 percent of residents 5 and over; 668,895 scaled to the census total. 1990: 809,089, 11.9 percent; 813,808 scaled. Moves between boroughs are excluded. The 1980 migration items were asked of half the sample, so those records carry double weight. |
 | Bureau migration split | CO-2000-8 (July 1990-June 2000), [vintage 2010](https://www2.census.gov/programs-surveys/popest/datasets/2010/2010-eval-estimates/co-est2010-alldata.csv) (July 2000-June 2010), vintage 2020 (July 2010-June 2020), vintage 2025 (July 2020-June 2025) | | Vintage 2010 is the last release of the 2000s series and the only one covering July 2009-June 2010; it replaced vintage 2009 on Sept. 29, 2026. |
 | Age, census years | 1970: Table 24, [PC(1)-B34](https://www2.census.gov/prod2/decennial/documents/1970a_ny1-02.pdf), page 34-108; 1980: Table 26, [PC80-1-B34](https://www2.census.gov/library/publications/decennial/1980/volume-1/new-york/1980censusofpopu80134unse_bw.pdf), page 34-124 (both read from scans; each column sums exactly to the census total); 2000 and 2010: SF1 P12; 2020: DHC [P12](https://data.census.gov/table/DECENNIALDHC2020.P12?g=160XX00US3651000) | `fix/census_age_1970_1980.json`, `fix/sf1_*_P012.json`, `fix/dhc2020_P12.json` | 1990 uses the Bureau's July 1990 estimate because the city's 1990 census age table is only in a scanned volume with different groupings. |
 | Median age | Published: 1970 32.4, 1980 32.6, 1990 33.6 ([CP-1-34](https://www2.census.gov/library/publications/decennial/1990/cp-1/cp-1-34-1.pdf), Table 1), 2000 34.2, 2010 35.5, 2020 36.8 (P13) | | 2025: no city median is published. Computed from the Bureau's [single-year-of-age county file](https://www2.census.gov/programs-surveys/popest/datasets/2020-2025/counties/asrh/cc-est2025-syasex-36.csv) by linear interpolation within the single year containing the midpoint; the same method reproduces the Bureau's published medians for all five boroughs exactly (Bronx 36.4, Brooklyn 36.5, Manhattan 37.7, Queens 40.3, Staten Island 41.0). Result: 37.9. |
@@ -44,7 +45,7 @@ The city Health Department's long historical series ([Summary of Vital Statistic
 | Households 1980 | PC80-1-B34 Table 27, page 34-132 (householders 2,788,530; family 1,202,278 + 555,286; spouses 1,203,135; nonfamily 430,244 + 600,722; 2.49) | `hh/scans/` | The 1980 housing volume with one-person households was not found online, so the living-alone line skips 1980. |
 | Households 1990-2024 | 1990 CP-1-34 Table 2, page 36; SF1 P18 (2000, 2010); DHC P16 (2020); ACS 1-year B11001, B25010, B11002 (2006-2024) | `hh/` | Shares are computed from counts, not from rounded percentages. |
 | Race and Hispanic origin | 1970-1990: Gibson and Jung, [Working Paper 76](https://www.census.gov/library/working-papers/2005/demo/POP-twps0076.html), New York city table; 2000: SF1 [P3 and P8](https://data.census.gov/table/DECENNIALSF12000.P008?g=160XX00US3651000); 2010: SF1 P5; 2020: P5 | `../nyc-demographics-horserace/data/data.json` | 2020 Asian and Pacific Islander = Asian alone 1,385,144 + NHPI alone 6,874. |
-| Foreign-born | 1970-1990: [Working Paper 29](https://www.census.gov/library/working-papers/1999/demo/POP-twps0029.html), Table 22, and City Planning's The Newest New Yorkers 2013, Table 2-1 (identical); 2000: SF3 P21; 2006-2024: ACS B05002 | `dcp_nny2013_table2-1_page20.txt`, `acs/` | |
+| Foreign-born | 1970-1990: Gibson and Lennon, [Working Paper 29](https://www.census.gov/library/working-papers/1999/demo/POP-twps0029.html), Table 22 (sample data); 2000: SF3 P21; 2006-2024: ACS B05002 | `fix/wp29_table22.xlsx`, `acs/` | |
 
 All files were downloaded September 15-23, 2026. nyc.gov refuses the default curl user agent; cdc.gov refuses scripted requests but loads in a browser.
 
@@ -66,9 +67,11 @@ During a decade the Census Bureau issues postcensal estimates, one "vintage" a y
 
 Postcensal estimates for the city have missed the next census badly. The Bureau's July 2000 estimate, made before the 2000 count, was 7,469,322, against a count of 8,008,278. Its July 2020 estimate was 8,253,213, against a count of 8,804,190. Vintage 2025 raised July 2024 from 8,478,072 to 8,596,825, mostly through higher international migration. The city's [challenge](https://www.census.gov/programs-surveys/popest/about/challenge-program/results.html) to vintage 2023, over uncounted shelter residents, raised July 2023 by 36,489. The 2020-25 decline of 219,561 rests entirely on postcensal estimates.
 
-The page measures change from the April 2020 census count (8,804,190), as City Planning does, rather than from the Bureau's estimates base (8,805,594). The Bureau's April 2000 and 2010 bases also differ slightly from the counts (+907 and −203).
+The page measures change from the April 2020 census count (8,804,190) rather than from the Bureau's estimates base (8,805,594). The Bureau's April 2000 and 2010 bases also differ slightly from the counts (+907 and −203).
 
 The [2020 Post-Enumeration Survey](https://www.census.gov/library/stories/2022/05/2020-census-undercount-overcount-rates-by-state.html) estimated a statewide net overcount of New York's household population of 3.44 percent (standard error 0.94; [report](https://www2.census.gov/programs-surveys/decennial/coverage-measurement/pes/census-coverage-estimates-for-people-in-the-united-states-by-state-and-census-operations.pdf)). It measures household population only. The Bureau says it cannot publish county or place estimates. If the city was overcounted too, the 2020 peak, the 2010s growth and the 2010s net migration (+19,027) are overstated, and the 2020-25 decline is overstated.
+
+Earlier counts missed people. The Bureau's [1990 coverage estimates](https://www.census.gov/data/tables/1990/dec/undercounts.html) (county file for New York) put the city's net undercount at 244,588 people, 3.2 percent of the adjusted total of 7,567,152: Bronx 61,982 (4.9 percent), Brooklyn 88,486 (3.7), Manhattan 53,910 (3.5), Queens 40,405 (2.0), Staten Island −195 (−0.1). The page uses the published counts. If the 2000 count missed fewer people, part of the 1990s population growth is better counting, not migration: the 1990s net migration of +101,959 would turn negative if the 2000 count missed fewer than about 142,600 New Yorkers. Every census misses some people; for 1970 and 1980 the Bureau published no coverage estimate for the city.
 
 ### 2.3 Decade ledger
 
@@ -80,9 +83,17 @@ Sums of the yearly rows between census dates, plus 2020-25. The Bureau's interna
 - **Floor from the Bureau's international figure.** Gross arrivals from abroad cannot be smaller than net arrivals from abroad. Where the Bureau's net international migration for the same July-June year exceeds the survey's count of arrivals from abroad, the model uses the Bureau's figure. That happened in 2022-23 (155,131 against 104,808) and 2023-24 (219,578 against 98,492), when the Bureau revised its methods to capture humanitarian migrants.
 - **Gaps.** The July 2019-March 2020 row has no survey (no standard 2020 release) and takes the mean of the neighboring rates. The July 2024-July 2025 row, whose survey is not yet out, carries the previous row's survey rate forward, with the same floor applied using the Bureau's 2024-25 international figure.
 - **Row length.** Rows spanning 15 or 9 months get 15/12 or 9/12 of a year's arrivals.
-- **1995-1999.** No annual series exists. The 2000 census counted 970,613 residents aged 5 and over who had lived outside the city in April 1995. The 1995-99 arrival rate is calibrated so that the model's count of people who arrived between April 1995 and April 2000 and were still in the city in 2000 equals that figure. Result: 2.663 percent of the population a year. Dividing the five-year count by five would understate annual arrivals badly, because a five-year question misses people who arrived and left again, or moved more than once. The 2000 census's domestic arrivals divided by five come to about 90,000 a year, while the 2006-10 surveys found about 166,000 a year.
-- **1970-1994.** The calibrated 1995-99 rate is assumed. Every calculator window that includes these years says so.
-- **2000-2004.** Interpolated between the calibrated rate and the first survey-based rate (2.994 percent).
+- **Before 2005.** No annual series exists, but the 1980, 1990 and 2000 censuses asked where people lived five years earlier. For each, one yearly arrival rate (arrivals per resident) is calibrated so that the model's count of people who arrived in the five years before the census and were still in the city on census day equals the census count of residents aged 5 and over who had lived outside the city five years earlier. The model tracks those arrivals through each year's deaths and out-moves, so the calibrated rate accounts for newcomers who died or left before the census; dividing the five-year count by five would not.
+
+| Period | Census target | Calibrated rate |
+|---|---|---|
+| 1975-79 | 668,895 (1980 census) | 2.006 percent a year |
+| 1985-89 | 813,808 (1990 census) | 2.423 percent |
+| 1995-99 | 970,613 (2000 census) | 2.663 percent |
+| 2005-06 (first survey) | | 2.994 percent |
+
+- **Years between.** 1980-84 and 1990-94 are interpolated linearly between the neighboring calibrated rates; 2000-04 between the 1995-99 rate and the first survey rate. 1970-74 precede any usable census question and assume the 1975-79 rate. Every calculator window says how many of its years are calibrated, interpolated or assumed.
+- **What the calibration cannot fix.** A five-year question misses people who arrived and left again between censuses, and counts people who moved more than once only once, so rates calibrated to it probably understate yearly arrivals. At the one point where both measures meet, the calibrated 1995-99 rate is 11 percent below the first survey rate. The model's arrivals also include children under 5 and returning New Yorkers, whom the census targets exclude, which pushes the calibrated rates down slightly. The range (section 2.5) allows for this.
 
 Out-moves each row = arrivals − net migration, so arrivals, out-moves, births, deaths and population changes are consistent by construction. Out-moves include emigration, which no source measures.
 
@@ -96,14 +107,18 @@ Start with the population in year A as one stock. For each row t from A to B−1
 
 The three stocks sum exactly to the population in B, for every window (checked in `build_data.py`). The headline is `1 − stayers / population(B)`: the share of the end-year city that was not here in A. The second line is `1 − stayers / population(A)`: the share of A's residents gone by B. Model outputs are rounded to three significant figures.
 
-**Range.** The largest uncertainty is the level of gross moves. The range shown reruns the model with arrivals 15 percent lower and 25 percent higher, with out-moves moving with them so net migration is unchanged. The upper bound is wider because independent measures point upward: the ACS county-to-county flows put domestic out-migration alone 1 to 16 percent above the page's total out-moves in the 2006-2020 windows (14-16 percent in the 2010s), IRS [Statistics of Income](https://www.irs.gov/statistics/soi-tax-stats-migration-data) data show domestic outflows of about 284,000 to 385,000 a year for the filing years 2016-17 through 2020-21, and the page's total also has to cover emigration.
+**Range.** The largest uncertainty is the level of gross moves. The range reruns the model with arrivals scaled down and up, with out-moves moving with them so net migration is unchanged: 15 percent lower to 25 percent higher for years with survey data (2005 on); 15 percent lower to 40 percent higher for 1975-2004, whose rates rest on five-year census questions (the survey years' 25 percent, compounded by the 12 percent gap between the calibrated 1995-99 rate and the first survey rate); and 30 percent lower to 40 percent higher for 1970-74, whose rate is assumed (the calibrated rates fall by a tenth to a sixth each decade going back, so the early 1970s could be lower still). The range does not include census coverage error. The upper bound for the survey years is wider than the lower because independent measures point upward: the ACS county-to-county flows put domestic out-migration alone 1 to 16 percent above the page's total out-moves in the 2006-2020 windows (14-16 percent in the 2010s), IRS [Statistics of Income](https://www.irs.gov/statistics/soi-tax-stats-migration-data) data show domestic outflows of about 284,000 to 385,000 a year for the filing years 2016-17 through 2020-21, and the page's total also has to cover emigration.
 
 | Window | Low | Central | High | Share of start-year residents gone |
 |---|---|---|---|---|
-| 2001-2025 | 62.3% | 66.5% | 72.5% | 64.3% |
-| 2001-2013 | 38.9% | 42.3% | 47.5% | 38.7% |
+| 2001-2025 | 62.3% | 66.5% | 73.0% | 64.3% |
+| 2001-2013 | 38.9% | 42.3% | 48.4% | 38.7% |
+| 2010-2020 | 32.4% | 35.5% | 40.3% | 30.5% |
 | 2020-2025 | 20.2% | 22.6% | 26.4% | 24.5% |
-| 1970-2025 | 88.9% | 91.3% | 94.3% | 90.6% |
+| 1990-2000 | 32.4% | 35.0% | 41.7% | 29.0% |
+| 1990-2025 | 75.7% | 79.4% | 85.3% | 75.8% |
+| 1970-2001 | 67.0% | 71.0% | 78.6% | 70.4% |
+| 1970-2025 | 87.6% | 90.3% | 94.2% | 89.4% |
 
 **Equal exit rates.** Newcomers leave at higher rates than long-settled residents, a pattern well established in migration research (e.g., [Morrison, Demography, 1967](https://pubmed.ncbi.nlm.nih.gov/21318669/)); the model ignores that, which overstates the newcomers still present and so overstates turnover. Deaths fall mostly on older, long-settled residents; the model spreads them evenly, which understates the loss of the original cohort and so understates turnover. The audit's simulations, run on the version of the model it examined, put the first effect at −1.5 to −6.6 points on the 2001-2025 result (newcomers leaving at two to four times the base rate in their first years) and the second at about +3.5 points; together they changed the result by about 3 points or less. Heterogeneity within the original cohort, mobile renters against rooted owners, is not modeled; over long windows it would push the model toward overstating turnover. Former New Yorkers who return count as newcomers, which also pushes turnover up.
 
@@ -145,18 +160,16 @@ Rerunning the model with the two main departures from equal exit rates gives the
 | 2001-2013 | 42.3% | 41.1% | 40.1% | 43.1% | 41.9% | 40.9% |
 | 2010-2020 | 35.5% | 34.6% | 33.7% | 36.1% | 35.1% | 34.3% |
 | 2020-2025 | 22.6% | 21.8% | 21.2% | 22.8% | 22.0% | 21.3% |
-| 1970-2025 | 91.3% | 90.4% | 89.6% | 94.2% | 93.6% | 93.0% |
+| 1970-2025 | 90.3% | 89.4% | 88.6% | 93.4% | 92.7% | 92.1% |
 
-The death weighting assumes the original residents have a relative death rate of 1, newcomers 0.4 and children born since 0.15. Every variant stays inside the page's range.
+The death weighting assumes the original residents have a relative death rate of 1, newcomers 0.4 and children born since 0.15. Every variant stays inside the page's range. (The 1970-2025 row reflects the September 30 recalibration; the others are unchanged by it.)
 
-The pre-2005 calibration probably errs slightly low. The model's stock of arrivals after 1995 includes children under 5 and returning New Yorkers. The census target excludes both. Children aged 1 to 4 were 3 to 4 percent of arrivals from out of state or abroad in the 2010, 2015 and 2019 surveys. So the calibrated rate is, if anything, a little low, and so are turnover figures for windows before 2005.
+The pre-2005 calibrations probably err low. The model's stock of arrivals includes children under 5 and returning New Yorkers, whom the census targets exclude; children aged 1 to 4 were 3 to 4 percent of arrivals from out of state or abroad in the 2010, 2015 and 2019 surveys. The five-year questions also miss people who came and went between censuses. So the calibrated rates are, if anything, low, and so are turnover figures for windows before 2005; the range leans upward for those years.
 
 The check led to two display fixes:
 
 - The legend's rounded shares now always add to 100 and to the headline, using largest-remainder rounding. Before the fix, 367 of the 1,540 windows were off by a point.
 - The calculator now names the population date: April 1 in census years, July 1 otherwise.
-
-**City Planning's 2013 figure.** In 2013 City Planning gave Harry Siegel a back-of-the-envelope estimate that "fully half" of the city had turned over since 2001 ([Vital City, 2026](https://www.vitalcitynyc.org/how-nyc-changed-since-9-11/)). Its method was not published. For 2001-2013 the model gives 42 percent (share of the 2013 city new since 2001) and 39 percent (share of 2001 residents gone). The simple tally, births plus arrivals divided by the 2013 population, gives 51 percent. That tally overstates turnover, because it counts newcomers who later left or died, so its closeness to "fully half" is not corroboration. The same Vital City article says "more than three-quarters of the city has turned over" since 9/11. The model's figures for 2001-2025 are 66 percent new and 64 percent gone, with an upper bound near 72 percent.
 
 ### 2.6 Households and families
 
@@ -178,7 +191,8 @@ Foreign-born shares are foreign-born residents divided by total population. Peop
 
 - Net migration is a residual and carries every error in the counts, estimates and vital statistics. Several annual values are within that error, and the 2010s yearly pattern partly reflects how the intercensal method spread the 2020 correction.
 - The 2020-25 population and the 2023-25 births and deaths are postcensal estimates and will be revised.
-- Arrivals before 2005 are calibrated (1995-99), interpolated (2000-04) or assumed (1970-94). Windows that start in the 1970s are sensitive to the assumed rate: 1970-2001 ranges from about 65 to 79 percent for assumed rates of 1.5 to 3.5 percent a year, while 1970-2025 stays between 88 and 93 percent.
+- Arrivals before 2005 are calibrated to census five-year questions (1975-79, 1985-89, 1995-99), interpolated (1980-84, 1990-94, 2000-04) or assumed (1970-74). Windows that reach back before 2005 are rougher, and the longer a window, the more its result depends on these rates: 1970-2001 has a range of 67 to 79 percent.
+- The census counts that anchor every series missed people by different amounts in different years (the 1990 count by an estimated 3.2 percent in the city). Those differences flow into net migration and the turnover model, and the range does not include them.
 - Gross moves are counted once a year, so they are a floor on movement. Someone who moved in and left again within 12 months appears in neither arrivals nor out-moves; someone who moved in twice counts twice; arrivals under age 1 are missed; and former New Yorkers who return count as newcomers. Out-moves, including emigration, are derived as arrivals minus net migration, not measured.
 - The turnover figures are model estimates meant to answer "roughly how much." They should be quoted with their range.
 - The 1971-79 population estimates are preliminary and rounded to hundreds.
@@ -216,14 +230,23 @@ Four independent checkers re-derived every series from freshly downloaded primar
 15. "26% below their 2006-07 peak" is replaced with comparisons to the series high and the late-2000s high.
 16. The "within about 1 percent" comparison is restated for multiyear totals.
 17. The footer is corrected: it had said the only modeled figures were the turnover estimates.
-18. The claim that the simple tally "matches" City Planning's figure is withdrawn.
+18. A comparison with an unpublished back-of-the-envelope estimate was withdrawn.
 19. "The ACS shows this" is replaced with a research citation.
 20. Model outputs are rounded, and a range is shown.
 21. This document had said the build uses only the standard library. It also needs openpyxl.
 
-## 5. Reproducing the page
+## 5. Revision, September 30, 2026
+
+1. Arrival rates before 2005 had used the 1995-99 rate, calibrated to the 2000 census, for every year back to 1970. They are now calibrated separately to the 1980 and 1990 censuses as well (section 2.4), interpolated between, and assumed only for 1970-74. The rates rise over time, from 2.0 to 2.4 to 2.7 percent a year. Results for windows that start before 1995 fall; 1970-2025 goes from 91.3 to 90.3 percent. Windows starting in 2001 or later are unchanged.
+2. The range is wider for years before 2005 and widest for 1970-74, and the calculator states that its figures are estimates.
+3. The Census Bureau's 1990 coverage estimates are now cited, with what they imply for the 1990s migration figure.
+4. The "Show the math" table now labels each period, gives its length in months and restates each exit rate on a 12-month basis, so the 15- and 9-month rows around census dates no longer look like jumps.
+5. Borough counts for 1970-1990 and foreign-born figures for 1970-1990 now come directly from Census Bureau publications.
+
+## 6. Reproducing the page
 
 ```
+python3 scripts/census_newcomers.py   # downloads the 1980 and 1990 PUMS files (about 80 MB) and writes the census arrival targets
 python3 scripts/build_data.py   # parses data/raw/ into docs/data.json and prints the cross-checks
 python3 scripts/build_page.py   # inlines data.json into build/template.html -> docs/index.html
 ```

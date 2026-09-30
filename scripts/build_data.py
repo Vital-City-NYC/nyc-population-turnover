@@ -20,7 +20,9 @@
 #   U.S. Census Bureau, ACS county-to-county migration flows, vintages 2010-2020 (5-year windows).
 #   NYC Dept. of Health and Mental Hygiene, Summary of Vital Statistics 2023, Table PC1
 #     (population, live births, deaths, 1898-2023).
-#   NYC Dept. of City Planning, The Newest New Yorkers 2013, Table 2-1 (foreign-born 1900-2011).
+#   Campbell Gibson and Emily Lennon, Census Bureau Working Paper 29, Table 22 (nativity of large cities, 1850-1990).
+#   Census Bureau, Population of States and Counties of the United States: 1790-1990 (borough census counts 1970-90).
+#   Census Bureau, 1980 and 1990 Public Use Microdata Samples (residence five years earlier; scripts/census_newcomers.py).
 #   Campbell Gibson and Kay Jung, Census Bureau Working Paper 76 (race/Hispanic 1970-1990),
 #     via the compiled series in nyc-demographics-horserace/data/data.json.
 # Description: parses the raw files into docs/data.json — one annual ledger 1970-2025
@@ -345,10 +347,14 @@ PEP_YEARS_ALL = PEP_YEARS
 #   - The abroad part is never allowed below the Bureau's net international migration for the same July-June
 #     year (gross arrivals from abroad cannot be smaller than net arrivals from abroad).
 #   - Rows that cover 15 or 9 months get 15/12 or 9/12 of a year's arrivals.
-#   - Rows before 2005: no annual series exists. The 1995-99 rate is calibrated so that the model's count of
-#     people who arrived after April 1995 and were still in the city in April 2000 equals the 2000 census count
-#     of residents aged 5+ who lived outside the city in 1995 (970,613). That rate is assumed for 1970-94, and
-#     2000-04 is interpolated between it and the first survey-based rate.
+#   - Rows before 2005: no annual series exists. Three censuses asked where people lived five years earlier.
+#     For each, one yearly rate (arrivals per resident) is calibrated so that the model's count of people who
+#     arrived in the five years before the census and were still in the city on census day equals the census
+#     count of residents aged 5+ who lived outside the city five years earlier: 1975-79 to the 1980 census
+#     (668,895), 1985-89 to the 1990 census (813,808), both from the Public Use Microdata Samples
+#     (scripts/census_newcomers.py), and 1995-99 to the 2000 census (970,613). 1980-84 and 1990-94 are
+#     interpolated between neighbouring calibrated rates, 2000-04 between the 1995-99 rate and the first
+#     survey-based rate, and 1970-74, before any usable census question, assumes the 1975-79 rate.
 b7204 = {}
 for y in list(range(2006, 2020)) + [2021, 2022, 2023, 2024]:
     d = json.load(open(rp(f'fix/b07204/acs1_{y}.json'))); r = dict(zip(d[0], d[1]))
@@ -380,31 +386,39 @@ def run_model(rate_of, A, B, start_stock=None):
         f = 1 - (deaths[t] + out) / pop[t]
         orig *= f; moved *= f; moved += inn
     return moved
-# calibrate the 1995-99 rate: arrivals from April 1995 (the last quarter of row 1994) through March 2000
+# calibrate one rate per census window: arrivals from April of year A (the last quarter of row A-1) through
+# March of year A+5, still present on census day A+5
 target = int(sf3['P024013']) + int(sf3['P024016']) + c2c_in['dom']
 assert target == 970613, target
-def moved_1995_2000(g):
+cn = json.load(open(rp('fix/census_newcomers_1980_1990.json')))
+targets = {1975: cn['1980']['newcomers'], 1985: cn['1990']['newcomers'], 1995: target}
+def moved_window(g, A):
     rate = lambda t: g * pop[t] * MONTHS[t] / 12
-    first = 0.25 * rate(1994)            # April-June 1995 arrivals sit in row 1994 (July 1994-June 1995)
-    return run_model(rate, 1995, 2000, start_stock=first)
-lo_g, hi_g = 0.01, 0.08
-for _ in range(60):
-    mid = (lo_g + hi_g) / 2
-    if moved_1995_2000(mid) < target: lo_g = mid
-    else: hi_g = mid
-g_cal = (lo_g + hi_g) / 2
+    first = 0.25 * rate(A - 1)           # e.g. April-June 1995 arrivals sit in row 1994 (July 1994-June 1995)
+    return run_model(rate, A, A + 5, start_stock=first)
+g_win = {}
+for A, tg in targets.items():
+    lo_g, hi_g = 0.005, 0.08
+    for _ in range(60):
+        mid = (lo_g + hi_g) / 2
+        if moved_window(mid, A) < tg: lo_g = mid
+        else: hi_g = mid
+    g_win[A] = (lo_g + hi_g) / 2
+g_cal = g_win[1995]
 rate_2005 = in_meas[2005]['annual'] / pop[2005]
 ledger = []
 for y in years:
     P = pop[y]; b = births[y]; d = deaths[y]; net = netmig[y]; k = MONTHS[y] / 12
     if y in in_meas:
         annual = in_meas[y]['annual']; isrc = in_meas[y]['source']
-    elif 1995 <= y <= 1999:
-        annual = g_cal * P; isrc = 'census2000'
+    elif y < 2005 and (y // 5 * 5) in g_win and y % 10 >= 5:
+        annual = g_win[y // 5 * 5] * P; isrc = f'census{y // 10 * 10 + 10}'
     elif 2000 <= y <= 2004:
         t = (y - 1999) / 6; annual = P * (g_cal * (1 - t) + rate_2005 * t); isrc = 'interp'
-    elif y < 1995:
-        annual = g_cal * P; isrc = 'assumed'
+    elif y in (1980, 1981, 1982, 1983, 1984, 1990, 1991, 1992, 1993, 1994):
+        a0 = y // 10 * 10 - 5; t = (y - (a0 + 4)) / 6; annual = P * (g_win[a0] * (1 - t) + g_win[a0 + 10] * t); isrc = 'interp'
+    elif y < 1975:
+        annual = g_win[1975] * P; isrc = 'assumed'
     else:
         annual = in_meas[2024]['annual'] / pop[2024] * P; isrc = 'carried'
     inn = round(annual * k) if MONTHS[y] else round(annual)
@@ -499,18 +513,23 @@ for i, y in enumerate(hr['years']):
 
 # ---------------------------------------------------------------- foreign-born
 fb = []
-for line in open(rp('dcp_nny2013_table2-1_page20.txt')).read().splitlines():
-    m = re.match(r'^(19[789]0|2000|2011)\s+([\d,]+)\s+([\d,]+)\s+([\d.]+)\s', line)
-    if m and int(m.group(1)) < 2011:
-        fb.append(dict(year=int(m.group(1)), total=num(m.group(2)), foreign_born=num(m.group(3)), share=float(m.group(4)), source='Decennial census via NYC Dept. of City Planning, The Newest New Yorkers 2013, Table 2-1'))
-assert fb[-1]['foreign_born'] == int(sf3['P021013'])   # 2000 ties to SF3 P21
+import openpyxl as _ox, warnings as _w
+_w.filterwarnings('ignore')
+wp29 = list(_ox.load_workbook(rp('fix/wp29_table22.xlsx'), data_only=True).active.iter_rows(values_only=True))
+i0 = next(i for i, r in enumerate(wp29) if r[0] and str(r[0]).startswith('New York /'))
+for r in reversed(wp29[i0 + 1:i0 + 4]):            # 1970, 1980, 1990 rows (sample data)
+    yr = int(re.search(r'(19\d0)', str(r[0])).group(1))
+    fb.append(dict(year=yr, total=int(r[1]), foreign_born=int(r[3]), share=float(r[4]), source='Decennial census (sample), Census Bureau Working Paper 29, Table 22'))
+assert [f['year'] for f in fb] == [1970, 1980, 1990] and [f['share'] for f in fb] == [18.2, 23.6, 28.4], fb
+fb.append(dict(year=2000, total=int(sf3['P021001']), foreign_born=int(sf3['P021013']), share=round(int(sf3['P021013']) / int(sf3['P021001']) * 100, 1), source='2000 census Summary File 3, P21'))
 for y in sorted(acs):
     fb.append(dict(year=y, total=acs[y]['B01001_001E'], foreign_born=acs[y]['B05002_013E'], share=round(acs[y]['B05002_013E'] / acs[y]['B01001_001E'] * 100, 1), source=f'ACS {y} 1-year, B05002'))
 
 # ---------------------------------------------------------------- boroughs
 BORO = [('36005', 'Bronx'), ('36047', 'Brooklyn'), ('36061', 'Manhattan'), ('36081', 'Queens'), ('36085', 'Staten Island')]
-# Census years use the published counts: 1970-1990 from City Planning's historical table (the Bureau's own
-# county files carry later corrections: Queens 1970 +701; Brooklyn/Staten Island 1980 shift 92), 2000 and 2010
+# Census years use the published counts: 1970-1990 from the Census Bureau's Population of States and Counties of
+# the United States: 1790-1990, New York table (data/raw/fix/census_1790_1990_new_york_counties.pdf; the Bureau's
+# estimate files carry later corrections: Queens 1970 +701; Brooklyn/Staten Island 1980 shift 92), 2000 and 2010
 # from SF1, 2020 from the P.L. 94-171 file (the 2010-20 intercensal file's April 2020 column differs by a few people).
 PUB = {1970: [1471701, 2602012, 1539233, 1986473, 295443], 1980: [1168972, 2230936, 1428285, 1891325, 352121], 1990: [1203789, 2300664, 1487536, 1951598, 378977]}
 for fname, yy in (('fix/sf1_2000_county_pop.json', 2000), ('fix/pl_2020_county_pop.json', 2020)):
@@ -590,7 +609,7 @@ data = dict(
     flows=flow_win, c2c2000=dict(in_dom=c2c_in['dom'], in_other_state=c2c_in['other'], in_rest_of_state=c2c_in['nys'], in_abroad=c2c_in['abroad'], out_dom=c2c_out['dom'],
                                  pop5plus=int(sf3['P024001']), same_house=int(sf3['P024002'])),
     acs_medage={y: acs[y]['medage'] for y in acs}, comp8090=dict(c8090), examples=examples,
-    inflow_parts={y: v for y, v in in_meas.items()}, calibration=dict(rate_1995_99=round(g_cal, 5), target_2000=target, rate_2005=round(rate_2005, 5)),
+    inflow_parts={y: v for y, v in in_meas.items()}, calibration=dict(rate_1995_99=round(g_cal, 5), target_2000=target, rate_2005=round(rate_2005, 5), rates={A: round(g, 5) for A, g in g_win.items()}, targets=targets),
     weekly_shares=dict(jul_dec_2019=round(sh19, 4), jan_mar_2020=round(sh20, 4)),
     boroughs=boroughs, households=hh)
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
@@ -622,6 +641,6 @@ print('turnover examples:'); [print(' ', k, v) for k, v in examples.items()]
 chk = turnover(1995, 2000); print('1995-2000 model newcomers (moved) still present', chk['moved'], 'vs census 2000 residents 5+ who lived outside NYC in 1995:', c2c_in['total'])
 print('min natural increase row (annual rate):', min(((r['births']-r['deaths'])*12/r['months'], r['year']) for r in ledger if r['births'] is not None))
 print('births peak row since 2000 (annual rate):', max((round(r['births']*12/r['months']), r['year']) for r in ledger if r['year']>=2000 and r['births'] is not None), '| 2024 row', [(r['year'], r['births']) for r in ledger if r['year']==2024])
-print('calibrated 1995-99 arrival rate', round(g_cal,5), 'rate 2005', round(rate_2005,5), '| weekly shares', round(sh19,4), round(sh20,4))
+print('calibrated arrival rates', {A: round(g, 5) for A, g in g_win.items()}, 'targets', targets, 'rate 2005', round(rate_2005,5), '| weekly shares', round(sh19,4), round(sh20,4))
 print('rows where outflow (annualized) < Bureau net domestic loss:', [r['year'] for r in ledger if r['pep_dom'] is not None and r['outflow'] is not None and r['outflow'] * 12 / max(r['months'],1) < -r['pep_dom']])
 print('bd sources', {r['year']: r['bd_src'] for r in ledger})
