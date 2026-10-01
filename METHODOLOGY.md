@@ -1,6 +1,8 @@
 # Methodology: New York City's population since 1970, and the turnover calculator
 
-Built September 15, 2026; revised September 23, 2026 after an independent audit that re-derived every series from primary sources (section 4), and September 30, 2026, when arrival rates before 2005 were calibrated to the 1980 and 1990 censuses as well as the 2000 census (section 5). Every figure comes from the U.S. Census Bureau, the National Center for Health Statistics (NCHS), the New York State Department of Health or the New York City Department of Health and Mental Hygiene. Every turnover figure is an estimate, not a count. The raw files are kept in `data/raw/` (page images of scanned volumes included). `scripts/build_data.py` turns them into `docs/data.json`, and `scripts/build_page.py` inlines that into `docs/index.html`. Re-running the two scripts reproduces the page.
+Built September 15, 2026; revised September 23, 2026 after an independent audit that re-derived every series from primary sources (section 4), September 30, 2026, when arrival rates before 2005 were calibrated to the 1980 and 1990 censuses as well as the 2000 census, and October 1, 2026, when the children-in-households chart was added (sections 5 and 2.6a). Every figure comes from the U.S. Census Bureau, the National Center for Health Statistics (NCHS), the New York State Department of Health or the New York City Department of Health and Mental Hygiene. Every turnover figure is an estimate. The raw files are kept in `data/raw/` (page images of scanned volumes included). `scripts/build_data.py` turns them into `docs/data.json`, and `scripts/build_page.py` inlines that into `docs/index.html`. Re-running the two scripts reproduces the page.
+
+Abbreviations used below: ACS is the American Community Survey, the Census Bureau's yearly sample survey; SF1 and SF3 are Summary Files 1 (100-percent data) and 3 (long-form sample) of the 2000 and 2010 censuses; DHC is the 2020 census Demographic and Housing Characteristics file; STF 1A and 3A are the equivalent Summary Tape Files of the 1980 and 1990 censuses; PUMS is a Public Use Microdata Sample, the Bureau's file of individual census records.
 
 ## 1. Sources
 
@@ -66,7 +68,7 @@ The headline totals cover April 1970 to July 2025: births 6,351,553, deaths 3,64
 
 During a decade the Census Bureau issues postcensal estimates, one "vintage" a year, each revising every year back to the last census. After the next census it issues an intercensal series reconciling the decade to the counts at both ends. The page uses intercensal series for every completed decade and vintage 2025 for 2021-25.
 
-Postcensal estimates for the city have missed the next census badly. The Bureau's July 2000 estimate, made before the 2000 count, was 7,469,322, against a count of 8,008,278. Its July 2020 estimate was 8,253,213, against a count of 8,804,190. Vintage 2025 raised July 2024 from 8,478,072 to 8,596,825, mostly through higher international migration. The city's [challenge](https://www.census.gov/programs-surveys/popest/about/challenge-program/results.html) to vintage 2023, over uncounted shelter residents, raised July 2023 by 36,489. The 2020-25 decline of 219,561 rests entirely on postcensal estimates.
+Postcensal estimates for the city have missed the next census, twice by more than half a million people. The Bureau's July 2000 estimate, made before the 2000 count, was 7,469,322, against a count of 8,008,278. Its July 2020 estimate was 8,253,213, against a count of 8,804,190. Vintage 2025 raised July 2024 from 8,478,072 to 8,596,825, mostly through higher international migration. The city's [challenge](https://www.census.gov/programs-surveys/popest/about/challenge-program/results.html) to vintage 2023, over uncounted shelter residents, raised July 2023 by 36,489. The 2020-25 decline of 219,561 rests entirely on postcensal estimates.
 
 The page measures change from the April 2020 census count (8,804,190) rather than from the Bureau's estimates base (8,805,594). The Bureau's April 2000 and 2010 bases also differ slightly from the counts (+907 and −203).
 
@@ -76,7 +78,7 @@ Earlier counts missed people. The Bureau's [1990 coverage estimates](https://www
 
 ### 2.3 Decade ledger
 
-Sums of the yearly rows between census dates, plus 2020-25. The Bureau's international and domestic columns are its own estimates for the July-to-June years named in the table. The 1990s series fell far short of the growth the 2000 census found (July 2000: 7,469,322 estimated, 8,008,278 counted). The 2000s series overshot (July 2010: 8,431,336 estimated; April 2010 count 8,175,133). They are shown for the split, not the level.
+Sums of the yearly rows between census dates, plus 2020-25. The Bureau's international and domestic columns are its own estimates for the July-to-June years named in the table. The 1990s series fell short of the growth the 2000 census found (July 2000: 7,469,322 estimated, 8,008,278 counted). The 2000s series overshot (July 2010: 8,431,336 estimated; April 2010 count 8,175,133). They are shown for the split between abroad and the rest of the country; the census counts supersede their levels.
 
 ### 2.4 Gross arrivals
 
@@ -108,7 +110,9 @@ Start with the population in year A as one stock. For each row t from A to B−1
 
 The three stocks sum exactly to the population in B, for every window (checked in `build_data.py`). The headline is `1 − stayers / population(B)`: the share of the end-year city that was not here in A. The second line is `1 − stayers / population(A)`: the share of A's residents gone by B. Model outputs are rounded to three significant figures.
 
-**Range.** The largest uncertainty is the level of gross moves. The range reruns the model with arrivals scaled down and up, with out-moves moving with them so net migration is unchanged: 15 percent lower to 25 percent higher for years with survey data (2005 on); 15 percent lower to 40 percent higher for 1975-2004, whose rates rest on five-year census questions (the survey years' 25 percent, compounded by the 12 percent gap between the calibrated 1995-99 rate and the first survey rate); and 30 percent lower to 40 percent higher for 1970-74, whose rate is assumed (the calibrated rates fall by a tenth to a sixth each decade going back, so the early 1970s could be lower still). The range does not include census coverage error. The upper bound for the survey years is wider than the lower because independent measures point upward: the ACS county-to-county flows put domestic out-migration alone 1 to 16 percent above the page's total out-moves in the 2006-2020 windows (14-16 percent in the 2010s), IRS [Statistics of Income](https://www.irs.gov/statistics/soi-tax-stats-migration-data) data show domestic outflows of about 284,000 to 385,000 a year for the filing years 2016-17 through 2020-21, and the page's total also has to cover emigration.
+**Range.** The largest uncertainty is the level of gross moves. The range reruns the model with arrivals scaled down and up, with out-moves moving with them so net migration is unchanged: 15 percent lower to 25 percent higher for years with survey data (2005 on); 15 percent lower to 40 percent higher for 1975-2004, whose rates rest on five-year census questions (the survey years' 25 percent, compounded by the 12 percent gap between the calibrated 1995-99 rate and the first survey rate); and 30 percent lower to 40 percent higher for 1970-74, whose rate is assumed (the calibrated rates fall by a tenth to a sixth each decade going back, so the early 1970s could be lower still). The range does not include census coverage error.
+
+The upper bound for the survey years is wider than the lower because independent measures point upward: the ACS county-to-county flows put domestic out-migration alone 1 to 16 percent above the page's total out-moves in the 2006-2020 windows (14-16 percent in the 2010s), Internal Revenue Service [Statistics of Income](https://www.irs.gov/statistics/soi-tax-stats-migration-data) data show domestic outflows of about 284,000 to 385,000 a year for the filing years 2016-17 through 2020-21, and the page's total also has to cover emigration.
 
 | Window | Low | Central | High | Share of start-year residents gone |
 |---|---|---|---|---|
@@ -121,7 +125,7 @@ The three stocks sum exactly to the population in B, for every window (checked i
 | 1970-2001 | 67.0% | 71.0% | 78.6% | 70.4% |
 | 1970-2025 | 87.6% | 90.3% | 94.2% | 89.4% |
 
-**Equal exit rates.** Newcomers leave at higher rates than long-settled residents, a pattern well established in migration research (e.g., [Morrison, Demography, 1967](https://pubmed.ncbi.nlm.nih.gov/21318669/)); the model ignores that, which overstates the newcomers still present and so overstates turnover. Deaths fall mostly on older, long-settled residents; the model spreads them evenly, which understates the loss of the original cohort and so understates turnover. The audit's simulations, run on the version of the model it examined, put the first effect at −1.5 to −6.6 points on the 2001-2025 result (newcomers leaving at two to four times the base rate in their first years) and the second at about +3.5 points; together they changed the result by about 3 points or less. Heterogeneity within the original cohort, mobile renters against rooted owners, is not modeled; over long windows it would push the model toward overstating turnover. Former New Yorkers who return count as newcomers, which also pushes turnover up.
+**Equal exit rates.** Newcomers leave at higher rates than long-settled residents, a pattern well established in migration research (e.g., [Morrison, Demography, 1967](https://pubmed.ncbi.nlm.nih.gov/21318669/)); the model ignores that, which overstates the newcomers still present and so overstates turnover. Deaths fall mostly on older, long-settled residents; the model spreads them evenly, which understates the loss of the original cohort and so understates turnover. The audit's simulations, run on the version of the model it examined, put the first effect at −1.5 to −6.6 points on the 2001-2025 result (newcomers leaving at two to four times the base rate in their first years) and the second at about +3.5 points; together they changed the result by about 3 points or less. Differences within the original cohort, between mobile renters and rooted owners, are not modeled; over long windows they would push the model toward overstating turnover. Former New Yorkers who return count as newcomers, which also pushes turnover up.
 
 **Independent check of the calculator (September 23, 2026).** A second implementation, written separately, computes each stock as a product of yearly survival factors instead of carrying running totals. It reproduces the page's figures for all 1,540 pairs of start and end years at all three arrival levels, to within floating-point error (about one part in a quadrillion). Every other check also passed:
 
@@ -165,7 +169,7 @@ Rerunning the model with the two main departures from equal exit rates gives the
 
 The death weighting assumes the original residents have a relative death rate of 1, newcomers 0.4 and children born since 0.15. Every variant stays inside the page's range. (The 1970-2025 row reflects the September 30 recalibration; the others are unchanged by it.)
 
-The pre-2005 calibrations probably err low. The model's stock of arrivals includes children under 5 and returning New Yorkers, whom the census targets exclude; children aged 1 to 4 were 3 to 4 percent of arrivals from out of state or abroad in the 2010, 2015 and 2019 surveys. The five-year questions also miss people who came and went between censuses. So the calibrated rates are, if anything, low, and so are turnover figures for windows before 2005; the range leans upward for those years.
+The pre-2005 calibrations probably err low. The model's stock of arrivals includes children under 5 and returning New Yorkers, whom the census targets exclude; children aged 1 to 4 were 3 to 4 percent of arrivals from out of state or abroad in the 2010, 2015 and 2019 surveys. The five-year questions also miss people who came and went between censuses. So the calibrated rates lean low, and so do turnover figures for windows before 2005; the range leans upward for those years.
 
 The check led to two display fixes:
 
@@ -180,7 +184,7 @@ The ACS runs somewhat differently from the census in the same year: 2010 ACS hou
 
 ### 2.6a Children in households
 
-Two measures, both as shares of all households. "Married couples with their own children" counts married-couple households with at least one son, daughter or stepchild of the householder under 18 (the census's "own children"; the 1970-2000 censuses and the yearly survey limit this to never-married children, which makes no practical difference); the remaining married couples are "without." "Households with anyone under 18" also counts grandchildren, other relatives and unrelated children. The married-couple totals match the households chart in every census year.
+Two measures, both as shares of all households. "Married couples with their own children" counts married-couple households with at least one son, daughter or stepchild of the householder under 18, the census's "own children." The 1970-2000 censuses and the yearly survey limit this to never-married children, which makes no practical difference. The remaining married couples are "without." "Households with anyone under 18" also counts grandchildren, other relatives and unrelated children. The married-couple totals match the households chart in every census year.
 
 The 1970 volume has no count of households with anyone under 18, so that line starts in 1980. For 1980 and 1990 that count comes from the full-count summary files (Summary Tape File 1A), whose household totals match the published counts exactly. The 1980 split of married couples by own children is not in the 100-percent tables for the city, so it comes from the Census Bureau's long-form sample tabulation (Summary Tape File 3A, Table 20): its share of married couples with own children (45.24 percent) is applied to the published 1,203,135 married couples, which keeps the married-couple total consistent with the households chart. The sample tabulation itself counts about 2 percent more married couples than the 100-percent count. As a check, the 5 percent microdata sample gives 45.30 percent, and the same microdata method run on the 1990 sample reproduces the published 1990 share within 0.2 points.
 
@@ -202,7 +206,7 @@ Foreign-born shares are foreign-born residents divided by total population. Peop
 - The 2020-25 population and the 2023-25 births and deaths are postcensal estimates and will be revised.
 - Arrivals before 2005 are calibrated to census five-year questions (1975-79, 1985-89, 1995-99), interpolated (1980-84, 1990-94, 2000-04) or assumed (1970-74). Windows that reach back before 2005 are rougher, and the longer a window, the more its result depends on these rates: 1970-2001 has a range of 67 to 79 percent.
 - The census counts that anchor every series missed people by different amounts in different years (the 1990 count by an estimated 3.2 percent in the city). Those differences flow into net migration and the turnover model, and the range does not include them.
-- Gross moves are counted once a year, so they are a floor on movement. Someone who moved in and left again within 12 months appears in neither arrivals nor out-moves; someone who moved in twice counts twice; arrivals under age 1 are missed; and former New Yorkers who return count as newcomers. Out-moves, including emigration, are derived as arrivals minus net migration, not measured.
+- Gross moves are counted once a year, so they are a floor on movement. Someone who moved in and left again within 12 months appears in neither arrivals nor out-moves; someone who moved in twice counts twice; arrivals under age 1 are missed; and former New Yorkers who return count as newcomers. Out-moves, including emigration, are derived as arrivals minus net migration; no source measures them.
 - The turnover figures are model estimates meant to answer "roughly how much." They should be quoted with their range.
 - The 1971-79 population estimates are preliminary and rounded to hundreds.
 - Race categories changed in 1980 (Hispanic write-ins), 2000 (multiple races) and 2020 (coding of write-ins).
@@ -244,13 +248,15 @@ Four independent checkers re-derived every series from freshly downloaded primar
 20. Model outputs are rounded, and a range is shown.
 21. This document had said the build uses only the standard library. It also needs openpyxl.
 
-## 5. Revision, September 30, 2026
+## 5. Revisions, September 30 and October 1, 2026
 
 1. Arrival rates before 2005 had used the 1995-99 rate, calibrated to the 2000 census, for every year back to 1970. They are now calibrated separately to the 1980 and 1990 censuses as well (section 2.4), interpolated between, and assumed only for 1970-74. The rates rise over time, from 2.0 to 2.4 to 2.7 percent a year. Results for windows that start before 1995 fall; 1970-2025 goes from 91.3 to 90.3 percent. Windows starting in 2001 or later are unchanged.
 2. The range is wider for years before 2005 and widest for 1970-74, and the calculator states that its figures are estimates.
 3. The Census Bureau's 1990 coverage estimates are now cited, with what they imply for the 1990s migration figure.
 4. The "Show the math" table now labels each period, gives its length in months and restates each exit rate on a 12-month basis, so the 15- and 9-month rows around census dates no longer look like jumps.
 5. Borough counts for 1970-1990 and foreign-born figures for 1970-1990 now come directly from Census Bureau publications.
+6. October 1: a children-in-households chart was added (section 2.6a). Its 1980 married-couple split first used our own tabulation of the microdata sample; it now uses the Bureau's long-form table (STF 3A, Table 20), which agrees within 0.1 points.
+7. October 1: the hover readouts moved beneath the charts, captions were cut to what a reader needs to read each chart, and the material they dropped was added to the source notes.
 
 ## 6. Reproducing the page
 
