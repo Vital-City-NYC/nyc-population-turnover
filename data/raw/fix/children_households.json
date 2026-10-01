@@ -1,0 +1,205 @@
+{
+ "1970": {
+  "households": 2836872,
+  "married": 1603387,
+  "married_own": 774496,
+  "any_u18": null,
+  "source": "1970 Census of Population PC(1)-B34, Table 25, page 34-115, New York City column (husband-wife families; with own children under 18 years)"
+ },
+ "1980": {
+  "households": 2788530,
+  "married": 1203135,
+  "married_own": 544994,
+  "any_u18": 905403,
+  "sample": {
+   "hh": 2792540,
+   "married": 1229640,
+   "married_own": 557000,
+   "any_u18": 920880
+  },
+  "source": "Married couples with own children: 1980 PUMS A share x published married couples (1,203,135); households with anyone under 18: 1980 STF 1A Table 19"
+ },
+ "1990": {
+  "households": 2819401,
+  "married": 1098418,
+  "married_own": 477935,
+  "any_u18": 892331,
+  "counties": {
+   "Bronx": [
+    424112,
+    146234,
+    67041
+   ],
+   "Kings": [
+    828199,
+    335295,
+    155867
+   ],
+   "New York": [
+    716422,
+    187016,
+    65975
+   ],
+   "Queens": [
+    720149,
+    351675,
+    150066
+   ],
+   "Richmond": [
+    130519,
+    78198,
+    38986
+   ]
+  },
+  "source": "1990 CP-1-34 Table 57, five county columns (PDF pages 411, 422, 426, 432, 434); households with anyone under 18 from 1990 STF 1A table P18"
+ },
+ "2000": {
+  "households": 3021588,
+  "married": 1124305,
+  "married_own": 532402,
+  "any_u18": 1026091,
+  "source": "2000 SF1 P18, P19"
+ },
+ "2010": {
+  "households": 3109784,
+  "married": 1097870,
+  "married_own": 492967,
+  "any_u18": 959122,
+  "source": "2010 SF1 P19, P20"
+ },
+ "2020": {
+  "households": 3370448,
+  "married": 1149200,
+  "married_own": 478170,
+  "any_u18": 948651,
+  "source": "2020 DHC P20, P21"
+ },
+ "acs": {
+  "2006": {
+   "households": 3020284,
+   "married": 1089597,
+   "married_own": 502221,
+   "any_u18": 975699,
+   "source": "ACS 2006 1-year B11001, B11003, B11005"
+  },
+  "2007": {
+   "households": 3030752,
+   "married": 1104122,
+   "married_own": 504890,
+   "any_u18": 975845,
+   "source": "ACS 2007 1-year B11001, B11003, B11005"
+  },
+  "2008": {
+   "households": 3055275,
+   "married": 1114962,
+   "married_own": 501803,
+   "any_u18": 966800,
+   "source": "ACS 2008 1-year B11001, B11003, B11005"
+  },
+  "2009": {
+   "households": 3087496,
+   "married": 1127161,
+   "married_own": 514952,
+   "any_u18": 967930,
+   "source": "ACS 2009 1-year B11001, B11003, B11005"
+  },
+  "2010": {
+   "households": 3039467,
+   "married": 1101569,
+   "married_own": 486693,
+   "any_u18": 956945,
+   "source": "ACS 2010 1-year B11001, B11003, B11005"
+  },
+  "2011": {
+   "households": 3023330,
+   "married": 1076334,
+   "married_own": 481963,
+   "any_u18": 945441,
+   "source": "ACS 2011 1-year B11001, B11003, B11005"
+  },
+  "2012": {
+   "households": 3085814,
+   "married": 1097984,
+   "married_own": 490345,
+   "any_u18": 940011,
+   "source": "ACS 2012 1-year B11001, B11003, B11005"
+  },
+  "2013": {
+   "households": 3084861,
+   "married": 1104140,
+   "married_own": 491192,
+   "any_u18": 940409,
+   "source": "ACS 2013 1-year B11001, B11003, B11005"
+  },
+  "2014": {
+   "households": 3148067,
+   "married": 1130578,
+   "married_own": 485356,
+   "any_u18": 928471,
+   "source": "ACS 2014 1-year B11001, B11003, B11005"
+  },
+  "2015": {
+   "households": 3129147,
+   "married": 1130834,
+   "married_own": 487661,
+   "any_u18": 926791,
+   "source": "ACS 2015 1-year B11001, B11003, B11005"
+  },
+  "2016": {
+   "households": 3114811,
+   "married": 1136961,
+   "married_own": 492163,
+   "any_u18": 905983,
+   "source": "ACS 2016 1-year B11001, B11003, B11005"
+  },
+  "2017": {
+   "households": 3159674,
+   "married": 1157215,
+   "married_own": 482678,
+   "any_u18": 910665,
+   "source": "ACS 2017 1-year B11001, B11003, B11005"
+  },
+  "2018": {
+   "households": 3184496,
+   "married": 1177840,
+   "married_own": 492692,
+   "any_u18": 900290,
+   "source": "ACS 2018 1-year B11001, B11003, B11005"
+  },
+  "2019": {
+   "households": 3211033,
+   "married": 1167665,
+   "married_own": 476273,
+   "any_u18": 869776,
+   "source": "ACS 2019 1-year B11001, B11003, B11005"
+  },
+  "2021": {
+   "households": 3263895,
+   "married": 1143898,
+   "married_own": 442999,
+   "any_u18": 840915,
+   "source": "ACS 2021 1-year B11001, B11003, B11005"
+  },
+  "2022": {
+   "households": 3373039,
+   "married": 1175427,
+   "married_own": 465118,
+   "any_u18": 867816,
+   "source": "ACS 2022 1-year B11001, B11003, B11005"
+  },
+  "2023": {
+   "households": 3394750,
+   "married": 1187879,
+   "married_own": 458843,
+   "any_u18": 859736,
+   "source": "ACS 2023 1-year B11001, B11003, B11005"
+  },
+  "2024": {
+   "households": 3379651,
+   "married": 1165203,
+   "married_own": 436948,
+   "any_u18": 821266,
+   "source": "ACS 2024 1-year B11001, B11003, B11005"
+  }
+ }
+}

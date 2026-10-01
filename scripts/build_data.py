@@ -575,6 +575,27 @@ for y in list(range(2006, 2020)) + [2021, 2022, 2023, 2024]:
                    pct_people_in_families=round(int(a['B11002_002E']) / int(a['B11002_001E']) * 100, 1)))
 hh.sort(key=lambda r: (r['year'], r['source'] != 'census'))
 
+# ---------------------------------------------------------------- children in households (scripts/children_households.py)
+ch = json.load(open(rp('fix/children_households.json')))
+kids = []
+for key, v in list(ch.items()):
+    if key == 'acs':
+        continue
+    kids.append(dict(year=int(key), source='census', **{k: v[k] for k in ('households', 'married', 'married_own', 'any_u18')}, note=v['source']))
+for y, v in ch['acs'].items():
+    kids.append(dict(year=int(y), source='acs', **{k: v[k] for k in ('households', 'married', 'married_own', 'any_u18')}, note=v['source']))
+for r in kids:
+    T = r['households']
+    r['married_noown'] = r['married'] - r['married_own']
+    r['pct_married_own'] = round(r['married_own'] / T * 100, 2)
+    r['pct_married_noown'] = round(r['married_noown'] / T * 100, 2)
+    r['pct_any_u18'] = round(r['any_u18'] / T * 100, 2) if r['any_u18'] else None
+kids.sort(key=lambda r: (r['year'], r['source'] != 'census'))
+for r in kids:   # married-couple totals must match the households panel
+    m = next((h for h in hh if h['year'] == r['year'] and h['source'] == r['source']), None)
+    if m and m['married'] is not None and r['source'] == 'census':
+        assert m['married'] == r['married'], (r['year'], m['married'], r['married'])
+
 # ---------------------------------------------------------------- turnover model (mirrors the page's JavaScript)
 def turnover(A, B):
     """Cohort-survival model. Every resident faces the same yearly exit rate (deaths + out-moves) / population.
@@ -611,7 +632,7 @@ data = dict(
     acs_medage={y: acs[y]['medage'] for y in acs}, comp8090=dict(c8090), examples=examples,
     inflow_parts={y: v for y, v in in_meas.items()}, calibration=dict(rate_1995_99=round(g_cal, 5), target_2000=target, rate_2005=round(rate_2005, 5), rates={A: round(g, 5) for A, g in g_win.items()}, targets=targets),
     weekly_shares=dict(jul_dec_2019=round(sh19, 4), jan_mar_2020=round(sh20, 4)),
-    boroughs=boroughs, households=hh)
+    boroughs=boroughs, households=hh, kids=kids)
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
 json.dump(data, open(OUT, 'w'), separators=(',', ':'))
 
