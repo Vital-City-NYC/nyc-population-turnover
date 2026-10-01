@@ -76,6 +76,7 @@ body.embed .pt .fsbar{display:flex}
 .pt .big{margin:0 0 1rem}
 .pt .big div{background:var(--paper);padding:.9rem 1.1rem 1rem;border-left:4px solid var(--orange);display:grid;grid-template-columns:auto 1fr;gap:.2rem 1.1rem;align-items:center}
 .pt .big .n{font-family:var(--serif);font-weight:300;font-size:3.2rem;line-height:1;grid-row:1 / span 2}
+.pt .big .rough{display:block;font-family:var(--sans);font-weight:700;font-size:1rem;line-height:1.2;margin:0 0 .25rem;color:var(--ink)}
 .pt .big .l{font-size:1.05rem;line-height:1.35;display:block;max-width:56ch}
 .pt .big .l2{font-size:.95rem;line-height:1.35;display:block;color:var(--muted);max-width:56ch}
 .pt .big .l2 b{color:var(--ink)}
@@ -578,7 +579,7 @@ function renderCalc(){
   const headN = Math.round(newShare*100), stayN = 100 - headN;
   const raw = [t.born, t.moved].map(v => v / t.popB * 100), parts = raw.map(Math.floor);
   raw.map((v, i) => [v - parts[i], i]).sort((p, q) => q[0] - p[0]).slice(0, headN - parts[0] - parts[1]).forEach(([, i]) => parts[i]++);
-  $('big').innerHTML = `<div><span class="n">${headN}%</span><span class="l">of the people in New York City in ${when(B)} were not here in ${when(A)}: about <b>${about(t.born)}</b> were born here in between and <b>${about(t.moved)}</b> moved in. This is an estimate, not a count; the plausible range is ${rng[0]}% to ${rng[1]}%, depending mainly on how many people actually moved in and out.</span><span class="l2">Seen from the other end: of the ${fmt(t.popA)} people here in ${when(A)}, about <b>${about(t.stayers)}</b> were still here in ${when(B)}, and ${Math.round(goneShare*100)}% had died or moved away.</span></div>`;
+  $('big').innerHTML = `<div><span class="n"><span class="rough">Roughly</span>${headN}%</span><span class="l">of the people in New York City in ${when(B)} were not here in ${when(A)}: about <b>${about(t.born)}</b> were born here in between and <b>${about(t.moved)}</b> moved in. This is an estimate, not a count; the plausible range is ${rng[0]}% to ${rng[1]}%, depending mainly on how many people actually moved in and out.</span><span class="l2">Seen from the other end: of the ${fmt(t.popA)} people here in ${when(A)}, about <b>${about(t.stayers)}</b> were still here in ${when(B)}, and ${Math.round(goneShare*100)}% had died or moved away.</span></div>`;
   const pct = v => (v / t.popB * 100);
   $('stack').innerHTML = `<div class="bar"><div style="width:${pct(t.stayers)}%;background:var(--c-stay)" title="Still here from ${A}: ${fmt(t.stayers)}"></div><div style="width:${pct(t.born)}%;background:var(--c-births)" title="Born since ${A}: ${fmt(t.born)}"></div><div style="width:${pct(t.moved)}%;background:var(--c-in)" title="Moved in since ${A}: ${fmt(t.moved)}"></div></div>
     <div class="keys2"><span><b style="color:#6b6f8a">■</b> Here in ${A} and still here in ${B}: ${stayN}%</span><span><b style="color:var(--c-births)">■</b> Born since: ${parts[0]}%</span><span><b style="color:var(--c-in)">■</b> Moved in since: ${parts[1]}%</span><span>= ${B} population of ${fmt(t.popB)}</span></div>`;
