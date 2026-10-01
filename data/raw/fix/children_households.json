@@ -9,15 +9,22 @@
  "1980": {
   "households": 2788530,
   "married": 1203135,
-  "married_own": 544994,
+  "married_own": 544279,
   "any_u18": 905403,
-  "sample": {
+  "stf3_table20": {
+   "married_own": 555670,
+   "married": 1228315,
+   "hh": 2792614
+  },
+  "share_stf3": 0.4524,
+  "pums_sample": {
    "hh": 2792540,
    "married": 1229640,
    "married_own": 557000,
    "any_u18": 920880
   },
-  "source": "Married couples with own children: 1980 PUMS A share x published married couples (1,203,135); households with anyone under 18: 1980 STF 1A Table 19"
+  "share_pums": 0.453,
+  "source": "Married couples with own children: 1980 STF 3A Table 20 share (45.24 percent) x published married couples (1,203,135); households with anyone under 18: 1980 STF 1A Table 19"
  },
  "1990": {
   "households": 2819401,

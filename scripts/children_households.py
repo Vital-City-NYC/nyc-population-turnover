@@ -5,11 +5,16 @@ Sources
   1970  Census of Population PC(1)-B34, Table 25, page 34-115 (New York City column, read from the scan):
         husband-wife families 1,603,387, with own children under 18 774,496. No count of households with
         anyone under 18 is published for the city.
-  1980  Married couples with own children: 1980 Public Use Microdata Sample A (5 percent; household record
-        HHTYPE column 104, CHILDREN column 105); the sample's share among married couples is applied to the
-        published 1,203,135 married couples. Households with anyone under 18: Summary Tape File 1A (100 percent),
-        Table 19, five county records (the same file's Table 3 and Table 16 reproduce the published 2,788,530
-        households and 1,203,135 married couples exactly).
+  1980  Married couples with own children: Summary Tape File 3A (the long-form sample, officially weighted),
+        Table 20 "Household Type and Presence of Own Children", cells 1-2 of the five county records; the
+        table's share of married couples with own children (45.24 percent) is applied to the published 100-percent
+        count of married couples (1,203,135), so the point stays consistent with the households chart. The sample
+        tabulation runs about 2 percent above the 100-percent count of married couples. Cross-check: the 1980
+        Public Use Microdata Sample A gives 45.30 percent (household record HHTYPE column 104, CHILDREN column 105).
+        Households with anyone under 18: Summary Tape File 1A (100 percent), Table 19, five county records (the
+        same file's Table 3 and Table 16 reproduce the published 2,788,530 households and 1,203,135 married
+        couples exactly). STF 3A records are stored as 11,620-character lines; Table 20 begins at character 2119,
+        as the data dictionary's absolute position says.
   1990  Census of Population CP-1-34, Table 57 ("Household and Family Characteristics"), the five county columns:
         married-couple families and those with own children under 18. Households with anyone under 18: Summary
         Tape File 1A, table P18, five county records (households sum to the published 2,819,401).
@@ -76,9 +81,19 @@ for raw in z.open(z.namelist()[0]):
         s80['married'] += int(l[1566:1575])                                 # Table 16 cell 3: married-couple family
         s80['any_u18'] += sum(int(l[1821 + 9 * i:1830 + 9 * i]) for i in range(4))   # Table 19: households with persons under 18
 assert s80['hh'] == HH80 and s80['married'] == M80, s80
-out['1980'] = dict(households=HH80, married=M80, married_own=round(M80 * c['married_own'] / c['married']),
-                   any_u18=s80['any_u18'], sample=dict(c),
-                   source='Married couples with own children: 1980 PUMS A share x published married couples (1,203,135); households with anyone under 18: 1980 STF 1A Table 19')
+z = zipfile.ZipFile(cached('1980_stf3axny.zip', 'https://www2.census.gov/census_1980/stf3a/stf3axny.zip'))
+t20 = Counter()
+for raw in z.open(z.namelist()[0]):
+    l = raw.decode('latin-1').rstrip('\r\n')
+    if l[9:11] == '11' and l[33:35] == '36' and l[39:42] in nyc:       # county records
+        cells = [int(l[2118 + 9 * i:2127 + 9 * i]) for i in range(7)]   # Table 20, total: married w/ own children, married w/o, male hh w/, w/o, female hh w/, w/o, nonfamily
+        t20['married_own'] += cells[0]; t20['married'] += cells[0] + cells[1]; t20['hh'] += sum(cells)
+assert abs(t20['hh'] / HH80 - 1) < 0.01 and abs(t20['married'] / M80 - 1) < 0.03, t20
+share_stf3 = t20['married_own'] / t20['married']; share_pums = c['married_own'] / c['married']
+assert abs(share_stf3 - share_pums) < 0.005, (share_stf3, share_pums)
+out['1980'] = dict(households=HH80, married=M80, married_own=round(M80 * share_stf3), any_u18=s80['any_u18'],
+                   stf3_table20=dict(t20), share_stf3=round(share_stf3, 4), pums_sample=dict(c), share_pums=round(share_pums, 4),
+                   source='Married couples with own children: 1980 STF 3A Table 20 share (45.24 percent) x published married couples (1,203,135); households with anyone under 18: 1980 STF 1A Table 19')
 
 # 1990: Table 57 county columns (households, married-couple families, with own children under 18) + PUMS for any under 18
 t57 = {'Bronx': (424112, 146234, 67041), 'Kings': (828199, 335295, 155867), 'New York': (716422, 187016, 65975),
